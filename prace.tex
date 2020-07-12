@@ -122,6 +122,9 @@ Abstract.
 %% Definice různých užitečných maker (viz popis uvnitř souboru)
 \include{makra}
 
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage[hyphens]{url}
+
 %% Titulní strana a různé povinné informační strany
 \begin{document}
 \include{titulka}
@@ -133,7 +136,8 @@ Abstract.
 %%% Jednotlivé kapitoly práce jsou pro přehlednost uloženy v samostatných souborech
 \include{chapter-uvod}
 \include{chapter-vue-framework}
-\include{kap02}
+\include{chapter-pozadavky-na-system}
+\include{chapter-serverova-cast}
 \include{kap03}
 
 \include{zaver}

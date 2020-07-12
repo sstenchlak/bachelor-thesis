@@ -1,0 +1,30 @@
+\chapter{Server}
+Jak již bylo zmíněno dříve, převážná část serveru byla napsána mým vedoucím Martinem Nečaským a sloužila i jako technická specifikace pro klientsou část. Server je napsaný v JavaScriptu a běží v Node.js\footnote{\url{https://nodejs.org/}}. Server je bezestavový a odpovídá na požadavky zmíněné dále.
+
+\section{Jazyková podpora}
+Server jsem částečně přepsal, aby podporoval dotazování na data z více světových jazyků. Některé požadavky přijímají parametr \texttt{languages} obsahující čárkou \texttt{,} oddělené ISO 639-1 jazykové kódy. Server pak vrací objekty jejiž klíčem je jazykový kód a hodnotou daný překlad do jazyku. Pokud překlad neexistuje, hodnotou je \texttt{undefined}. V případě, že na všechny jazyky bylo vráceno \texttt{undefined}, server se pokusí přidat další jazyk, který existuje. Který jazyk takto bude vybrán není určeno.
+
+\begin{prikl}
+Pro \texttt{languages=cs,en} může server vrátit například
+\begin{code}[frame=none]
+{
+    cs: undefined,
+    en: "Kankakee County"
+}
+\end{code}
+ale pokud nezná překlad ani do češtiny, ani do angličity, může vrátit
+\begin{code}[frame=none]
+{
+    cs: undefined,
+    en: undefined,
+    sk: "Jazero Beňatina"
+}
+\end{code}
+\end{prikl}
+
+\section{API}
+\begin{itemize}
+    \item \texttt{/metaconfiguration}, parametry \texttt{iri} a \texttt{languages} \\
+    Vrátí informace o metakonfiguraci zadané podle \texttt{iri}. \\
+    Vrátí všechna data (viz. kapitola \ref{pozadavky-metakonfigurace}) o metakonfiguraci, veškerá data o dceřiných konfiguracích (viz. kapitola \ref{pozadavky-konfigurace}) a základní data o dceřiných metakonfiguracích (vše kromě seznamu konfigurací a metakonfigurací).
+\end{itemize}
