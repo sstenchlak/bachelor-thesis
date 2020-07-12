@@ -1,0 +1,48 @@
+\chapter{Požadavky na systém}
+\textit{Tato kapitola shrnuje původní a později přidané požadavky na systém a jeho základní funkcionalitu.}
+
+Cílem bylo vyrobit webovou aplikaci jež by uměla procházet data v RDF databázích podle předem navolenýcyh konfiguracích. Procházením se myslí postupné objevování nových uzlů grafu s pomocí již existujících.
+
+\section{Konfigurace}
+Konfigurací se rozumí uzel v RDF grafu který popisuje, jak by měla aplikace procházet datasety. Aktuálně může mít konfigurace tyto vlastnosti:
+
+\begin{itemize}
+    \item \texttt{dct:title} Název konfigurace \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{dct:description} Širší popis, čeho je možné s konfigurací dosáhnout \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{browser:hasVisualStyleSheet} Určuje, jak mají uzly v aplikaci vypadat. \textit{(popsáno dále)}
+    \item \texttt{browser:startingNode} Doporučený uzel nebo uzly, kde začít s procházením grafu.
+    \item \texttt{browser:resourceUriPattern} Regulární výraz popisující, jak by mělo vypadat IRI uzlu. Používá se v aplikaci jako nápověda uživateli, zda zadal správné IRI ještě než se pošle požadavek.
+    \item \texttt{browser:hasViewSet} View sety. \textit{(popsáno dále)}
+    \item \texttt{browser:autocomplete} JSON soubor se seznamem RDF uzlů podle kterých probíhá hledání. \textit{(popsáno dále)}
+\end{itemize}
+
+Příkladem konfigurace může být kupříkladu procházení slavných osobností na Wikidatech. Takováto konfigurace pak umožňuje uživateli chodit po uzlech reprezentující slavné osobnosti a dotazovat se například na filmy které natočily a knihy, které napsaly.
+
+\section{ViewSet}
+View set reprezentuje skupinu pohledů. Pravý smysl pohledů pochopí čtenář dále v textu. View set má následující vlastnosti:
+\begin{itemize}
+    \item \texttt{dct:title} Název view setu \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{browser:hasView} Pohledy které patří pod tento view set. \textit{(popsáno dále)}
+    \item \texttt{browser:hasDefaultView} Výchozí pohled ze seznamu výše.
+    \item \texttt{browser:hasCondition} todo
+    \item \texttt{browser:hasDataset} todo
+\end{itemize}
+
+\section{View}
+View (česky pohled) je způsob, jak můžeme pohlížet na konkrétní uzel v RDF grafu. Uzel totiž může mít obecně více vlastností současně, obdobně jako jedna osoba může být současně spisovatel, režisér a herec. V takovém případě bychom mohli mít tři různé pohledy na jeden uzel a uživatel si může vybírat, jestli ho zajímá jeho herecká, nebo spisovatelská kariéra. View má následující vlastnosti:
+
+\begin{itemize}
+    \item \texttt{dct:title} Název pohledu \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{dct:description} Popis pohledu \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{browser:hasExpansion} Odkaz na expanzi - určuje jaké uzly lze získat z daného uzlu \textit{(popsáno dále)}
+    \item \texttt{browser:hasPreview} Odkaz na preview - určuje jaká data se mají získat pro ostylování konkrétního uzlu \textit{(popsáno dále)}
+    \item \texttt{browser:hasDetail} Odkaz na detail - určuje která data se zobrazí v detailu konkrétního uzlu \textit{(popsáno dále)}
+\end{itemize}
+
+\section{Expansion}
+Expansion popisuje jak lze daný uzel expandovat, tedy jedná se o operaci kdy se stahují nové uzly jež jsou nějak příbuzné expandovanému uzlu. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy co napsala daná osoba}. Expanze formálně partří k pohledu (view).
+\begin{itemize}
+    \item \texttt{dct:title} Název expanze \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{browser:hasDataset} Popisuje kokrétní endpoint vůči kterému se dotazuje na data.
+    \item \texttt{browser:query} Popisuje SPARQL dotaz který bude spuštěn na endpointu datasetu.
+\end{itemize}
