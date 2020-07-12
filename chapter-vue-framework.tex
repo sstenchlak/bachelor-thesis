@@ -43,6 +43,40 @@ Tyto předávána data jsou právě data ze storu. Vue framework doporučuje, ab
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.75\textwidth]{media/vue.pdf}
+    \includegraphics[width=0.5\textwidth]{media/vue.pdf}
     \caption{Doporučený způsob komunikace mezi komponentami ve Vue frameworku}
 \end{figure}
+
+\section{Loaders}
+Kód Vue komponent se zapisuje do souborů s příponou \texttt{.vue}. Při sestavování aplikace se pak použije \texttt{vue-loader} který ze souboru vyextrahuje zvlášť CSS, JS a HTML a ty předá dál na zpracování. HTML kód komponent není ve skutečnosti pravý HTML. Jedná se nadstavbu umožňující psát speciální značky, jež rozhodují kolikrát a jestli vůbec se tag na stránce vyrenderuje. Tato HTML nadstavba je pak předána \texttt{vue-template-compiler} který vyrobí optimalizovaný JS kód jež renderuje HTML na základě stavu komponenty.
+
+\newpage
+
+\begin{prikl}
+Ukázka jednoduché Vue komponenty \texttt{IndexedList} která má parametr \texttt{list} očekávající pole stringů. Tato komponenta vypíše pole v odrážkovém seznamu ve formě \texttt{index: hodnota}. Komponenta se sama stará o překreslení DOMu, když se změní data. Komponentu můžeme v jiné komponentě použít vložením \texttt{<indexed-list :list="inputData" />} kde \texttt{inputData} je proměnná obsahující pole stringů.
+
+\begin{code}
+<template>
+  <ul>
+    <li v-for="(item, index) in list" :key="index">
+      {{index}}: {{ item }}
+    </li>
+  </ul>
+</template>
+
+<script lang="ts">
+  import {Component, Prop} from "vue-property-decorator";
+  import Vue from "vue";
+  @Component
+  export default class IndexedList extends Vue {
+    @Prop() private list: string[];
+  }
+</script>
+
+<style scoped>
+  ul {
+    color: red;
+  }
+</style>
+\end{code}
+\end{prikl}

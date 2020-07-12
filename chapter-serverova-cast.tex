@@ -23,8 +23,30 @@ ale pokud nezná překlad ani do češtiny, ani do angličity, může vrátit
 \end{prikl}
 
 \section{API}
+Server vrací data ve formátu JSON, požadavky jsou posílány metodou GET a parametry jsou kódovány do URL adresy.
+
 \begin{itemize}
-    \item \texttt{/metaconfiguration}, parametry \texttt{iri} a \texttt{languages} \\
+    \item \texttt{/metaconfiguration}, \textbf{parametry:} \texttt{iri} a \texttt{languages} \\
     Vrátí informace o metakonfiguraci zadané podle \texttt{iri}. \\
-    Vrátí všechna data (viz. kapitola \ref{pozadavky-metakonfigurace}) o metakonfiguraci, veškerá data o dceřiných konfiguracích (viz. kapitola \ref{pozadavky-konfigurace}) a základní data o dceřiných metakonfiguracích (vše kromě seznamu konfigurací a metakonfigurací).
+    Vrátí všechna data (viz kapitola \ref{pozadavky-metakonfigurace}) o metakonfiguraci, veškerá data o dceřiných konfiguracích (viz kapitola \ref{pozadavky-konfigurace}) a základní data o dceřiných metakonfiguracích (vše kromě seznamu konfigurací a metakonfigurací).
+
+    \item \texttt{/configuration}, \textbf{parametry:} \texttt{iri} a \texttt{languages} \\
+    Vrátí informace o konfiguraci zadané podle \texttt{iri}. \\
+    Vrátí stejná data jako \texttt{/metaconfiguration} o svých sceřiných konfiguracích. \\
+    Toto volání se používá pouze když uživatel ručně zvolí IRI konfigurace, v opačném případě si aplikace vystačí s voláním \texttt{/metaconfiguration}.
+
+    \item \texttt{/stylesheet}, \textbf{parametry:} \texttt{stylesheet} \\
+    Vrátí kompletní visual style sheet (viz kapitola \ref{pozadavky-visual-style-sheet}) na základě jeho IRI jako parametr \texttt{stylesheet}.
+
+    \item \texttt{/view-sets}, \textbf{parametry:} \texttt{config} a \texttt{resource} \\
+    Vrátí seznam možných view setů (viz kapitola \ref{pozadavky-view-sets}) které odpovídají uzlu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
+
+    \item \texttt{/preview}, \textbf{parametry:} \texttt{view} a \texttt{resource} \\
+    Vrátí data z dotazu preview (viz kapitola \ref{pozadavky-preview}) na uzel s IRI \texttt{resource} při daném pohledu \texttt{view}.
+
+    \item \texttt{/detail}, \textbf{parametry:} \texttt{view} a \texttt{resource} \\
+    Vrátí data z dotazu detail (viz kapitola \ref{pozadavky-detail}) na uzel s IRI \texttt{resource} při daném pohledu \texttt{view}.
+
+    \item \texttt{/expand}, \textbf{parametry:} \texttt{view} a \texttt{resource} \\
+    Vrátí expandované uzly (viz kapitola \ref{pozadavky-expansion}) pro uzel s IRI \texttt{resource} při daném pohledu \texttt{view}. Tyto expandované uzly již obsahují data o detailu a tedy není třeba žádného dalšího volání.
 \end{itemize}

@@ -44,7 +44,7 @@ Konfigurací se rozumí uzel v RDF grafu který popisuje, jak by měla aplikace 
 
 Příkladem konfigurace může být kupříkladu procházení slavných osobností na Wikidatech. Takováto konfigurace pak umožňuje uživateli chodit po uzlech reprezentující slavné osobnosti a dotazovat se například na filmy které natočily a knihy, které napsaly.
 
-\subsection{ViewSet}
+\subsection{ViewSet} \label{pozadavky-view-sets}
 View set reprezentuje skupinu pohledů. Pravý smysl pohledů pochopí čtenář dále v textu. View set má následující vlastnosti:
 \begin{itemize}
     \item \texttt{dct:title} Název view setu \textit{(je možné zadat ve více jazycích)}
@@ -65,7 +65,7 @@ View (česky pohled) je způsob, jak můžeme pohlížet na konkrétní uzel v R
     \item \texttt{browser:hasDetail} Odkaz na detail - určuje která data se zobrazí v detailu konkrétního uzlu \textit{(popsáno dále)}
 \end{itemize}
 
-\subsection{Expansion}
+\subsection{Expansion} \label{pozadavky-expansion}
 Expansion popisuje jak lze daný uzel expandovat, tedy jedná se o operaci kdy se stahují nové uzly jež jsou nějak příbuzné expandovanému uzlu. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy co napsala daná osoba}. Expanze formálně partří k pohledu (view).
 \begin{itemize}
     \item \texttt{dct:title} Název expanze \textit{(je možné zadat ve více jazycích, aktuálně se nepoužívá)}
@@ -73,14 +73,14 @@ Expansion popisuje jak lze daný uzel expandovat, tedy jedná se o operaci kdy s
     \item \texttt{browser:query} Popisuje SPARQL dotaz který bude spuštěn na endpointu datasetu.
 \end{itemize}
 
-\subsection{Preview}
+\subsection{Preview} \label{pozadavky-preview}
 Preview popisuje která data v rámci daného pohledu (view) popisují daný uzel. Popisem se myslí taková data, kretá mají na svědomí stylování uzlu. V aplikaci je možné mít uzly různých barev a tvarů, to právě popisuje preview. Obdobně jako expanze, preview patří ke konkrétnímu pohledu.
 
 Preview má stejné vlastnosti jako expanze. \texttt{browser:query} v tomto případě popisuje SPARQL dotaz, který vrátí graf obsahující daný uzel a jeho literály a z těchto literálů bude sestaven preview.
 
 Konkrétně pro preview je predikát \texttt{browser:class} považován na třídy uzlu a ty jsou nastaveny jako třídy v knihovně Cytoscape\footnote{\url{https://js.cytoscape.org/}}, která je využíváná v klientské části na krelsení grafů.
 
-\subsection{Detail}
+\subsection{Detail} \label{pozadavky-detail}
 Detail je poslední z trojice a poskytuje dodatečné informace k uzlu. Může se jednat o literály které nemá smysl v dané konfiguraci vykreslit do grafu jako uzly, proto budou zobrazeny v bočním panelu aplikace.
 
 Detail má stejné vlastnosti včetně \texttt{browser:query} jako preview.
@@ -94,7 +94,7 @@ Dataset popisuje SPARQL endpoint vůči kterému probíhá dotazování na data.
     \item \texttt{browser:accept} todo
 \end{itemize}
 
-\subsection{Visual style sheet}
+\subsection{Visual style sheet} \label{pozadavky-visual-style-sheet}
 Popisuje jakž styl mají mít uzly v dané konfiguraci. Popis je založen na datech pocházejících právě z \textbf{preview}. Forma zápisu stylů aktuálně odpovídá stylům jaké používá knihovna Cytoscape.
 
 Visual style sheet má pouze jednu vlastnosti
@@ -127,3 +127,27 @@ Chachování aktuálně implementováno ještě není, server je tedy kompletně
 Převážná část serveru byla napsána mým vedoucím a sloužila jako forma specifikace na klientskou část. Server bude podrobněji rozebrán v další kapitole.
 
 \subsection{Klient}
+Požadavkem bylo vyrobit webovou aplikaci schopnou komunikovat se serverem a uživateli vizuálně zobrazovat uzly a hrany na obrazovce. Mezi původními požadavky na software bylo (požadavky jsou zkráceny):
+
+\begin{enumerate}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+\item Uživatel je schopen vybrat IRI konfigurace.
+\item Uživatel je schopen vybrat IRI stylesheetu podle kterého budou obarveny a jinak zvýrazněny uzly.
+\item Uživatel je schopen přidat uzel na základě jeho IRI a zobrazit si k němu detail.
+\item Pokud uživatel klikne na uzel, zobrazí se mu nabídka s detailem a možností další expanze.
+\item \textit{sjednoceno do 4}
+\item Uživatel může uzel skrýt. V menu je možnost zobrazit skryté uzly.
+\item Dvojklikem na uzel se provede expanze podle aktuálního pohledu. Tu je možné provést také pomocí požadavku 4.
+\item Uzly je možné filtrovat podle grafových vlastností.
+\item Uzly je možné filtrovat podle sémantických vlastností.
+\item Uživatelské rozhraní je multijazyčné.
+\item Graf je možné uložit do souboru a poté jej ze souboru obnovit.
+\item Uživatel může uzel z grafu smazat.
+\item Uživatel může přidávat uzly pomocí autocomplete z před připraveného JSON souboru.
+\end{enumerate}
+
+Časem byly do aplikace doplněné další požadavky jako
+\begin{itemize}[topsep=0pt,itemsep=-1ex,partopsep=1ex,parsep=1ex]
+\item Volba různých layoutů.
+\item Uzly mohou být seskupovány do skupin.
+\item Podpora metakonfigurací.
+\end{itemize}
