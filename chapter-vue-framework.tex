@@ -1,5 +1,3 @@
-%%% Fiktivní kapitola s ukázkami sazby
-
 \chapter{Vue.js framework}
 Klientská část aplikace je postavena nad Vue.js frameworkem, jež je populární JavaScriptový framework na stavbu uživatelských rozhraní. Protože některé z jeho funkcionalit byly použity v klíčových částech aplikace, je nutné čtenáře obeznámit alespoň se základním principem fungování frameworku.
 
@@ -73,10 +71,16 @@ Ukázka jednoduché Vue komponenty \texttt{IndexedList} která má parametr \tex
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   ul {
     color: red;
   }
 </style>
 \end{code}
 \end{prikl}
+
+\subsection*{Scoped styly}
+
+Můžeme si povšimnout \texttt{scoped} stylů v ukázce. Vue má mechanismus, že styly které zde nastavíme se aplikují jen na tuto komponentu. Nastavením červené barvy na seznam jsme tedy skutečně nastavili červenou barvu jen této komponentě a ostatní seznamy jsou netknuté. Toto má nespornou výhodu pokud pracujeme s velkým množstvím komponent a hrozilo by, že bychom museli používat složitě pojmenované css třídy aby nedošlo ke kolizi.
+
+Pokud bychom chtěli ovlivnit styly vnořených komponent a máme nastavené scoped styly, musíme použít pseudoselektor \texttt{::v-deep}, kupříkladu \\ \texttt{.actions ::v-deep .v-input--selection-controls}. Tohoto je hodně používáno poukud je potřeba upravit styly Vuetify frameworku (viz dále).
