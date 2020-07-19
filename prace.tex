@@ -127,6 +127,9 @@ Abstract.
 \usepackage[hyphens]{url}
 \usepackage{enumitem}
 
+\usepackage{xcolor}
+\newcommand{\todo}[1]{{\color{red} TODO: #1}}
+
 %% Titulní strana a různé povinné informační strany
 \begin{document}
 \include{titulka}
@@ -137,12 +140,12 @@ Abstract.
 
 %%% Jednotlivé kapitoly práce jsou pro přehlednost uloženy v samostatných souborech
 \include{chapter-uvod}
-\include{chapter-vue-framework}
-\include{chapter-pozadavky-na-system}
-\include{chapter-serverova-cast}
-\include{kap03}
-
-\include{zaver}
+\include{chapter-technicke-predpoklady}
+\include{chapter-analyza}
+\include{chapter-navrh}
+\include{chapter-implementace}
+\include{chapter-testovani}
+\include{chapter-zaver}
 
 %%% Seznam použité literatury
 \include{literatura}
