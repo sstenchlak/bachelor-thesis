@@ -17,7 +17,7 @@ Chachování aktuálně implementováno ještě není, server je tedy kompletně
 \section{Server}
 Jak již bylo zmíněno dříve, převážná část serveru byla napsána mým vedoucím Martinem Nečaským a sloužila i jako technická specifikace pro klientsou část. Server je napsaný v JavaScriptu a běží v Node.js\footnote{\url{https://nodejs.org/}}. Server je bezestavový a odpovídá na požadavky zmíněné dále.
 
-\subsection{Jazyková podpora}
+\subsection{Jazyková podpora} \label{jazykova-podpora}
 Server jsem částečně přepsal, aby podporoval dotazování na data z více světových jazyků. Některé požadavky přijímají parametr \texttt{languages} obsahující čárkou (\texttt{,}) oddělené ISO 639-1 jazykové kódy. Server pak vrací objekty jejiž klíčem je jazykový kód a hodnotou daný překlad do jazyka. Pokud překlad neexistuje, hodnotou je \texttt{null}. V případě, že na všechny jazyky bylo vráceno \texttt{null}, server se pokusí přidat další jazyk, který existuje. Který jazyk takto bude vybrán není určeno.
 
 \begin{prikl}
@@ -179,3 +179,29 @@ interface ResponseElementNode {
 
 
 \section{Klient}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{media/graph.pdf}
+    \caption{Class diagram části aplikace jež pracuje s grafem.}
+\end{figure}
+
+\subsection{Moduly}
+
+\subsubsection{Připojení na server}
+Tento modul řeší komunikaci se serverem.
+
+\subsubsection{Graf}
+Tato část aplikace reprezentuje stažený graf a všechny jeho data. Má metody pro práci s grafem, jeho modifikaci a stahování nových dat ze serveru.
+
+\subsubsection{Filtrování}
+Tento modul integruje možnost filtrování vrcholů v aplikaci na základě různých grafových a sémantických vlastností. Modul se dá rozšířit o další filtry i za runtime a nabízí tedy možnost instalace pluginů.
+
+\subsubsection{Layoutování}
+Modul řeší uspořádání vrcholů v grafu. Layoutování reaguje na významné události z grafu. Jedná se například o vložení nového vrcholu, expanzi, přesunutí vrcholů, zamčení vrcholů atp. Stejně jako filtrování, jednotlivé layouty lze přidávat za runtime a je tedy možné s pomocí pluginů přidat nové layouty.
+
+\subsubsection{Vyhledávání}
+Modul vyhledávání vrací vrcholy na základě textového řetězce. Vyhledává v grafu, z autocomplete nebo se pokusí IRI sestavit z hledaného výrazu. Jednotlivé vyhledávače lze rozšířit o další stejně jako u filtrování a layoutování.
+
+\subsubsection{Ukládání do souboru}
+Řeší jak uložit a znova načíst stav aplikace do a ze souboru.

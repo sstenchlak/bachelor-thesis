@@ -58,7 +58,7 @@ View set reprezentuje skupinu pohledů. Pravý smysl pohledů pochopí čtenář
     \item \texttt{browser:hasDataset} Dataset vůči kterému probíhá ASK dotaz. \textit{(popsáno dále)}
 \end{itemize}
 
-\subsection{View}
+\subsection{View} \label{pozadavky-view}
 Konkrétní pohled na uzel jež byl vysvětlen v úvodu. View má následující vlastnosti:
 
 \begin{itemize}
@@ -168,9 +168,10 @@ Uživatel může ručně zadat IRI vrcholu který se následně zobrazí v grafu
 
 \paragraph{Analýza} Pro úspěšné zobrazení vrcholu musí aplikace znát preview vrcholu. Preview lze ale získat pouze z konkrétního pohledu a je tedy nutné nejprve stáhnout view sety daného vrcholu, z nich následně vybrat defaultní a zvolit výchozí pohled. Pak je možné zavolat metodu \texttt{preview} na serveru a získat data o uzlu.
 
-IRI uzlu budeme považovat za chybné, pokud server vrátí prázdnou množinu view sets. V takovém případě totiž nejde aplikovat žádné pohledy na uzel a tedy zřejmě nepatří do dané konfigurace.
-
-Vrchol může být již v grafu přítomen, pak bude viditelně zvýrazněn. Pokud je uzel skrytý, bude odkryt. Pokud jsou zapnuté filtry a uzel je skrytý filtrem, uzel se v grafu nezobrazí. Pokud se uzel podaří načíst, nebo již existuje, bude vybrán a zobrazí se jeho detail v pravém panelu.
+\begin{itemize}
+    \item IRI vrcholu bude považováno za chybné, pokud server vrátí prázdnou množinu na dotaz \texttt{view-sets}. V takovém případě totiž nejde aplikovat žádné pohledy na uzel a tedy zřejmě nepatří do dané konfigurace.
+    \item Vrchol může být již v grafu přítomen, pak bude viditelně zvýrazněn. Pokud je vrchol skrytý, bude odkryt. Pokud jsou zapnuté filtry a vrchol je skrytý filtrem, vrchol se v grafu nezobrazí. Pokud se vrchol podaří načíst, nebo již existuje, bude vybrán a zobrazí se jeho detail v pravém panelu.
+\end{itemize}
 
 \subsection{Detail vrcholu}
 Pokud uživatel klikne na vrchol, zobrazí se panel s podrobnými informacemi o uzlu. Bude zobrazen detail uzlu voláním metody \texttt{detail} na serveru a budou zobrazeny veškeré pohledy vrcholu, možnost je přepínat a provádět expanze podle daného pohledu.
@@ -219,7 +220,7 @@ Typy a třídy vrcholů nejsou známy předem a API serveru neumožňuje získat
 \subsection{Vícejazyčné uživatelské rozhraní}
 Uživatel může přepínat mezi více jazyky uživatelského rozhraní. Aktuálně bude podporována pouze angličtina a čeština.
 
-\paragraph{Analýza} Kromě uživatelského rozhraní by měl být vícejazyčný i graf. Aktuální API serveru toto ještě neumožňuje a problém je předmětem poslední kapitoly. Multijazyčnost zatím podporují metody \texttt{meta-configuration} a \texttt{configuration} na serveru. Protože obecně můžou existovat překlady do spousty světových jazyků, je vhodné stahovat pouze požadovaný jazyk a při jeho změně stáhnout nový jazyk. Podrobněji je toto rozebráno v kapitole s implementací. \todo{ref}
+\paragraph{Analýza} Kromě uživatelského rozhraní by měl být vícejazyčný i graf. Aktuální API serveru toto ještě neumožňuje a problém je předmětem poslední kapitoly. Multijazyčnost zatím podporují metody \texttt{meta-configuration} a \texttt{configuration} na serveru. Protože obecně můžou existovat překlady do spousty světových jazyků, je vhodné stahovat pouze požadovaný jazyk a při jeho změně stáhnout nový jazyk. Podrobněji je toto rozebráno v kapitole s implementací.
 
 Pro velké grafy může být překlad problémem, protože změna jazyku může vyvolat spoustu požadavků na datové zdroje. Pro překlad grafu by tedy bylo nejlepší stáhnout překlad až když si uživatel zobrazí detail, nebo explicitně neoznačí vrcholy na překlad. Taktéž je vhodné oddělit výběr jazyka pro obsluhu aplikace a výběr konfigurací od překladu jednotlivých vrcholů. Příkladem může být procházení měst v Japonsku anglicky mluvícím uživatelem, kdy je žádoucí, aby názvy měst byly v originále.
 
