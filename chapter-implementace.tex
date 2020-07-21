@@ -382,3 +382,54 @@ protected stylesheetUpdated() {
 }
 \end{code}
 S pomocí dekorátoru nastavíme sledování \texttt{finalStylesheet}. Jamile dojde k jeho změně, zavolá se metoda která předá knihovně (\texttt{this.cy}) nový stylesheet. Nesmíme zapomenout objekt oklonovat, protože nemáme zaručeno, že ho knihovna nebude upravovat. Pokud by kupříkladu knihovna objekt vždy upravila, například z optimalizačních důvodů, Vue framework by zachytil změnu stylu a znoa by zavolal tuto funkci a situace by se opakovala.
+
+\bigskip
+Komponenta pak ke každému vrcholu, hraně a skupině vytvoří vlastní komponentu která tento prvek reprezentuje a spravuje. Jako příklad uveďme vytvoření komponent reprezentujících vrchol.
+
+\begin{code}
+<graph-element-node
+  v-for="node in graph.nodes"
+  v-if="node.mounted && !node.belongsToGroup"
+  :node="node"
+
+  ...
+/>
+\end{code}
+
+\subsection{Komponenty GraphElementNode, GraphElementNodeGroup a GraphElementNodeMixin}
+Jak již bylo zmíněno v popsiu Vue frameworku a z příkladu výše, framework automaticky pro kažý vrchol grafu který je \texttt{mounted} a není ve skupině, vytvoří kopmonentu \texttt{GraphElementNode}. Ta se pak stará o zobrazení tohoto vrhcholu v rámci Cytoscape knihovny.
+
+Obdobně jako jsme měli třídy \texttt{NodeCommon}, \texttt{Node} a \texttt{NodeGroup} i zde komponenty \texttt{GraphElementNodeMixin}, \texttt{GraphElementNode} a \texttt{GraphElementNodeGroup} jež si navzájem odpovídají.
+
+Mezi významné metody patří
+\begin{itemize}
+  \item \texttt{mount()} - Metoda se volá automaticky když je komponenta vytvořena v této metodě probíhá registrace vrcholu v Cytoscape knihovně. Kromě vytvoření uzlu zde probíhá i registrace důležitých eventů a registrace knihovny Popper\footnote\url{https://popper.js.org/} jež má na starosti pozicování elementů vůči různým objektům, zde právě vůči vrcholům na plátně. Tak jsme schopni vykreslit k vrcholům ikonky, pokud jsou vrcholy uzamčeny.
+  \item \texttt{beforeDestroy()} - Metoda je volána před tím, než Vue framework zničí komponentu. V této části probíhá odstranění vrcholu z grafu.
+\end{itemize}
+
+\paragraph{Souhrn} Díky těmto dvěma metodám a kompletnímu managementu Vue frameworku nám stačí do třídy \texttt{Graph} přidat nový uzel a ten se automaticky vykreslí do grafu. Opětovným odstraněním uzlu z kontejneru dojde k jeho smazání.
+
+\medskip
+
+Komponenty obsahují spoustu dalších metod pro aktualizaci stylů, pozic vrcholů a podobně. Uveďme ještě konkrétní příklad pro vybírání uzlů.
+\begin{code}
+@Watch('node.selected')
+protected selectedChanged() {
+    if (this.node.selected) {
+        this.element.select();
+    } else {
+        this.element.unselect();
+    }
+}
+
+mounted() {
+    ...
+
+    this.element.on("select", () => this.node.selected = true);
+    this.element.on("unselect", () => this.node.selected = false);
+
+    ...
+}
+\end{code}
+
+Jak lze vidět z ukázky, první metodou zařídíme že událost vybrání vrcholu putuje z Vue frameworku do Cytoscape knihovny. Ve druhé metodě pak definujeme opačný směr a máme tak docíleno, že pokud uživatel klikne na vrchol, dojde k nastavení \texttt{selected} což může otevřít kupříkladu panel s detailem o vrcholu.
