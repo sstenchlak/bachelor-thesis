@@ -3,13 +3,13 @@
 \section{Resource Description Framework}
 Resource Description Framework zkráceně RDF je rodina specifikací (tedy sada pravidel) která se používá na popis informací na internetu. RDF popisuje data jako graf, konkrétně vrcholy grafu jsou entity, jež ztvářňují nějaké věci (fyzické předměty, díla, myšlenky) a hrany tyto entity propojují a dávají jim vztahy.
 
-Základem je takzvaný \textbf{statement} (česky trojice). Statement se skládá v tomto pořadí ze subjektu, predikátu a objektu přičemž subjekt a objekt jsou vrcholy (anglicky \textbf{nodes}) a predikát je orientovanou hranou jdoucí od subjektu k objektu.
+Základem je takzvaný \textbf{statement} (česky tvrzení). Tvrzení je vyjádřeno formou trojice v tomto pořadí ze subjektu, predikátu a objektu, přičemž subjekt a objekt jsou vrcholy (anglicky \textbf{nodes}) a predikát je orientovanou hranou jdoucí od subjektu k objektu.
 
 Vrcholem v RDF může být IRI, literál, nebo prázdný uzel.
 
 \medskip
 
-Jako vrchol IRI (Internationalized Resource Identifier) se rozumí vrchol jež přiřazuje entitě nějaký identifikátor ve tvaru IRI. Tímto jsme schopni v rámci WWW identifikovat různé entity a pracovat s nimi napříč různými zdroji. Ku příkladu Karel Čapek, zmíněný v úvodu, je v rámci Wikipedie jednoznačně identifikován jako \url{https://www.wikidata.org/wiki/Q155855}. IRI kromě identifikátoru nenese žádné další informace včetně jména. IRI tedy reprezentuje nějakou neznámou entitu, která musí být popsaná statementy aby dostala význam.
+Jako vrchol IRI (Internationalized Resource Identifier) se rozumí vrchol jež přiřazuje entitě nějaký identifikátor ve tvaru IRI. Tímto jsme schopni v rámci WWW identifikovat různé entity a pracovat s nimi napříč různými zdroji. Ku příkladu Karel Čapek, zmíněný v úvodu, je v rámci Wikidat jednoznačně identifikován jako \url{https://www.wikidata.org/wiki/Q155855}. IRI kromě identifikátoru nenese žádné další informace včetně jména, reprezentuje tedy nějakou entitu, která musí být popsaná tvrzeními, aby dostala význam.
 
 \medskip
 
@@ -22,16 +22,18 @@ Literály nám tedy dávají možnost přidat IRI uzlům různé hodnoty a podpo
 Nakonec, hrana je opět popsána pomocí IRI jež reprezentuje typ vztahu.
 
 \subsection{Turtle jazyk}
-RDF graf může být popsán pomocí Turtle jazyka\footnote{\url{https://www.w3.org/TR/turtle/}}. Ten je využit při zápisu konfigurací a metakonfigurací, jež jsou popsány dále v tomto dokumentu.
+RDF graf může být popsán pomocí Turtle jazyka\footnote{\url{https://www.w3.org/TR/turtle/}}. Ten je využit při zápisu konfigurací, jež jsou popsány dále v tomto dokumentu.
 
-Trojice (statementy) se zapisují jako tři slova oddělená mezerami a zakončená tečkou. Chceme-li zapsat IRI, musíme jej dát do špičatých závorek \texttt{<>}. Na začátku dokumentu lze kromě dalších věcí definovat i prefixy, které pak umožňují zkrátit zapisované IRI do namespacu a zbytku \texttt{namespace:zbytek}.
+Trojice (tvrzení) se zapisují jako tři slova oddělená mezerami a zakončená tečkou. Chceme-li zapsat IRI, musíme jej dát do špičatých závorek \texttt{<>}. Na začátku dokumentu lze definovat prefixy, které pak umožňují zkrátit zapisované IRI do namespace a zbylé části \texttt{namespace:zbytek}.
 
-Pokud se nám u statementů opakuje subjekt a predikát, můžeme jednotlivé objekty oddělovat čárkou (\texttt{,}). Obdobně, pokud se nám opakuje jen subjekt, můžeme dvojice predikát-objekt oddělovat středníkem (\texttt{;}).
+Pokud se nám u trojic opakuje subjekt a predikát, můžeme jednotlivé objekty oddělovat čárkou (\texttt{,}). Obdobně, pokud se nám opakuje jen subjekt, můžeme dvojice predikát-objekt oddělovat středníkem (\texttt{;}).
+
+\newpage
 
 Uveďme několik příkladů RDF grafu.
 
 \begin{prikl}
-Statement \uv{Karel Čapek se narodil 9. ledna 1890} vyjádřený v rámci wikidat.
+Tvrzení \uv{Karel Čapek se narodil 9. ledna 1890} vyjádřené v rámci Wikidat.
 \begin{code}
 @prefix wd: <https://www.wikidata.org/wiki/> .
 @prefix wdt: <https://www.wikidata.org/wiki/Property:> .
@@ -40,14 +42,14 @@ Statement \uv{Karel Čapek se narodil 9. ledna 1890} vyjádřený v rámci wikid
 wd:Q155855 wdt:P569 "1890-01-09"^^xsd:dateTime .
 \end{code}
 
-Kód popisuje jeden statement kdy se Karlu Čapkovi \\ \url{https://www.wikidata.org/wiki/Q155855} přiřadí přes property datum narození \url{https://www.wikidata.org/wiki/Property:P569} literál s jeho datem narození, jež má typ \url{http://www.w3.org/2001/XMLSchema#dateTime}.
+Kód popisuje jedno tvrzení, kdy se Karlu Čapkovi \\ \url{https://www.wikidata.org/wiki/Q155855} přiřadí přes property datum narození \url{https://www.wikidata.org/wiki/Property:P569} literál s jeho datem narození, jež má typ \url{http://www.w3.org/2001/XMLSchema#dateTime}.
 \end{prikl}
 
-Jak lze vidět z příkladu, statementy nemusí odkazovat jen na svůj dataset, ale mohou odkazovat i mimo něj. To nám dovoluje stavět již na existujících datasetech a jednoduše se na ně okazovat přes IRI. Můžeme tak mít vlastní knihovní databázi jež ke knize přiradí autora z datasetu Wikidat. Tímto jsme propojili dva datasety, což nám umožní se nad oběma dotazovat. Příkladem takového dotazu by mohlo být \uv{Chci seznam knih v naší knihovně, jež byly napsány českými autory.} Takový dotaz pak současně prohledá dva různé datasety a vrátí očekávané výsledky.
+Jak lze vidět z příkladu, tvrzení nemusí odkazovat jen na svůj dataset, ale i mimo něj. To nám dovoluje stavět již na existujících datasetech a jednoduše se na ně okazovat přes IRI. Můžeme tak mít vlastní knihovní databázi jež ke knize přiradí autora z datasetu Wikidat. Tímto jsme propojili dva datasety, což nám umožní nad nimi provádět dotazy. Příkladem takového dotazu by mohlo být \uv{Chci seznam knih v naší knihovně, jež byly napsány českými autory.} Takový dotaz pak současně prohledá dva různé datasety a vrátí očekávané výsledky.
 
-Uveďme ještě příklad statementu, jež se odkazuje na další entity.
+Uveďme ještě příklad tvrzení, jež se odkazuje na další entity.
 \begin{prikl}
-Statement \uv{Děti Antonína Čapka jsou Karel, Josef a Helena} vyjádřený v rámci wikidat.
+Tvrzení \uv{Děti Antonína Čapka jsou Karel, Josef a Helena} vyjádřené v rámci Wikidat.
 \begin{code}
 @prefix wd: <https://www.wikidata.org/wiki/> .
 @prefix wdt: <https://www.wikidata.org/wiki/Property:> .
@@ -61,10 +63,10 @@ wd:Q6657059 wdt:P40 wd:Q155855 ,
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{media/rdf.pdf}
-    \caption{Příklad grafu který získáme z předešlých dvou ukázek}
+    \caption{Příklad grafu který získáme z předešlých dvou ukázek.}
 \end{figure}
 
-Pro úplnost zmiňme ještě například následující graf popisující vztahy mezi lidmi, které jsou vyjádřeny ontologií FOAF (friend of a friend). Pokud by všechny zdroje popisující lidi využívali tuto ontologii, měli bychom jednotný interface jak přistupovat k lidským vstahům.
+Pro úplnost zmiňme ještě následující graf popisující vztahy mezi lidmi, které jsou vyjádřeny ontologií FOAF (friend of a friend). Pokud by všechny zdroje popisující lidi využívaly tuto ontologii, měli bychom jednotné rozhraní, jak přistupovat k lidským vztahům.
 
 \begin{code}
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -79,4 +81,33 @@ example:Pavel-Novotný foaf:name "Pavel Novotný" ;
 \end{code}
 
 \subsection{SPARQL jazyk}
-Jakyk SPARQL slouží na dotazování nad RDF daty a jejich manipulaci a je použit v definici konfigurací, kde jsou pomocí něj definovány dotazy na získání dalších vrcholů grafu.
+Jakyk SPARQL\footnote{\url{https://www.w3.org/TR/sparql11-overview/}} slouží k definici dotazů nad RDF daty a jejich manipulaci.
+
+SPARQL má 4 typy dotazů:
+\begin{itemize}
+    \item \texttt{SELECT} dotaz vrací data z databáze ve formě tabulky obdobně jako u tabulkových databází. Můžeme tak například k jedné entitě vrátit hned několik vlastností jako různé sloupce tabulky.
+    \item \texttt{CONSTRUCT} dotaz vrací data ve formě RDF grafu. Tento dotaz tedy použijeme, pokud chceme s výsledkem dále pracovat jako s grafem.
+    \item \texttt{ASK} dotaz vrací pravdivostní hodnotu ano/ne podle toho, zda dotaz uspěl. Může být využit například ke zjištění, zda se konkrétní data již v databázi nacházejí.
+    \item \texttt{DESCRIBE} dotaz obdobně jako \texttt{CONSTRUCT} vrací RDF graf, s tím rozdílem, že zde určuje databáze, jaká data na dotaz dostaneme. Výhoda tohoto typu dotazu je ta, pokud neznáme strukturu grafu a chceme tedy získat \uv{nějaké} informace o vrcholu.
+\end{itemize}
+
+\newpage
+
+\begin{prikl}
+Dotaz, jež nám vrátí seznam děl Karla Čapka a jejich data vydání z Wikidat.
+\begin{code}
+PREFIX wd: <https://www.wikidata.org/wiki/>
+PREFIX wdt: <https://www.wikidata.org/wiki/Property:>
+
+SELECT ?title ?publication_date
+WHERE
+{
+    wd:Q155855 wdt:P800 ?work .
+    ?work wdt:P1476 ?title ;
+          wdt:P577 ?publication_date .
+}
+\end{code}
+Jedná se o \texttt{SELECT} dotaz, tedy jako výsledek dostaneme tabulku, jež má sloupce \texttt{title} a \texttt{publication_date}.
+
+Dotaz se nejprve zeptá na všechny vrcholy které dostaneme přes vlastnost \texttt{wdt:P800} kterou Wikidata definují jako \uv{dílo - významné vědecké, umělecké či jiné dílo}. Tyto vrcholy jsou pak reprezentovány proměnnou \texttt{?work}. Na dalších dvou řádcích se pak dotazujeme, jaký titulek (\texttt{wdt:P1476}) má \texttt{?work} a uložíme ho do \texttt{?title}, který je i prvním sloupcem výstupu. Dále se pak obdobně ptáme na datum publikace, které je také součástí výsledku.
+\end{prikl}

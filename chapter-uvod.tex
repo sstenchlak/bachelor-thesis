@@ -7,11 +7,11 @@ Pro lidi je systém WWW vyhovující zdroj informací, nicméně narazíme na pr
 
 Možností řešení tohoto problému je zveřejňovat data i ve strojové podobně. Nabízí se například tabulky ve formátu CSV, nebo komplikovanější data ve formátu JSON a XML. Zde je již snadné číst data a dál je zpracovávat, ale programátor je stále nucen pochopit a přizpůsobit program na rozhraní těchto dat.
 
-Konečným řešením se nabízí popsat data pomocí RDF frameworku, jež je popsán důkladněji v následující kapitole.
+Možným řešením se nabízí popsat data pomocí RDF frameworku, jež je důkladněji rozebrán v následující kapitole.
 
 \bigskip
 
-Tato práce se zabývá reprezentací dat popsancýh právě pomocí RDF. RDF reprezentuje entity z reálného světa jako vrcholy grafu a jejich vlastnosti pomocí hran propojující tyto entiy. Data uložená v grafových databázích jsou snadno čitelná počítačovými programy a je jednoduché propojovat různé datové zdroje do větších a provádět nad nimi dotazy.
+Tato práce se zabývá reprezentací dat popsaných právě pomocí RDF. RDF reprezentuje entity z reálného světa jako vrcholy grafu a jejich vlastnosti pomocí hran propojující tyto entiy. Data uložená v grafových databázích jsou snadno čitelná počítačovými programy a je jednoduché propojovat různé datové zdroje do větších celků a provádět nad nimi dotazy.
 
 Jako veškerá strojová data je potřeba i tyto grafová data vizualizovat. Příkladem může být datový analytik, který se chce přesvědčit, že jsou data uložena tak, jak bylo zamýšleno.
 
@@ -24,9 +24,9 @@ Jako modelový příklad vizualizace uveďme entitu Karla Čapka a některá jeh
     \label{fig:capek-full}
 \end{figure}
 
-Jak vidíme z obrázku \ref{fig:capek-full}, zobrazit všechna data k uzlu může být velmi nepřehledné a takovýchto dat může být stovky. Pokud nás například zajímají pouze díla Karla Čapka, určitě v grafu nebudeme chtít mít informaci, že Karel Čapek je člověk. Možností řešení tohoto problému je dívat se na entity pouze určitým pohledem a tedy zobrazit pouze ty vztahy k vrcholu, jež odpovídají pohledu.
+Jak vidíme z obrázku \ref{fig:capek-full}, zobrazit všechna data k uzlu může být velmi nepřehledné a takovýchto uzlů může být stovky. Pokud nás například zajímají pouze díla Karla Čapka, určitě v grafu nebudeme chtít mít informaci, že je Karel Čapek člověk. Možností řešení tohoto problému je dívat se na entity pouze určitým pohledem, a tedy zobrazit pouze ty vztahy k vrcholu, jež odpovídají pohledu.
 
-Kupříkladu pokud bychom chtěli procházet rodokmenem, je vhodné se na Karla Čapka dívat jako na osobu, jež má rodiče a sama může být rodičem ostatních osob. V tuto chvíli nás nezajímají ostatní vlastnosti jako knihy, které napsal, nebo ocenění, která získal. Na Karla Čapka se ale můžeme dívat i jako na spisovatele, kde nás pak zajímají pouze jeho díla a rodinné vztahy můžeme skrýt. Příklad tekovýchto pohledů je na obrázku \ref{fig:capek-part}.
+Kupříkladu pokud bychom chtěli procházet rodokmenem, je vhodné se na Karla Čapka dívat jako na osobu, jež má rodiče a sama může být rodičem ostatních osob. V tuto chvíli nás nezajímají ostatní vlastnosti jako knihy, které napsal, nebo ocenění, která získal. Na Karla Čapka se ale můžeme dívat i jako na spisovatele, kde nás pak zajímají pouze jeho díla a rodinné vztahy můžeme skrýt. Příklad takovýchto pohledů je na obrázku \ref{fig:capek-part}.
 
 \begin{figure}[h]
     \centering
