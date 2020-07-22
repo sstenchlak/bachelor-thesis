@@ -1,10 +1,10 @@
 \chapter{Návrh architektury}
 
-Bylo zamýšleno, že klientská aplikace bude komunikovat se serverovou částí, která bude stahovat data z různých datových zdrojů a výsledky posílat zpět klientské aplikaci. Ta v případě potřeby bude stahovat přímo z internetu obrázky, pokud na ně uzly odkazují. Idea rozdělení klienta a serveru byla v tom, že v budoucnu může být na serveru implementováno chachování, aby aplikace byla plynulejší a neprobíhalo zatěžování datových zdrojů.\footnote{Při příliš rychlém stahování z Wikidat lze bohužel snadno dostat IP ban, tedy alespoň pro Wikipedii je cachování nezbytné.}
+Aplikace je rozdělena na serverovou a klientskou část. Server slouží pro odstínění klienta od RDF databází, komunikuje tedy přímo s datovými zdroji a zpracované data předává klientské aplikaci. Klient pak v případě potřeby z internetu stahuje externí obrázky (příkladem jsou konfigurace Wikidat, které obsahují URL odkazy) a autocomplete soubory.
 
-Server tak slouží na odstínění od link datové vrstvy a v budoucnu pro cachování dat.
+Rozdělení aplikace na klient-server také umožňuje cachování na straně serveru, které ještě implementováno není. Tento problém je diskutován v poslední kapitole.
 
-Chachování aktuálně implementováno ještě není, server je tedy kompletně bezestavový.
+Server tak slouží na odstínění od link datové vrstvy a v budoucnu pro cachování dat, aktuálně je bezestavový.
 
 \begin{figure}[h]
     \centering
@@ -12,13 +12,13 @@ Chachování aktuálně implementováno ještě není, server je tedy kompletně
     \caption{Komunikace mezi klientem, serverem a datovými zdroji. Cachování na serveru ještě implemontováno není.}
 \end{figure}
 
-
-
 \section{Server}
-Jak již bylo zmíněno dříve, převážná část serveru byla napsána mým vedoucím Martinem Nečaským a sloužila i jako technická specifikace pro klientsou část. Server je napsaný v JavaScriptu a běží v Node.js\footnote{\url{https://nodejs.org/}}. Server je bezestavový a odpovídá na požadavky zmíněné dále.
+Jak již bylo v dokumentu zmíněno, převážná část serveru byla dodána jako specifikace pro klientskou aplikaci.
 
 \subsection{Jazyková podpora} \label{jazykova-podpora}
 Server jsem částečně přepsal, aby podporoval dotazování na data z více světových jazyků. Některé požadavky přijímají parametr \texttt{languages} obsahující čárkou (\texttt{,}) oddělené ISO 639-1 jazykové kódy. Server pak vrací objekty jejiž klíčem je jazykový kód a hodnotou daný překlad do jazyka. Pokud překlad neexistuje, hodnotou je \texttt{null}. V případě, že na všechny jazyky bylo vráceno \texttt{null}, server se pokusí přidat další jazyk, který existuje. Který jazyk takto bude vybrán není určeno.
+
+Tato implementace umoňuje stahování vícejazyčných dat tak, že jsou stažené jen žádané jazyky, což může značně ušetřit přenos dat v některých případech, ale současně dojde ke stažení alespoň jednoho podporovaného jazyka, pokud je to možné.
 
 \begin{prikl}
 Pro \texttt{languages=cs,en} může server vrátit například
@@ -176,6 +176,12 @@ interface ResponseElementNode {
     classes: string[];
 }
 \end{code}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{media/sequence-server.pdf}
+    \caption{Schéma komunikace se serverem a RDF databází při spuštění aplikace. Nejprve klient vybírá konfiguraci. Poté začne stahování stylesheetu a stahování prvního vrcholu. Nejprve se stáhnout \texttt{view-sets} a poté z výchozího pohledu se stáhne \texttt{detail} a vrchol se zobrazí na grafu.}
+\end{figure}
 
 
 \section{Klient}
