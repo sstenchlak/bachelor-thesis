@@ -1,10 +1,8 @@
 \chapter{Návrh architektury}
 
-Aplikace je rozdělena na serverovou a klientskou část. Server slouží pro odstínění klienta od RDF databází, komunikuje tedy přímo s datovými zdroji a zpracované data předává klientské aplikaci. Klient pak v případě potřeby z internetu stahuje externí obrázky (příkladem jsou konfigurace Wikidat, které obsahují URL odkazy) a autocomplete soubory.
+Aplikace je rozdělena na serverovou a klientskou část. Server slouží pro odstínění klienta od RDF databází, komunikuje tedy přímo s datovými zdroji a zpracovaná data předává klientské aplikaci. Klient pak v případě potřeby z internetu stahuje externí obrázky (příkladem jsou konfigurace Wikidat, které obsahují URL odkazy) a autocomplete soubory.
 
 Rozdělení aplikace na klient-server také umožňuje cachování na straně serveru, které ještě implementováno není. Tento problém je diskutován v poslední kapitole.
-
-Server tak slouží na odstínění od link datové vrstvy a v budoucnu pro cachování dat, aktuálně je bezestavový.
 
 \begin{figure}[h]
     \centering
@@ -40,6 +38,12 @@ ale pokud nezná překlad ani do češtiny, ani do angličity, může vrátit
 
 \subsection{API}
 Server vrací data ve formátu JSON, požadavky jsou posílány metodou GET a parametry jsou kódovány do URL adresy.
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{media/sequence-server.pdf}
+    \caption{Schéma komunikace se serverem a RDF databází při spuštění aplikace. Nejprve klient vybírá konfiguraci. Poté začne stahování stylesheetu a stahování prvního vrcholu. Nejprve se stáhnout \texttt{view-sets} a poté z výchozího pohledu se stáhne \texttt{detail} a vrchol se zobrazí na grafu.}
+\end{figure}
 
 \subsubsection{/metaconfiguration}
 \textbf{parametry:} \texttt{iri} a \texttt{languages} \\
@@ -177,37 +181,76 @@ interface ResponseElementNode {
 }
 \end{code}
 
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=\textwidth]{media/sequence-server.pdf}
-    \caption{Schéma komunikace se serverem a RDF databází při spuštění aplikace. Nejprve klient vybírá konfiguraci. Poté začne stahování stylesheetu a stahování prvního vrcholu. Nejprve se stáhnout \texttt{view-sets} a poté z výchozího pohledu se stáhne \texttt{detail} a vrchol se zobrazí na grafu.}
-\end{figure}
-
-
-\section{Klient}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{media/graph.pdf}
-    \caption{Class diagram části aplikace jež pracuje s grafem.}
-\end{figure}
+\section{Klientská část aplikace}
 
 \subsection{Moduly}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{media/dependencies.pdf}
+    \caption{Závislost modulů a dalších částí aplikace na sobě. \todo{Mohl bych se zeptat? Počítá se toto jako popis vazeb mezi moduly? Tento obrázek popisuje skutečné závislosti a používá skutečná jména tříd z aplikace. Můžu ho tedy v této části použít (i když ne vždy odpovídá textu v této kapitole), nebo ho mám dát k implementaci a tady dát něco jiného?}}
+\end{figure}
+
+Následující text popisuje rozvržení klientské části do modulů a jejich vzájemnou integraci.
+
 \subsubsection{Připojení na server}
-Tento modul řeší komunikaci se serverem.
+Modul řeší komunikaci se serverem. Obsahuje metody odpovídající API serveru, které vracejí data ve správném interface. V případě chyby vrátí jako odpověď false. Vyžaduje URL adresu serveru se kterým má komunikovat.
 
 \subsubsection{Graf}
 Tato část aplikace reprezentuje stažený graf a všechny jeho data. Má metody pro práci s grafem, jeho modifikaci a stahování nových dat ze serveru.
 
+Využívá modul pro připojení na server.
+
+\subsubsection{Práce s grafovou oblastí}
+Tento modul odpovídá za práci s grafovou oblastí, tedy s plátnem, na které se vykresluje graf. Řeší manipulaci s grafovou oblastí, správné umístění nových vrcholů v rámci grafu a podobně.
+
+Využívá modulu Graf pro práci s grafem.
+
 \subsubsection{Filtrování}
-Tento modul integruje možnost filtrování vrcholů v aplikaci na základě různých grafových a sémantických vlastností. Modul se dá rozšířit o další filtry i za runtime a nabízí tedy možnost instalace pluginů.
+Modul integruje možnost filtrování vrcholů v aplikaci na základě různých grafových a sémantických vlastností.
+
+Obsahuje množinu filtrů, která může být za běhu aplikace měněna a tedy umožňuje aplikaci rozšířit o nové filtry pomocí pluginů. Každý filtr pak
+\begin{itemize}
+    \item Zodpovídá za vykreslení uživatelského rozhraní pro nastavení parametrů filtru.
+    \item Má vlastní parametry
+    \item Obsahuje třídu, která bude instanciována pro každý vrchol a na základě parametrů filtru a dat vrcholu rozhodne, zda je vrchol viditelný.
+\end{itemize}
+
+Filtrování tedy potřebuje přístup ke grafu.
 
 \subsubsection{Layoutování}
-Modul řeší uspořádání vrcholů v grafu. Layoutování reaguje na významné události z grafu. Jedná se například o vložení nového vrcholu, expanzi, přesunutí vrcholů, zamčení vrcholů atp. Stejně jako filtrování, jednotlivé layouty lze přidávat za runtime a je tedy možné s pomocí pluginů přidat nové layouty.
+Modul řeší uspořádání vrcholů v grafu, přičemž může reagovat na významné události grafu, jako přidání nového vrcholu, expanzi atp.
+
+Obdobně jako filtrování, modul layoutování obsahuje množinu layoutů, která může být za běhu aplikace měněna. Každý layout pak
+\begin{itemize}
+    \item Zodpovídá za vykreslení uživatelského rozhraní pro nastavení parametrů layoutu.
+    \item Má vlastní parametry
+    \item Provádí layoutování, pokud je daný layout aktivní.
+    \item Může vykreslit dodatečná tlačítka do uživatelského rozhraní pro snazší obsluhu layoutování.
+\end{itemize}
+
+Vždy je aktivní právě jeden layout. Pokud dojde ke změně layoutu, je o tom starý, i nový layout informován. Aktivní layout pak přijímá události z aplikace na které může reagovat. Využívá právě modulu práce s grafovou oblastí.
 
 \subsubsection{Vyhledávání}
-Modul vyhledávání vrací vrcholy na základě textového řetězce. Vyhledává v grafu, z autocomplete nebo se pokusí IRI sestavit z hledaného výrazu. Jednotlivé vyhledávače lze rozšířit o další stejně jako u filtrování a layoutování.
+Modul vyhledávání vrací IRI vrcholy konfigurace na základě textového řetězce. Vyhledává v grafu, z autocomplete nebo se pokusí IRI sestavit z hledaného výrazu.
+
+Modul má několik vyhledávačů a každý se pokusí na základě hledaného výrazu vrátit nalezené vrcholy. Ty jsou pak vhodně sloučeny a seřazeny do jednoho seznamu. Modul vyhledávání sám o sobě nezávisí na žádné jiné části aplikace, nicméně jednotlivé vyhledávače ano.
+
+Některé vyhledávače můžou mít větší šanci nalézt vrchol, ale menší dodat k němu podrobné informace. Příkladem může být vyhledávač, který sestavuje IRI vrcholu z hledaného výrazu. V takovém případě je vyhledávač schopen poskytnout pouze IRI, nicméně jiný vyhledávač může vrchol znát, ale nemusel ho být schopen podle hledaného výrazu najít.
+
+Proto vyhledávání probíhá ve dvou fázích. V první fázi se na základě hledaného řetězce sestaví množina IRI adres vrcholů. Ty jsou následně předány ve druhé fázi všem vyhledávačům, které se pak snaží doplnit informaci k těmto vrcholům, například jejich popisek. Protože vyhledávače mohou využívat internet, je třeba výsledky vhodně přepočítat kdykoli nějaký z vyhledávačů vrátí výsledek.
+
+Postup vyhledávaní je následující
+\begin{enumerate}
+    \item Dotaž se všech vyhledávačů současně na IRI, která odpovídají hledanému výrazu.
+    \item Když vyhledávač odpoví, přidej výsledná IRI k již nalezeným (od jiných vyhledávačů) v rámci daného hledaného výrazu.
+    \item Dotaž se všech ostatních vyhledávačů současně na ty IRI, která byla do seznamu přidána poprvé.
+    \item Když vyhledávač odpoví, přidej informace o daných vrcholech a aktualizuj vyhledávané výsledky.
+\end{enumerate}
 
 \subsubsection{Ukládání do souboru}
-Řeší jak uložit a znova načíst stav aplikace do a ze souboru.
+Řeší ukládání stavu aplikace do souboru a jeho následnou obnovu. Každý modul aplikace, konkrétně třídy, co nesou data, mají metody na serializaci a deserializaci jejich vnitřního stavu. Jednotlivé stavy jsou pak získány ze všech modulů a uloženy do souboru. Obdobně opačným způsobem se soubor načte a jednotlivé objekty popisující stavy jsou zpět rozdistribuovány po aplikaci na obnovení stavu.
+
+\subsubsection{Uživatelské rozhraní}
+\todo{Můžu to považovat za modul? Je to vlastně určitá část aplikace co něco dělá.}
+Poskytuje uživateli informace o vrcholech a umožňuje mu interagovat s grafem.

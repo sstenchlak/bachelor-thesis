@@ -127,12 +127,6 @@ Mezi důležité fieldy patří (veškeré tyto třídy budou popsány dále v t
 
 \subsubsection{Závislost modulů}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{media/dependencies.pdf}
-    \caption{Závislost některých modulů aplikace na sobě}
-\end{figure}
-
 Značná část modulů v aplikaci je závislá na jiných. Kupříkladu \texttt{Graph} je závislý na \texttt{RemoteServer} a částečně na \texttt{Configuration}. Na třídě \texttt{Graph} pak závisí \texttt{GraphAreaManipulator} na které závisí \texttt{GraphManipulator}. Protože těchto závislostí je hodně, některé třídy byly určeny jako readonly a tedy se může měnit pouze jejich stav. Jedná se například o třídu \texttt{RemoteServer} které lze měnit URL adresu serveru. Dalšími třídami jsou \texttt{GraphAreaManipulator}, \texttt{ViewOptions}, \texttt{FiltersList}, \texttt{LayoutManager}, \texttt{ConfigurationManager}. Ostaní třídy jsou pak měněny pouze když se mění konfigurace, v tu chvíli se starý graf zahazuje a vytváří se nový.
 
 \medskip
@@ -168,6 +162,13 @@ Tento interface implemetuje i komponenta \texttt{Application} jež tyto metody v
 Do budoucna se nabízí tento interface rozšířit o více módů ukládání. Tento problém je popsán v poslední kapitole.
 
 \subsection{Třída Graph}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{media/graph.pdf}
+    \caption{Class diagram části aplikace jež pracuje s grafem.}
+\end{figure}
+
 Třída \texttt{Graph} umístěna v \texttt{graph/} spravuje stažený graf pod konkrétní konfigurací. Závisí na \texttt{server: RemoteServer} a \texttt{configuration: Configuration}. Pokud se konfigurace mění, nebo se načítá nový graf ze souboru, je tato třída zahozena. Ačkoli třídy jako \texttt{Node} nebo \texttt{Edge} obsahují fieldy pro obsluhu viditelného grafu, třída \texttt{Graph} a ostatní nemusí být explicitně použity na vykreslení grafu na plátno, ale mohou být použity pro držení obecného grafu.
 
 \subsubsection*{Fieldy}
