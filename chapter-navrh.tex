@@ -42,7 +42,7 @@ Server vrací data ve formátu JSON, požadavky jsou posílány metodou GET a pa
 \begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth]{media/sequence-server.pdf}
-    \caption{Schéma komunikace se serverem a RDF databází při spuštění aplikace. Nejprve klient vybírá konfiguraci. Poté začne stahování stylesheetu a stahování prvního vrcholu. Nejprve se stáhnout \texttt{view-sets} a poté z výchozího pohledu se stáhne \texttt{detail} a vrchol se zobrazí na grafu.}
+    \caption{Příklad komunikace mezi klientem, serverem a RDF databází při spuštění aplikace. Na začátku klient nejprve vybírá konfiguraci. (Přičemž je dostačující volat pouze \texttt{meta-configuration}, protože výsledek dotazu obsahuje i konfigurace.) Poté začne stahování stylesheetu a prvního vrcholu. \\ Při stahování vrcholu se nejprve stáhnou \texttt{view-sets} a poté z výchozího pohledu \texttt{detail} a vrchol se zobrazí na grafu. Případné \texttt{expand} a \texttt{preview} vypadají obdobně.}
 \end{figure}
 
 \subsubsection{/metaconfiguration}
@@ -185,7 +185,7 @@ interface ResponseElementNode {
 
 \subsection{Moduly}
 
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{media/dependencies.pdf}
     \caption{Závislost modulů a dalších částí aplikace na sobě. \todo{Mohl bych se zeptat? Počítá se toto jako popis vazeb mezi moduly? Tento obrázek popisuje skutečné závislosti a používá skutečná jména tříd z aplikace. Můžu ho tedy v této části použít (i když ne vždy odpovídá textu v této kapitole), nebo ho mám dát k implementaci a tady dát něco jiného?}}

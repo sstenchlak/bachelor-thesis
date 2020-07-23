@@ -1,7 +1,7 @@
 \chapter{Implementace}
 
 \section{Vue.js framework}
-Klientská část aplikace je postavena nad Vue.js frameworkem, jež je populární JavaScriptový framework na stavbu uživatelských rozhraní. Protože některé z jeho funkcionalit byly použity v klíčových částech aplikace, je nutné čtenáře obeznámit alespoň se základním principem fungování frameworku.
+Klientská část aplikace je postavena nad Vue.js frameworkem\footnote{\url{https://vuejs.org/}}, jež je populární JavaScriptový framework na stavbu uživatelských rozhraní. Protože některé z jeho funkcionalit byly použity v klíčových částech aplikace, je nutné čtenáře obeznámit alespoň se základním principem fungování frameworku.
 
 \subsection{Vuex}
 Vue.js framework, podobně jako konkurenční React\footnote{\url{https://reactjs.org/}} (Facebook) nebo Angular\footnote{\url{https://angularjs.org/}} (Google), využívají principu sledování stavu aplikace (jejich dat) pro automatickou změnu DOMu webové stránky. V praxi to znamená, že programátor může velice snadno napsat kód, který generuje uživatelské rozhraní na základě dat, která mohou být libovolně měněna bez nutnosti řešit problém, zda ke změně vůbec došlo a které části aplikace mají být o změně stavu informovány. Ve Vue tuto funkcionalitu zastává právě Vuex\footnote{\url{https://vuex.vuejs.org/}}, jež je možný používat samostatně.
@@ -38,6 +38,8 @@ Tento přístup má několik nevýhod, které se promítly i při vývoji klient
 Vue framework využívá takzvané komponenty. Komponentou se rozumí prvek na stránce se kterým má smysl pracovat samostatně. Každá komponenta má vlastní HTML, CSS a JS. Komponenty se mohou do sebe zanořovat a vytvářet tak větší komponenty z menších. Příkladem může být komponenta \textit{seznam} jež dokáže na stránku vykreslit senznam prvků. Takováto komponenta by pak mohla mít podkomponenty jako \textit{prvek seznamu}.
 
 Každé komponentě lze předat data formou \textbf{properties} přičemž komponenta na základě těchto dat může vyrobit pod sebou další komponenty a předat jim část dat, která dostala.
+
+Někdy může být žádoucí, aby vícero komponent sdílelo stejnou množinu funkcí. V klasickém programování toto odpovídá dědičnosti tříd. Vue má takzvané Mixiny. Mixin je objekt, který komponentě dodává logiku navíc. Mixiny se dají použít jak v případě dědičnosti, kdy komponenty řeší podobný problém, tak i v případě, kdy kód jedné komponenty je příliš dlouhý a vyplatí se ho rozdělit na více částí. Mixiny totiž umožňují i vícenásobnou dědičnost.
 
 Tyto předávána data jsou právě data ze storu. Vue framework doporučuje, aby data co koponenta dostane formou properties neupravovala přímo, ale místo toho posílala události rodičovské komponentě, která data upraví. Ve své práci jsem se \textbf{rozhodl toto doporučení ignorovat}, neboť by tímto vzrostla náročnočnost na správu aplikace.
 
@@ -88,6 +90,45 @@ Můžeme si povšimnout \texttt{scoped} stylů v ukázce. Vue má mechanismus, �
 Pokud bychom chtěli ovlivnit styly vnořených komponent a máme nastavené scoped styly, musíme použít pseudoselektor \texttt{::v-deep}, kupříkladu \\  \texttt{.actions ::v-deep .v-input--selection-controls}. Tohoto je hodně používáno poukud je potřeba upravit styly Vuetify frameworku (viz dále).
 
 \newpage
+
+\section{Cytoscape knihovna}
+
+Cytoscape.js\footnote{\url{https://js.cytoscape.org/}} je JavaScriptová knihovna na kreslení grafů s pomocí technologie canvas\footnote{Canvas umožňuje kreslit bitmapové obrázky na stránku. Alternativou této technologie je SVG která pracuje s vektorovými objekty. Nicméně pro větší grafy může limitovat výkon aplikace.}, která byla využita v tomto projektu.
+
+Cytoscape umoňuje definovat graf pomocí vrcholů a hran, který bude vykreslen na obrazovku, kde může uživatel přesouvat jednotlivé jeho části, měnit přiblížení grafu, označovat vrcholy a podobně. Kromě toho podporuje širokou škálu možností, jak vizuálně obarvit vrcholy. Tato pravidla jsou dodávána jako style sheet a odpovídají těm, které byly zmíněné v kapitole \ref{pozadavky-visual-style-sheet}.
+
+V knihovně lze zaregistrovat callbacky na různé události grafu a tímto jsme schopni na ně v aplikaci reagovat a propojit knihovnu i s Vue frameworkem. Umoňuje také měnit stav grafu průběžně a vytvářet tak animace, kupříkladu přiblížení grafu pak bude plynulé.
+
+Cytoscape podporuje layoutování grafu s pomocí pluginů. V této prácy byl využit Cola layout\footnote{\url{https://github.com/cytoscape/cytoscape.js-cola}}, který využívá fyzikální simulaci na esteticky příjemné uspořádání vrcholů. Původní plugin byl v mírně upraven, aby vyhovoval požadavkům na uzamykání pozic vrcholů. Kromě Coly je v aplikaci využit Dagre layout, který vrcholy uspořádá do stromové struktury.
+
+\paragraph{Třídy} Cytoscape podporuje přídávání tříd vrcholům obdobně, jako třídy v HTML. Na tyto třídy je pak možné nastavit pravidla style shetů. Toho je v aplikaci právě využito tak, že náhled (\ref{pozadavky-preview}) vrací seznam tříd, které budou nastaveny vrcholům a podle kterých budou barevně a jinak vizuálně rozlišeny.
+
+
+\begin{prikl}
+Ukázka kódu který vytváří nový vrchol. Jak lze vidět, vytvářenému vrcholu nastavujeme ihned pozici a třídy. Kromě tříd může nést další data jako popisek (label), který se pak zobrazí jako text u vrcholu. Vrcholu jsou nastavena všechna data z \texttt{preview} na které lze reagovat a používat je v rámci style sheetů.
+\begin{code}
+this.element = this.cy.add({
+    group: 'nodes',
+    data: {
+      label: '-',
+      ...clone(this.node.lastPreview),
+      id: this.node.IRI
+    },
+    classes: this.classList,
+    position,
+});
+\end{code}
+\textit{Za povšimnutí stojí i funkce clone, která je nutná, neboť předáváme objekt z Vue frameworku.}
+\end{prikl}
+
+
+\newpage
+
+
+
+
+
+
 
 \section{Programátorská dokumentace}
 V této sekci budou postupně rozebrány klíčové třídy a komponenty aplikace.
@@ -166,7 +207,7 @@ Do budoucna se nabízí tento interface rozšířit o více módů ukládání. 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{media/graph.pdf}
-    \caption{Class diagram části aplikace jež pracuje s grafem.}
+    \caption{Class diagram tříd, které pracují s grafem.}
 \end{figure}
 
 Třída \texttt{Graph} umístěna v \texttt{graph/} spravuje stažený graf pod konkrétní konfigurací. Závisí na \texttt{server: RemoteServer} a \texttt{configuration: Configuration}. Pokud se konfigurace mění, nebo se načítá nový graf ze souboru, je tato třída zahozena. Ačkoli třídy jako \texttt{Node} nebo \texttt{Edge} obsahují fieldy pro obsluhu viditelného grafu, třída \texttt{Graph} a ostatní nemusí být explicitně použity na vykreslení grafu na plátno, ale mohou být použity pro držení obecného grafu.
@@ -358,18 +399,24 @@ Aktuálně třída \texttt{Expansion} je v aplikaci využívána pouze během pr
 
 Veškeré třídy zde zmíněné pro práci s grafem implementují rozhraní \\\texttt{ObjectSave} a tedy je možné na třídě \texttt{Graph} volat metody pro uložení a obnovení stavu.
 
+
+
+
+
+
+
 \newpage
 
-V následujících částech práce bude popsáno, jak je tento modul grafu integrován do Vue frameworku tak, aby se samy vytvářely a updatovaly vrcholy a hrany kdykoli dojde k jejich změně.
+V následujících kapitolách práce bude popsáno, jak je tento modul grafu integrován do Vue frameworku tak, aby se samy vytvářely a updatovaly vrcholy a hrany, kdykoli dojde k jejich změně.
 
-\subsection{Komponenta GraphArea}
+\subsection{Komponenta GraphArea} \label{komponenta-graph-area}
 Tato komponenta je definována v souboru \\\texttt{src/component/graph/GraphArea.vue} a reprezentuje právě plátno na které se vykresluje graf. Kromě plátna ještě obsluhuje tlačítka v pravém dolním rohu na jeho ovládání a vyhledávací políčko v levém horním rohu.
 
-Komponenta přijímá spoustu properties, nejdůležitější jsou však \\\texttt{graph: Graph} a \texttt{stylesheet: ResponseStylesheet}. Jakmile se komponenta vyrobí, vrátí rodičovské komponentě \texttt{Application} instanci třídy \texttt{GraphAreaManipulator} formou emitu jež je schopna pracovat právě s grafovou oblastí.
+Komponenta přijímá spoustu properties, nejdůležitější jsou však \\\texttt{graph: Graph} a \texttt{stylesheet: ResponseStylesheet}. Jakmile se komponenta vyrobí, vrátí rodičovské komponentě \texttt{Application} instanci třídy \\\texttt{GraphAreaManipulator} formou emitu, jež je schopna pracovat právě s grafovou oblastí.
 
 \subsubsection{GraphAreaStylesheetMixin}
 
-Komponenta používá \texttt{GraphAreaStylesheetMixin} kde je oddělena logika zpracování stylesheetů.
+Komponenta používá \texttt{GraphAreaStylesheetMixin} kde je oddělena logika \\zpracování stylesheetů.
 
 Předtím, než jsou styly předány Cytoscape knihovně, jsou použity výchozí styly z \texttt{defaultStyles} které nastavují základní parametry. Poté jsou aplikovány styly které komponenta dostala od rodiče a ten si je stáhl ze serveru. Nakonec jsou použity styly z \texttt{viewOptionsStyles} které na základě \texttt{ViewOptions} přepisují základní pravidla.
 
@@ -382,9 +429,9 @@ protected stylesheetUpdated() {
     this.cy.style(clone(this.finalStylesheet));
 }
 \end{code}
-S pomocí dekorátoru nastavíme sledování \texttt{finalStylesheet}. Jamile dojde k jeho změně, zavolá se metoda která předá knihovně (\texttt{this.cy}) nový stylesheet. Nesmíme zapomenout objekt oklonovat, protože nemáme zaručeno, že ho knihovna nebude upravovat. Pokud by kupříkladu knihovna objekt vždy upravila, například z optimalizačních důvodů, Vue framework by zachytil změnu stylu a znoa by zavolal tuto funkci a situace by se opakovala.
+S pomocí dekorátoru nastavíme sledování \texttt{finalStylesheet}. Jamile dojde k jeho změně, zavolá se metoda která předá knihovně (\texttt{this.cy}) nový stylesheet. Nesmíme zapomenout objekt oklonovat, protože nemáme zaručeno, že ho knihovna nebude upravovat. Pokud by knihovna objekt vždy upravila, například z optimalizačních důvodů, Vue framework by zachytil změnu stylu a znovu by zavolal tuto funkci.
 
-\bigskip
+\newpage
 Komponenta pak ke každému vrcholu, hraně a skupině vytvoří vlastní komponentu která tento prvek reprezentuje a spravuje. Jako příklad uveďme vytvoření komponent reprezentujících vrchol.
 
 \begin{code}
@@ -397,21 +444,32 @@ Komponenta pak ke každému vrcholu, hraně a skupině vytvoří vlastní kompon
 />
 \end{code}
 
-\subsection{Komponenty GraphElementNode, GraphElementNodeGroup a GraphElementNodeMixin}
-Jak již bylo zmíněno v popsiu Vue frameworku a z příkladu výše, framework automaticky pro kažý vrchol grafu který je \texttt{mounted} a není ve skupině, vytvoří kopmonentu \texttt{GraphElementNode}. Ta se pak stará o zobrazení tohoto vrhcholu v rámci Cytoscape knihovny.
+\bigskip
 
-Obdobně jako jsme měli třídy \texttt{NodeCommon}, \texttt{Node} a \texttt{NodeGroup} i zde komponenty \texttt{GraphElementNodeMixin}, \texttt{GraphElementNode} a \texttt{GraphElementNodeGroup} jež si navzájem odpovídají.
+Mezi tlačítky v pravém dolním rohu se vykreslí i tlačítka aktuálního layoutu, pokud to daný layout podporuje. Layout v takovém případě musí dodat právě komponentu, která se zde vloží. V následujícím kódu se ověří, že \texttt{buttons} není prázdné a použije se jako ona komponenta. Té pak je předán jeden parametr a to aktuální layout.
+
+\begin{code}
+<component
+  v-if="layoutManager.currentLayoutData.buttons"
+  :is="layoutManager.currentLayoutData.buttons"
+  :layout="layoutManager.currentLayout" />
+\end{code}
+
+\subsection{Komponenty GraphElementNode, GraphElementNodeGroup a GraphElementNodeMixin}
+Jak již bylo zmíněno v popsiu Vue frameworku a z příkladu výše, framework automaticky pro kažý vrchol grafu, který je \texttt{mounted} a není ve skupině, vytvoří kopmonentu \texttt{GraphElementNode}. Ta se pak stará o zobrazení tohoto vrhcholu v rámci Cytoscape knihovny.
+
+Obdobně jako jsme měli třídy \texttt{NodeCommon}, \texttt{Node} a \texttt{NodeGroup} i zde máme komponenty \texttt{GraphElementNodeMixin}, \texttt{GraphElementNode} a \\\texttt{GraphElementNodeGroup}, jež si navzájem odpovídají.
 
 Mezi významné metody patří
 \begin{itemize}
-  \item \texttt{mount()} - Metoda se volá automaticky když je komponenta vytvořena v této metodě probíhá registrace vrcholu v Cytoscape knihovně. Kromě vytvoření uzlu zde probíhá i registrace důležitých eventů a registrace knihovny Popper\footnote\url{https://popper.js.org/} jež má na starosti pozicování elementů vůči různým objektům, zde právě vůči vrcholům na plátně. Tak jsme schopni vykreslit k vrcholům ikonky, pokud jsou vrcholy uzamčeny.
+  \item \texttt{mounted()} - Metoda se volá automaticky, když je komponenta vytvořena. V této metodě probíhá registrace vrcholu v Cytoscape knihovně, registrace důležitých eventů a registrace knihovny Popper\footnote{\url{https://popper.js.org/}}, jež má na starosti pozicování elementů vůči různým objektům, zde právě vůči vrcholům na plátně. Tak jsme schopni vykreslit k vrcholům ikonky. Prozatím jsou dvě ikonky - uzamčení vrcholu a že je vrchol skupinou.
   \item \texttt{beforeDestroy()} - Metoda je volána před tím, než Vue framework zničí komponentu. V této části probíhá odstranění vrcholu z grafu.
 \end{itemize}
 
 \paragraph{Souhrn} Díky těmto dvěma metodám a kompletnímu managementu Vue frameworku nám stačí do třídy \texttt{Graph} přidat nový uzel a ten se automaticky vykreslí do grafu. Opětovným odstraněním uzlu z kontejneru dojde k jeho smazání.
 
-\medskip
 
+\newpage
 Komponenty obsahují spoustu dalších metod pro aktualizaci stylů, pozic vrcholů a podobně. Uveďme ještě konkrétní příklad pro vybírání uzlů.
 \begin{code}
 @Watch('node.selected')
@@ -433,4 +491,89 @@ mounted() {
 }
 \end{code}
 
-Jak lze vidět z ukázky, první metodou zařídíme že událost vybrání vrcholu putuje z Vue frameworku do Cytoscape knihovny. Ve druhé metodě pak definujeme opačný směr a máme tak docíleno, že pokud uživatel klikne na vrchol, dojde k nastavení \texttt{selected} což může otevřít kupříkladu panel s detailem o vrcholu.
+Jak lze vidět z ukázky, první metodou zařídíme, že událost vybrání vrcholu putuje z Vue frameworku do Cytoscape knihovny. Ve druhé metodě pak definujeme opačný směr a máme tak docíleno, že pokud uživatel klikne na vrchol, dojde k nastavení \texttt{selected}, což může otevřít kupříkladu panel s detailem o vrcholu.
+
+\bigskip
+
+Hrany jsou pak vykresleny komponentou \texttt{GraphElementEdge}.
+
+
+
+
+\subsection{Definice filtrů}
+Jednotlivé filtry jsou definovány v adresáři \\\texttt{src/filter/filters/<jméno-filtru>}. Každá definice filtru je pak soubor, který exportuje objekt odkazující na třídy a komponenty příslušného filtru. Tento objekt musí odpovídat rozhraní \\\texttt{FilterDefinition}, které je definováno následovně:
+
+\begin{itemize}
+  \item \texttt{name: string} - Jednoznačný identifikátor filtru podle kterého se pak jednotlivé filtry identifikují a data filtru ukládají do souboru. Pro každý filtr by měl být neměnný a nesmí nastávat kolize.
+  \item \texttt{component: typeof Vue} - Jedná se o Vue komponentu, která se napojí na filtr a jeden vrchol a provádí filtrování tohoto vrcholu. Výhoda použití komponenty místo klasické třídy je ta, že komponenta si může snadno zaregistrovat watchery a aktualizuje se pouze tehdy, když se změní sledovaný stav. Této komponentě je pak předán jeden vrchol \texttt{node: Node} a data filtru \texttt{filter}. Komponenta na základě dat filtru sleduje vrchol a zapisuje do \texttt{node.filters[name]} boolean hodnotu, zda je vrchol dle tohoto filtru viditelný.
+
+  Jedná se o takzvanou renderless komponentu. Komponenta nemá žádný HTML výstup a pouze využívá Vue frameworku, který ji automaticky vytoří a zničí když se odstraní vrchol.
+
+  \item \texttt{filter: Filter} - Nese data filtru, která se pak dají uložit do souboru. Interface \texttt{Filter} tedy rozšiřuje rozhraní \texttt{ObjectSave}. Kromě toho má metodu \texttt{reset()} která nastaví filtr do výchozí hodnoty. Toho je využíváno při vytváření nového grafu, neboť většina filtrů je závislých právě na konkrétním grafu (například filtrování podle typu nemá smysl zachovávat, když měníme konfiguraci). Nakonec, toto rozhraní ještě předepisuje \texttt{readonly active: number}, jež je použit jako getter a říká \uv{kolik filtrů je aktivních}. Tyto čísla jsou pak zobrazena v uživatelksém rozhraní pro přehled uživatele.
+
+  \item \texttt{tabs} - Jedná se o pole jednotlivých sekci filtrů. Každý filtr totiž může v rámci uživatelského rozhraní mít více oken pro nastavení. Každé okno je pak reprezentováno jedním prvkem této položky.
+  \begin{itemize}
+    \item \texttt{component: typeof Vue} - Komponenta, která vykreslí okno s nastavením filtru.
+    \item \texttt{icon: string} - Data ikony která bude zobrazena u názvu karty.
+    \item \texttt{active: (filter: Filter) => bool} - Vrací logickou hodnotu zdali je daná část filtru aktivní.
+    \item \texttt{text: string} - Kód reprezentující text, který se zobrazí v seznamu karet. Podle tohoto kódu se pak provede překlad.
+  \end{itemize}
+
+\end{itemize}
+
+\subsection*{Komponenta VueFilterComponentCreator}
+Tato komponenta očekává \texttt{graph: Graph} a seznam filtrů \\\texttt{filter: FiltersList}. Pro každý filtr a každý vrchol pak vytvoří komponentu (viz výše) která dostane zmíněný vrchol a graf. Tato komponenta je vytvořena v komponentě \\\texttt{Application}.
+
+Příklad definice filtru.
+\begin{code}
+export default {
+    name: "propertyFilter",
+    component: PropertyFilterComponent,
+    filter: new PropertyFilterData(),
+    tabs: [{
+        component: PropertyFilterSettingsTabClass,
+        icon: mdiFormatListBulletedType,
+        active: (filter: PropertyFilterData) => filter.class.active,
+        text: "filters.propertyFilter.class.tab",
+    }, {
+        component: PropertyFilterSettingsTabType,
+        icon: mdiFormatListBulletedType,
+        active: (filter: PropertyFilterData) => filter.type.active,
+        text: "filters.propertyFilter.type.tab",
+    }],
+} as FilterDefinition;
+\end{code}
+
+
+\subsection{Definice Layoutů}
+Struktura layoutů je velmi podobně koncipována jako struktura filtrů. Layouty se registrují v rámci třídy \texttt{LayoutManager}. Jednotlivé layouty jsou definované jako objekty implementující rozhraní \texttt{LayoutData}. Toto rozhraní je definováno následovně:
+
+\begin{itemize}
+  \item \texttt{name: string} - Unikátní identifikátor layoutu podle kterého se stav ukládá do souboru.
+  \item \texttt{layout: Layout} - Třída nesoucí stav layoutu a provádí samotné layoutování.
+  \item \texttt{settingsComponent: typeof Vue} - Vue komponenta, která vykreslí stánku s nastavením layoutu. Této komponentě je předán parametr \texttt{layout} a data tohoto layoutu upravuje. Na rozdíl od filtrů každý layout může vyrobit jen jednu stránku s nastavením. Titulek této stránky je pak sestaven ze jména \texttt{name} jako kód na přeložení.
+  \item \texttt{buttons?: typeof Vue} - Volitelný parametr jako komponenta, která vykreslí dodatečná tlačítka v pravém dolním rohu aplikace. Této komponentě je opět předán parametr \texttt{layout}. Ukázka integrace této komponenty je na konci kapitoly \ref{komponenta-graph-area}.
+\end{itemize}
+
+\subsection{Abstraktní třída Layout}
+Tuto třídu rozšiřují třídy, které jsou schopny provádět layoutování vrcholů grafu. Layoutování přitom reaguje na různé události aplikace tak, že jsou na aktivním layoutu volány odpovídající metody. Layout se pak může rozhodnout tyto metody přepsat a tedy na ně reagovat. Jedná se o následující metody:
+
+\begin{itemize}
+  \item \texttt{onAddedNodes()} - Voláno, když je do grafu přidán vrchol uživatelem. \textbf{Poznámka:} Při expanzi tato funkce není volána.
+  \item \texttt{onExpansion(expansion: Expansion)} - Voláno při expanzi, která je předána jako parametr. Nově přidané vrcholy nemají nastaveno \texttt{mounted} a tedy je lze rozlišit v rámci funkce.
+  \item \texttt{onDrag(isStartNotEnd: boolean)} - Metoda je zavolána s kladným parametrem, pokud uživatel začal přesouvat vrcholy v grafu. Při skončení je funkce zavolána se záporným parametrem.
+  \item \texttt{onCompactMode(nodes: NodeCommon[] | null, edges: EdgeCommon[] | null)} - Metoda je volána při zapnutí kompaktního módu. V takovém případě je předán seznam vrcholů a hran, které se kompaktního módu účastní. Opětovným zavoláním lze změnit množinu prvků účastnících se kompaktního módu. Jakmile je kompaktní mód ukončen, oba parametry budou nastaveny na null.
+  \item \texttt{onLockedChanged()} - Voláno při změně zafixování vrcholů na grafu.
+  \item \texttt{onGroupBroken(nodes: Node[], group: NodeGroup)} - Voláno při rozbití skupiny \texttt{group} na samostatné vrcholy \texttt{nodes}.
+\end{itemize}
+
+Jakmile je layout aktivován, je na něm volána metoda \texttt{activate}. Naopak, pokud je nastaven layout jiný, je voláno \texttt{deactivate}, jež by mělo zrušit veškeré probíhající animace na grafu a přestat layoutovat. Když layout přestane být aktivní, nebudou již na něm volány předešlé metody při významných událostech. Při změně layoutu je nejprve na starém voláno \texttt{deactivate} a pak na novém layoutu \texttt{activate}.
+
+Pro explicitní spuštění layoutu je možné volat funkci \texttt{run}.
+
+Layout implementuje \texttt{ObjectSave}.
+
+\subsection{LayoutManager}
+Třída spravuje všechny layouty. Je konstruována s polem objektů \texttt{LayoutData}, tedy při jejím vytvoření dostane seznam podporovaných layoutů. Tento seznam nicméně může být měněn za runtime.
+
+Metoda \texttt{switchToLayout(name: string)} pak po zadání identifikátoru layoutu správně provede jejich změnu.
