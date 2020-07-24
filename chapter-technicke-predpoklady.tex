@@ -1,7 +1,7 @@
 \chapter{Technické předpoklady}
 
 \section{Resource Description Framework}
-Resource Description Framework, zkráceně RDF, je rodina specifikací (tedy sada pravidel), která se používá na popis informací na internetu. RDF popisuje data jako graf, konkrétně vrcholy grafu jsou entity, jež ztvárňují nějaké věci (fyzické předměty, díla, myšlenky) a hrany tyto entity propojují a dávají jim vztahy.
+Resource Description Framework, zkráceně RDF, je rodina specifikací\footnote{\citet{Raimond:14:RP}} (tedy sada pravidel), která se používá na popis informací na internetu. RDF popisuje data jako graf, konkrétně vrcholy grafu jsou entity, jež ztvárňují nějaké věci (fyzické předměty, díla, myšlenky) a hrany tyto entity propojují a dávají jim vztahy.
 
 Základem je takzvaný \textbf{statement} (česky tvrzení). Tvrzení je vyjádřeno formou trojice v tomto pořadí ze subjektu, predikátu a objektu, přičemž subjekt a objekt jsou vrcholy (anglicky \textbf{nodes}) a predikát je orientovanou hranou jdoucí od subjektu k objektu.
 
@@ -22,7 +22,7 @@ Literály nám tedy dávají možnost přidat IRI uzlům různé hodnoty a podpo
 Nakonec, hrana je opět popsána pomocí IRI, jež reprezentuje typ vztahu.
 
 \subsection{Turtle jazyk}
-RDF graf může být popsán pomocí Turtle jazyka\footnote{\url{https://www.w3.org/TR/turtle/}}. Ten je využit při zápisu konfigurací, jež jsou popsány dále v tomto dokumentu.
+RDF graf může být popsán pomocí Turtle jazyka\footnote{\citet{Prud'hommeaux:14:RT}}. Ten je využit při zápisu konfigurací, jež jsou popsány dále v tomto dokumentu.
 
 Trojice (tvrzení) se zapisují jako tři slova oddělená mezerami a zakončená tečkou. Chceme-li zapsat IRI, musíme jej dát do špičatých závorek \texttt{<>}. Na začátku dokumentu lze definovat prefixy, které pak umožňují zkrátit zapisované IRI do namespace a zbylé části \texttt{namespace:zbytek}.
 
@@ -83,7 +83,7 @@ example:Pavel-Novotný foaf:name "Pavel Novotný" ;
 \end{code}
 
 \subsection{SPARQL jazyk}
-Jazyk SPARQL\footnote{\url{https://www.w3.org/TR/sparql11-overview/}} slouží k definici dotazů nad RDF daty a jejich manipulaci.
+Jazyk SPARQL\footnote{\citet{Seaborne:13:SQL}} slouží k definici dotazů nad RDF daty a jejich manipulaci.
 
 SPARQL má 4 typy dotazů:
 \begin{itemize}

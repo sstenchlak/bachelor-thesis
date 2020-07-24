@@ -1,7 +1,7 @@
 \chapter{Implementace}
 
 \section{Vue.js framework}
-Klientská část aplikace je postavena nad Vue.js frameworkem\footnote{\url{https://vuejs.org/}}, jež je populární JavaScriptový framework na stavbu uživatelských rozhraní. Protože některé z jeho funkcionalit byly použity v klíčových částech aplikace, je nutné čtenáře obeznámit alespoň se základním principem fungování frameworku.
+Klientská část aplikace je postavena nad Vue.js frameworkem\footnote{\url{https://vuejs.org/}, \citet*{Vue}}, jež je populární JavaScriptový framework na stavbu uživatelských rozhraní. Protože některé z jeho funkcionalit byly použity v klíčových částech aplikace, je nutné čtenáře obeznámit alespoň se základním principem fungování frameworku.
 
 \subsection{Vuex}
 Vue.js framework, podobně jako konkurenční React\footnote{\url{https://reactjs.org/}} (Facebook) nebo Angular\footnote{\url{https://angularjs.org/}} (Google), využívají principu sledování stavu aplikace (jejich dat) pro automatickou změnu DOMu webové stránky. V praxi to znamená, že programátor může velice snadno napsat kód, který generuje uživatelské rozhraní na základě dat, která mohou být libovolně měněna bez nutnosti řešit problém, zda ke změně vůbec došlo a které části aplikace mají být o změně stavu informovány. Ve Vue tuto funkcionalitu zastává právě Vuex\footnote{\url{https://vuex.vuejs.org/}}, jež je možný používat samostatně.
@@ -91,9 +91,14 @@ Pokud bychom chtěli ovlivnit styly vnořených komponent a máme nastavené sco
 
 \newpage
 
+
+
+
+
+
 \section{Cytoscape knihovna}
 
-Cytoscape.js\footnote{\url{https://js.cytoscape.org/}} je JavaScriptová knihovna na kreslení grafů s pomocí technologie canvas\footnote{Canvas umožňuje kreslit bitmapové obrázky na stránku. Alternativou této technologie je SVG která pracuje s vektorovými objekty. Nicméně pro větší grafy může limitovat výkon aplikace.}, která byla využita v tomto projektu.
+Cytoscape.js\footnote{\url{https://js.cytoscape.org/}, \citet{10.1093/bioinformatics/btv557}} je JavaScriptová knihovna na kreslení grafů s pomocí technologie canvas\footnote{Canvas umožňuje kreslit bitmapové obrázky na stránku. Alternativou této technologie je SVG která pracuje s vektorovými objekty. Nicméně pro větší grafy může limitovat výkon aplikace.}, která byla využita v tomto projektu.
 
 Cytoscape umoňuje definovat graf pomocí vrcholů a hran, který bude vykreslen na obrazovku, kde může uživatel přesouvat jednotlivé jeho části, měnit přiblížení grafu, označovat vrcholy a podobně. Kromě toho podporuje širokou škálu možností, jak vizuálně obarvit vrcholy. Tato pravidla jsou dodávána jako style sheet a odpovídají těm, které byly zmíněné v kapitole \ref{pozadavky-visual-style-sheet}.
 
@@ -128,6 +133,56 @@ this.element = this.cy.add({
 
 
 
+\section{Prostředí}
+Klientská část aplikace je napsána v jazyce TypeScript\footnote{\url{https://www.typescriptlang.org/}}, což je typovaná nadstavba JavaScriptu. Projekt využívá balíčkovací nástroj npm\footnote{\url{https://www.npmjs.com/}} a je sestavován pomocí \texttt{@vue/cli-service}. Ten interně využívá Webpack\footnote{\url{https://webpack.js.org/}} pro sestavení celého projektu.
+
+\subsection{Instalace}
+Pro úspěšné přeložení aplikace je nutné vytvořit soubor \texttt{./conf.yaml} který přepisuje nastavení ze souboru \texttt{./conf.default.yaml}. V tomto souboru lze nastavit výchozí jazyk aplikace, výkozí IRI meta konfigurace a URL adresu, kde se nachází server.
+
+Pro přeložení projektu je pak nutné spustit
+\begin{enumerate}
+  \item \texttt{npm install} pro stažení a případnou aktualizaci balíčků, na kterých aplikace závisí.
+  \item \texttt{npm run build} pro přeložení projektu.
+\end{enumerate}
+
+Výsledné soubory jsou umístěny v adresáři \texttt{./dist} včetně souboru \texttt{index.html}, odkud se aplikace spouští. Webový server by tedy měl odkazovat právě do tohoto adresáře.
+
+\subsection*{Překlad aplikace}
+Aplikaci lze přeložit přidáním souboru \texttt{<jazykový-kód>.yaml} do adresáře \texttt{./locales}. Soubor vytvořte jako kopii souboru \texttt{en.yaml}, jež obsahuje anglické překlady aplikace. Aplikaci pak stačí znova přeložit a vytvořený jazyk bude v aplikaci dostupný.
+
+\newpage
+
+\subsection{Adresářová struktura}
+\dirtree{%
+.1 /.
+.2 dist \DTcomment{Adresář s vyrobenými .js a .css soubory. Obsahuje také výchozí index.html soubor.}.
+.2 locales \DTcomment{Adresář s .yaml překlady aplikace.}.
+.2 public \DTcomment{Adresář se statickými soubory.}.
+.3 index.html \DTcomment{Šablona pro soubor index.html.}.
+.2 src.
+.3 @types \DTcomment{Definice typů pro knihovny jež nemají oficiální typy pro Typescript.}.
+.3 component \DTcomment{Obsahuje Vue komponenty.}.
+.4 Application.vue \DTcomment{Top level Vue komponenta. Zde se vše registruje.}.
+.3 configurations \DTcomment{Obsahuje logiku pro správu konfigurací a meta konfigurací.}.
+.3 file-save \DTcomment{Interface pro třídy které obsahují uložitelná data.}.
+.3 filter \DTcomment{Logika filtrování a jednotlivé filtry na skrývání uzlů.}.
+.4 filters \DTcomment{Obsahuje adresáře s jednotlivými filtry.}.
+.3 graph \DTcomment{Třídy reprezentující lokální graf.}.
+.3 layout \DTcomment{Logika layoutů.}.
+.4 layouts \DTcomment{Obsahuje adresáře s jednotlivými layouty.}.
+.3 remote-server \DTcomment{Třídy pro stahování dat ze vzdáleného serveru.}.
+.3 searcher \DTcomment{Logika vyhledávání.}.
+.4 searchers \DTcomment{Obsahuje jednotlivé vyhledávače.}.
+.3 LiteralTranslator.ts \DTcomment{Pomocná metody pro překlad.}.
+.3 conf.ts \DTcomment{Pomocný export soubor pro konfiguraci.}.
+.3 i18n.ts \DTcomment{Inicializuje překlad aplikace.}.
+.3 main.ts \DTcomment{Počáteční soubor aplikace.}.
+.2 conf.default.yaml \DTcomment{Výchozí nastavení aplikace.}.
+.2 tsconfig.json \DTcomment{Konfigurační soubor pro Typescript.}.
+.2 vue.config.js \DTcomment{Konfigurační soubor pro balíčky aplikace.}.
+}
+
+\newpage
 
 
 \section{Programátorská dokumentace}
