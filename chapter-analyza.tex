@@ -343,3 +343,8 @@ Vrcholy bude možné seskupovat do skupin, které budou ve vizuálním grafu rep
     \item Označením několika vrcholů se nabídne možnost vytvořit skupinu. Tato skupina pak vznikne na místě, kde byly původní vrcholy.
     \item Rozbít skupinu je možné dvojklikem, nebo tlačítkem z detailu skupiny. Vrchol skupiny bude odstraněn a vzniknou místo něj původní vrcholy, které budou layoutovány.
 \end{itemize}
+
+\subsection*{Kompaktní mód}
+Uživatel bude mít možnost zapnout kompaktní mód. Během něj se ve středu obrazovky zobrazí pouze zvolené vrcholy a jejich přímí sousedi. Tyto vrcholy budou layoutovány bez ohledu na ostatní vrcholy, které budou skryté. Uživatel pak bude mít možnost graf v tomto módu procházet klikáním na sousedy aktivního vrcholu.
+
+\paragraph{Analýza} Kompaktní mód se vypne, pokud nebude vybrán žádný vrchol. Při kompaktním módu se bude obrazovka neustále zaměřovat na vrcholy účastnící se kompaktního módu. Jamile vrchol kompaktní mód opustí, měl by se vrátit na svou původní pozici. Pak po skončení kompaktního módu se původní rozložení grafu nezmění. Nově vytvořené vrcholy v rámci kompaktního módu musí být i správně umístěny, jakmile bude mód ukončen.
