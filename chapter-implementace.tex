@@ -577,3 +577,44 @@ Layout implementuje \texttt{ObjectSave}.
 Třída spravuje všechny layouty. Je konstruována s polem objektů \texttt{LayoutData}, tedy při jejím vytvoření dostane seznam podporovaných layoutů. Tento seznam nicméně může být měněn za runtime.
 
 Metoda \texttt{switchToLayout(name: string)} pak po zadání identifikátoru layoutu správně provede jejich změnu.
+
+\subsection{Vyhledávání vrcholů}
+\subsubsection{Interface Searcher}
+Všechny vyhledávače implementují následující funkce:
+\begin{itemize}
+  \item \texttt{query(query: string)} vrací mapu z IRI do \texttt{SearcherResult} nebo tu samou mapu v Promise - Na základě vyhledávaného výrazu \texttt{query} funkce vrátí nalezené vrcholy jako JavaScriptovou mapu, kde klíčem je IRI vrcholu a hodnotou je objekt \texttt{SearcherResult}, který představuje dodatečné informace o nalezeném vrcholu. Metoda také může vrátit stejnou mapu obalenou v Promise, pokud se například dotazuje na internetu.
+  \item \texttt{getByIRI(IRIs: IterableIterator<string>)} vrací to samé, jako předchozí metoda - Tato funkce vrátí informace o vrcholech zadaných pomocí jejich IRI. Obdobně jako předchozí funkce může vracet Promise.
+\end{itemize}
+
+\subsubsection{Interface SearcherResult}
+\begin{itemize}
+  \item \texttt{readonly IRI: string} - IRI vrcholu, který objekt popisuje.
+  \item \texttt{text: string | string[]} - Text, jež bude zobrazen u nalezeného vrcholu jako \uv{popisek} tohoto vrcholu. Pokud se jedná o \texttt{string}, bude normálně zobrazen. To se použije v případě, kdy známe název vrcholu. Pokud se jedná o pole, první prvek reprezentuje kód pro překlad a další prvky pak parametry. Tohoto lze využít, pokud název vrcholu neznáme a chceme tedy vypsat obecnou hlášku, například \uv{Vrchol s identifikátorem XYZ}.
+  \item \texttt{icon: string} a \texttt{color: string} - Popisuje, jak má vypadat ikonka u vyhledávaného výsledku. Používá se pro rozlišení více typů vyhledávačů, například v autocomplete a v grafu.
+\end{itemize}
+
+\subsubsection{GraphSearcher}
+Tato třída pak reprezentuje modul vyhledávání. Drží si jednotlivé vyhledávače a je schopna v nich vyhledávat. Obsahuje metodu \texttt{search}, jejímž prvním parametrem je vyhledávaný řetězec a druhým je callback, který je volán \textbf{několikrát} se setříděným seznamem výsledných vrcholů a informací, zda vyhledávání stále probíhá (například při dotazování na server).
+
+\subsubsection{GraphSearcherQuery}
+Předchozí třída při vyhledávání vytvoří tuto třídu, která reprezentuje konkrétní vyhledávání.
+\begin{itemize}
+  \item \texttt{MAX_RESULTS_PER_SEARCHER: number} - Představuje maximální počet výsledků, které vyhledávání vrátí.
+  \item \texttt{nodes} - Již nalezené vrcholy z první fáze vyhledávání.
+\end{itemize}
+
+\begin{itemize}
+  \item \texttt{firstPhase()} - Tato metoda na všech vyhledávačích zavolá první metodu \texttt{query} a shromáždí výsledky následovně. Výsledky, které byly navráceny hned (tedy nejedná se o Promise) jsou sjednoceny, uloženy do privátní proměnné jako nalezené vrcholy a je zavolána druhá fáze. Jakmile se dokončí nějaká Promise z vyhledávačů, které nevrátily výsledek ihned, aktualizuje se seznam nalezených vrcholů a opět se zavolá druhá fáze.
+  \item \texttt{secondPhase()} - Druhá fáze je volána vždy, když se aktualizoval seznam nalezených vrcholů z první fáze. Vrcholy, které nebyly prohledávány v rámci druhé fáze se pak postupně předají všem vyhledávačům pomocí druhé metody \texttt{getByIRI} a jakmile ta vrátí výsledek, (buď okamžitě, nebo až po splnění Promise) zavolá se callback s aktualizovaným seznamem nalezených vrcholů.
+\end{itemize}
+
+\bigskip
+
+V aplikaci jsou implementovány následující vyhledávače
+\begin{itemize}
+  \item \texttt{IRIConstructorSearcher} - Pokud hledaný výraz odpovídá regulárnímu výrazu, pak se obalí prefixem a sufixem a takto bude vytvořené IRI. Dá se využít kupříkladu u Wikidat, jejichž IRI mají tvar jednotného prefixu následován výrazem \texttt{Q<číslo>}.
+  \item \texttt{IRIIdentitySearcher} - Pokud hledaný výraz odpovídá regulárnímu výrazu popisující, jak by mělo vypadat IRI, bude vrácen výsledek s tímto IRI označen jako \uv{podporované IRI}. V případě, že dotaz neodpovídá regulárnímu výrazu, bude opět navrácen jeden výsledek s IRI rovnou vyhledávanému dotazu a označen jako \uv{nepodporované IRI}.
+  \item \texttt{LocalGraphSearcher} - Vyhledává v grafu podle popisku (label pod preview). Ignoruje velikost písmen.
+  \item \texttt{SimpleJsonSearcher} - Stáhne z internetu soubor ve formátu JSON-LD se seznamem vrcholů a jejich popisky. Po stažení je index uložen a tedy další dotazy již nevrací Promise, ale přímo výsledky.
+\end{itemize}
+

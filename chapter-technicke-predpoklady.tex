@@ -1,7 +1,7 @@
 \chapter{Technické předpoklady}
 
 \section{Resource Description Framework}
-Resource Description Framework zkráceně RDF je rodina specifikací (tedy sada pravidel) která se používá na popis informací na internetu. RDF popisuje data jako graf, konkrétně vrcholy grafu jsou entity, jež ztvářňují nějaké věci (fyzické předměty, díla, myšlenky) a hrany tyto entity propojují a dávají jim vztahy.
+Resource Description Framework, zkráceně RDF, je rodina specifikací (tedy sada pravidel), která se používá na popis informací na internetu. RDF popisuje data jako graf, konkrétně vrcholy grafu jsou entity, jež ztvárňují nějaké věci (fyzické předměty, díla, myšlenky) a hrany tyto entity propojují a dávají jim vztahy.
 
 Základem je takzvaný \textbf{statement} (česky tvrzení). Tvrzení je vyjádřeno formou trojice v tomto pořadí ze subjektu, predikátu a objektu, přičemž subjekt a objekt jsou vrcholy (anglicky \textbf{nodes}) a predikát je orientovanou hranou jdoucí od subjektu k objektu.
 
@@ -17,9 +17,9 @@ Literálem je pak uzel nesoucí nějakou hodnotu. Může se jednat o číslo pop
 
 \medskip
 
-Literály nám tedy dávají možnost přidat IRI uzlům různé hodnoty a podporují právě i multijazyčnost. Taktovéto grafy pak dokáží popsat celou řadu věcí z reálného světa.
+Literály nám tedy dávají možnost přidat IRI uzlům různé hodnoty a podporují právě i multijazyčnost. Takovéto grafy pak dokáží popsat celou řadu věcí z reálného světa.
 
-Nakonec, hrana je opět popsána pomocí IRI jež reprezentuje typ vztahu.
+Nakonec, hrana je opět popsána pomocí IRI, jež reprezentuje typ vztahu.
 
 \subsection{Turtle jazyk}
 RDF graf může být popsán pomocí Turtle jazyka\footnote{\url{https://www.w3.org/TR/turtle/}}. Ten je využit při zápisu konfigurací, jež jsou popsány dále v tomto dokumentu.
@@ -68,6 +68,8 @@ wd:Q6657059 wdt:P40 wd:Q155855 ,
 
 Pro úplnost zmiňme ještě následující graf popisující vztahy mezi lidmi, které jsou vyjádřeny ontologií FOAF (friend of a friend). Pokud by všechny zdroje popisující lidi využívaly tuto ontologii, měli bychom jednotné rozhraní, jak přistupovat k lidským vztahům.
 
+Ontologie je slovník obsahující formalizovaný seznam pojmů na definici kategorií a vztahů z určitého oboru.
+
 \begin{code}
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix example: <http://example.org/> .
@@ -81,14 +83,14 @@ example:Pavel-Novotný foaf:name "Pavel Novotný" ;
 \end{code}
 
 \subsection{SPARQL jazyk}
-Jakyk SPARQL\footnote{\url{https://www.w3.org/TR/sparql11-overview/}} slouží k definici dotazů nad RDF daty a jejich manipulaci.
+Jazyk SPARQL\footnote{\url{https://www.w3.org/TR/sparql11-overview/}} slouží k definici dotazů nad RDF daty a jejich manipulaci.
 
 SPARQL má 4 typy dotazů:
 \begin{itemize}
     \item \texttt{SELECT} dotaz vrací data z databáze ve formě tabulky obdobně jako u tabulkových databází. Můžeme tak například k jedné entitě vrátit hned několik vlastností jako různé sloupce tabulky.
     \item \texttt{CONSTRUCT} dotaz vrací data ve formě RDF grafu. Tento dotaz tedy použijeme, pokud chceme s výsledkem dále pracovat jako s grafem.
     \item \texttt{ASK} dotaz vrací pravdivostní hodnotu ano/ne podle toho, zda dotaz uspěl. Může být využit například ke zjištění, zda se konkrétní data již v databázi nacházejí.
-    \item \texttt{DESCRIBE} dotaz obdobně jako \texttt{CONSTRUCT} vrací RDF graf, s tím rozdílem, že zde určuje databáze, jaká data na dotaz dostaneme. Výhoda tohoto typu dotazu je ta, pokud neznáme strukturu grafu a chceme tedy získat \uv{nějaké} informace o vrcholu.
+    \item \texttt{DESCRIBE} dotaz obdobně jako \texttt{CONSTRUCT} vrací RDF graf s tím rozdílem, že zde určuje databáze, jaká data na dotaz dostaneme. Tento dotaz použijeme, pokud neznáme strukturu grafu a chceme získat \uv{nějaké} informace o vrcholu.
 \end{itemize}
 
 \newpage
@@ -109,5 +111,5 @@ WHERE
 \end{code}
 Jedná se o \texttt{SELECT} dotaz, tedy jako výsledek dostaneme tabulku, jež má sloupce \texttt{title} a \texttt{publication_date}.
 
-Dotaz se nejprve zeptá na všechny vrcholy které dostaneme přes vlastnost \texttt{wdt:P800} kterou Wikidata definují jako \uv{dílo - významné vědecké, umělecké či jiné dílo}. Tyto vrcholy jsou pak reprezentovány proměnnou \texttt{?work}. Na dalších dvou řádcích se pak dotazujeme, jaký titulek (\texttt{wdt:P1476}) má \texttt{?work} a uložíme ho do \texttt{?title}, který je i prvním sloupcem výstupu. Dále se pak obdobně ptáme na datum publikace, které je také součástí výsledku.
+Dotaz se nejprve zeptá na všechny vrcholy, které dostaneme přes vlastnost \texttt{wdt:P800}, kterou Wikidata definují jako \uv{dílo - významné vědecké, umělecké či jiné dílo}. Tyto vrcholy jsou pak reprezentovány proměnnou \texttt{?work}. Na dalších dvou řádcích se pak dotazujeme, jaký titulek (\texttt{wdt:P1476}) má \texttt{?work} a uložíme ho do \texttt{?title}, který je i prvním sloupcem výstupu. Dále se pak obdobně ptáme na datum publikace, které je také součástí výsledku.
 \end{prikl}

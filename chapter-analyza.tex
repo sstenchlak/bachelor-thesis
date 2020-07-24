@@ -2,15 +2,15 @@
 
 \textit{Tato kapitola popisuje požadavky, jež byly kladeny na vývoj systému.}
 
-Cílem práce je vyrobit webovou aplikaci, která vizualizuje grafová data dle předem definovaných konfigurací a je schopna s těmito daty pracovat. Konfigurace popisují jak a která data mají být vizualizována a jak je možné graf dále rozšiřoavat. Celá aplikace bude rozdělena na klientskou a serverovou část, přičemž server odstiňuje klienta od RDF modelu a vrací mu již zpracovaná data.
+Cílem práce je vyrobit webovou aplikaci, která vizualizuje grafová data dle předem definovaných konfigurací a je schopna s těmito daty pracovat. Konfigurace popisují jak a která data mají být vizualizována a jak je možné graf dále rozšiřovat. Celá aplikace bude rozdělena na klientskou a serverovou část, přičemž server odstiňuje klienta od RDF modelu a vrací mu již zpracovaná data.
 
-Součástí požadavků na webovou aplikaci bylo vedoucím této práce připraveno několik konfigurací a webový server s určeným rozhraním se kterým má klientská aplikace komunikovat.
+Součástí požadavků na webovou aplikaci bylo vedoucím této práce připraveno několik konfigurací a webový server s určeným rozhraním, se kterým má klientská aplikace komunikovat.
 
-V následujících kapitolách je popsána nejprve struktura konfigurací, rozhraní serveru a následně uživatelské požadavky na klientskou část aplikace.
+V následujících kapitolách je nejprve popsána struktura konfigurací, rozhraní serveru a následně uživatelské požadavky na klientskou část aplikace.
 
 \section{Konfigurace}
 
-\textbf{Konfigurace} popisuje určitý pohled na data a definuje jaká data lze v rámci této konfigurace vizualizovat a jakými způsoby. Konfigurace má \textbf{množiny pohledů}, kdy každá množina je aplikovatelná jen na učitou skupinu typů vrcholů podporovaných konfigurací. Množina pohledů pak obsahuje jednotlivé \textbf{pohledy} které popisují, jak se na konkrétní vrchol můžeme dívat. Každý pohled pak určuje \textbf{náhled} (preview), \textbf{detail}  a \textbf{expanzi}. Náhled poskytuje základní informace o vrcholu v rámci pohledu a určuje, jak má být vrchol v grafu vykreslen. Detail pak tyto informace rozšiřuje o další které mohou být vypsány v tabulce. Expanze popisuje RDF graf který doplňuje konkrétní vrchol o nové vztahy v rámci pohledu.
+\textbf{Konfigurace} popisuje určitý pohled na data a definuje, jaká data lze v rámci této konfigurace vizualizovat a jakými způsoby. Konfigurace má \textbf{množiny pohledů}, kdy každá množina je aplikovatelná jen na určitou skupinu typů vrcholů podporovaných konfigurací. Množina pohledů pak obsahuje jednotlivé \textbf{pohledy}, které popisují, jak se na konkrétní vrchol můžeme dívat. Každý pohled pak určuje \textbf{náhled} (preview), \textbf{detail} a \textbf{expanzi}. Náhled poskytuje základní informace o vrcholu v rámci pohledu a určuje, jak má být vrchol v grafu vykreslen. Detail pak tyto informace rozšiřuje o další, které mohou být vypsány v tabulce. Expanze popisuje RDF graf, který doplňuje konkrétní vrchol o nové vztahy v rámci pohledu.
 
 Konfigurace také určuje \textbf{počáteční vrchol} a \textbf{stylesheet}, tedy pravidla, jak mají být uzly v aplikaci vizualizovány.
 
@@ -41,7 +41,7 @@ dct                        & \texttt{\url{http://purl.org/dc/terms/}}
 \newpage
 
 \subsection{Meta konfigurace} \label{pozadavky-metakonfigurace}
-Meta konfigurace je skupina pro další konfigurace a meta konfigurace. Díky tomuto může uživatel procházet desíkty různých konfigurací uspořádaných do složek obdobně jako v souborovém systému na počítači. Meta konfigurace má tyto vlastnosti:
+Meta konfigurace je skupina pro další konfigurace a meta konfigurace. Díky tomuto může uživatel procházet desítky různých konfigurací uspořádaných do složek obdobně jako v souborovém systému na počítači. Meta konfigurace má tyto vlastnosti:
 
 \begin{itemize}
     \item \texttt{dct:title} Název meta konfigurace. \textit{(je možné zadat ve více jazycích)}
@@ -58,7 +58,7 @@ Konfigurace popisuje způsoby, jakými se lze dívat na data. Dvě konfigurace j
 
 \begin{itemize}
     \item \texttt{dct:title} Název konfigurace. \textit{(je možné zadat ve více jazycích)}
-    \item \texttt{dct:description} Detailnější popis, čeho je možné s konfigurací dosáhnout. \textit{(je možné zadat ve více jazycích)}
+    \item \texttt{dct:description} Detailnější popis čeho je možné s konfigurací dosáhnout. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{browser:hasVisualStyleSheet} Určuje, jak mají být uzly v aplikaci vizualizovány. \textit{(popsáno dále)}
     \item \texttt{browser:startingNode} Doporučený uzel nebo uzly, se kterými začít s procházením grafu. \textit{(je očekáváno více objektů)}
     \item \texttt{browser:resourceUriPattern} Regulární výraz popisující, jak by mělo vypadat IRI uzlu. Používá se v aplikaci jako nápověda uživateli, zda zadal správné IRI dřív, než se pošle požadavek. Také se používá pro sestavení IRI z vyhledávaného dotazu, pokud lze dotazem nahradit část výrazu a získat tak validní IRI.
@@ -73,37 +73,37 @@ View set reprezentuje skupinu pohledů. Skupina pohledů je vždy aplikovatelná
     \item \texttt{browser:hasView} Pohledy, které patří pod tento view set. \textit{(je očekáváno více objektů; popsáno dále)}
     \item \texttt{browser:hasDefaultView} Výchozí pohled ze seznamu výše.
     \item \texttt{browser:hasCondition} SPARQL ASK dotaz jež určí, zda tato množina pohledů je aplikovatelná na konkrétní vrchol.
-    \item \texttt{browser:hasDataset} Dataset vůči kterému probíhá ASK dotaz. \textit{(popsáno dále)}
+    \item \texttt{browser:hasDataset} Dataset, vůči kterému probíhá ASK dotaz. \textit{(popsáno dále)}
 \end{itemize}
 
 \subsection{View} \label{pozadavky-view}
-Konkrétní pohled na vrchol který určuje náhled, detail a expanzi. Jak již bylo zmíněno v úvodu, pohledem může být například \uv{člověk, jež je autorem literárních děl}, nebo \uv{člověk jako součást rodokmenu}. View má následující vlastnosti:
+Konkrétní pohled na vrchol, který určuje náhled, detail a expanzi. Jak již bylo zmíněno v úvodu, pohledem může být například \uv{člověk, jež je autorem literárních děl}, nebo \uv{člověk jako součást rodokmenu}. View má následující vlastnosti:
 
 \begin{itemize}
     \item \texttt{dct:title} Název pohledu. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{dct:description} Popis pohledu. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{browser:hasExpansion} Expanze -  popisuje graf který rozšiřuje vrchol o nové vrcholy v rámci daného pohledu. \textit{(popsáno dále)}
-    \item \texttt{browser:hasPreview} Preview (náhled) - určuje data která popisují vrhol v rámci daného pohledu a na základě kterých se vrchol vizuálně vykreslí \textit{(popsáno dále)}
+    \item \texttt{browser:hasPreview} Preview (náhled) - určuje data která popisují vrchol v rámci daného pohledu a na základě kterých se vrchol vizuálně vykreslí \textit{(popsáno dále)}
     \item \texttt{browser:hasDetail} Detail - určuje dodatečné informace o vrcholu v rámci daného pohledu. \textit{(popsáno dále)}
 \end{itemize}
 
 \subsection{Expanze} \label{pozadavky-expansion}
-Expanze popisuje, jak lze daný uzel rozšířit o nové vrcholy které s uzlem souvisí. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného vrcholu. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy co napsala daná osoba}. Expanze formálně partří k pohledu (view).
+Expanze popisuje, jak lze daný vrchol rozšířit o nové vrcholy, které s ním souvisí. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného vrcholu. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy, co napsala daná osoba}. Expanze formálně partří k pohledu (view).
 \begin{itemize}
     \item \texttt{dct:title} Název expanze. \textit{(je možné zadat ve více jazycích, aktuálně se nepoužívá)}
-    \item \texttt{browser:hasDataset} Popisuje dataset vůči kterému se dotazuje na data. \textit{(popsáno dále)}
-    \item \texttt{browser:query} Popisuje SPARQL CONSTRUCT dotaz který bude spuštěn na endpointu datasetu a vrátí výsledný graf.
+    \item \texttt{browser:hasDataset} Popisuje dataset, vůči kterému se dotazuje na data. \textit{(popsáno dále)}
+    \item \texttt{browser:query} Popisuje SPARQL CONSTRUCT dotaz, který bude spuštěn na endpointu datasetu a vrátí výsledný graf.
 \end{itemize}
 
 \subsection{Preview (náhled)} \label{pozadavky-preview}
-Preview určuje která data v rámci daného pohledu (view) popisují konkrétní vrchol. Popisem se myslí taková data, podle kterých se určí, jak bude vrchol na grafu vizuálně vykreslen. Obdobně jako expanze, preview patří ke konkrétnímu pohledu.
+Preview určuje, která data v rámci daného pohledu (view) popisují konkrétní vrchol. Popisem se myslí taková data, podle kterých se určí, jak bude vrchol na grafu vizuálně vykreslen. Obdobně jako expanze, preview patří ke konkrétnímu pohledu.
 
 Preview má stejné vlastnosti jako expanze. \texttt{browser:query} v tomto případě popisuje SPARQL CONSTRUCT dotaz, který vrátí graf obsahující daný uzel společně s literály ze kterých bude sestaven preview.
 
 Konkrétně pro preview je predikát \texttt{browser:class} považován za třídu uzlu. Podle těchto tříd je pak možné nastavovat vizuální styly pro konkrétní vrcholy.
 
 \subsection{Detail} \label{pozadavky-detail}
-Detail poskytuje dodatečné informace k uzlu. Může se jednat o literály které nemá smysl v dané konfiguraci vykreslit do grafu jako uzly a proto budou zobrazeny v bočním panelu aplikace po kliknutí na uzel.
+Detail poskytuje dodatečné informace k uzlu. Může se jednat o literály, které nemá smysl v dané konfiguraci vykreslit do grafu jako uzly, a proto budou zobrazeny v bočním panelu aplikace po kliknutí na uzel.
 
 Detail má stejné vlastnosti včetně \texttt{browser:query} jako preview.
 
@@ -117,12 +117,12 @@ Dataset popisuje SPARQL endpoint vůči kterému probíhá dotazování na data.
 \end{itemize}
 
 \subsection{Visual style sheet} \label{pozadavky-visual-style-sheet}
-Popisuje sadu pravidel podle kterých budou vizuálně vykresleny vrcholy v aplikaci. Pravidla popsané v rámci style sheetu mohou pracovat náhledem (preview) včetně zmíněných tříd. Forma zápisu stylů aktuálně odpovídá stylům jaké používá knihovna Cytoscape\footnote{\url{https://js.cytoscape.org/}}, která bude popsána v další kapitole.
+Popisuje sadu pravidel, podle kterých budou vizuálně vykresleny vrcholy v aplikaci. Pravidla popsaná v rámci style sheetu mohou pracovat náhledem (preview) včetně zmíněných tříd. Forma zápisu stylů aktuálně odpovídá stylům, jaké používá knihovna Cytoscape\footnote{\url{https://js.cytoscape.org/}}, která bude popsána v další kapitole.
 
 Visual style sheet má pouze jednu vlastnost
 
 \begin{itemize}
-    \item \texttt{browser:hasVisualStyle} Pravidlo popisující jak se má provést stylování. Odkazuje na \textbf{Visual style}.
+    \item \texttt{browser:hasVisualStyle} Pravidlo popisující, jak se má provést stylování. Odkazuje na \textbf{Visual style}.
 \end{itemize}
 
 \subsubsection{Visual style}
@@ -144,7 +144,7 @@ Na základě debaty s vedoucím byla konfigurace rozšířena o meta konfigurace
 \bigskip
 
 \begin{prikl}
-Na závěr uveďme část konfigurace popisující procházení texonů živočichů a rostlin na Wikidatech. Tato konfigurace je dosupná pod IRI \\\href{https://linked.opendata.cz/resource/knowledge-graph-browser/configuration/wikidata/animals}{https://linked.opendata.cz/resource/knowledge-graph-browser/}\\\href{https://linked.opendata.cz/resource/knowledge-graph-browser/configuration/wikidata/animals}{configuration/wikidata/animals}. Prefix \texttt{rb} definujme jako \\\url{https://linked.opendata.cz/resource/knowledge-graph-browser/}.
+Na závěr uveďme část konfigurace popisující procházení taxonů živočichů a rostlin na Wikidatech. Tato konfigurace je dostupná pod IRI \\\href{https://linked.opendata.cz/resource/knowledge-graph-browser/configuration/wikidata/animals}{https://linked.opendata.cz/resource/knowledge-graph-browser/}\\\href{https://linked.opendata.cz/resource/knowledge-graph-browser/configuration/wikidata/animals}{configuration/wikidata/animals}. Prefix \texttt{rb} definujme jako \\\url{https://linked.opendata.cz/resource/knowledge-graph-browser/}.
 
 \smallskip
 
@@ -232,7 +232,7 @@ Níže je sepsán seznam původních požadavků na klientskou aplikaci.
 \subsection*{Konfigurace a stylesheet}
 Uživatel musí být schopen vybrat IRI konfigurace a IRI visual style sheetu a lze je kdykoli změnit. IRI konfigurace může být vybráno jen jedno.
 
-\paragraph{Analýza} Konfigurace popisuje jak je graf zobrazen a které pohledy jsou na uzly aplikovatelné. Ačkoli by teoreticky bylo možné podporovat dvě konfigurace, nebudeme toto implementovat. Změna konfigurace tedy smaže aktuální graf a vytvoří graf nový.
+\paragraph{Analýza} Konfigurace popisuje, jak je graf zobrazen a které pohledy jsou na uzly aplikovatelné. Ačkoli by teoreticky bylo možné podporovat dvě konfigurace, nebudeme toto implementovat. Změna konfigurace tedy smaže aktuální graf a vytvoří graf nový.
 
 \subsection*{Vložení vrcholů}
 Uživatel může ručně zadat IRI vrcholu, který se následně zobrazí v grafu.
@@ -240,7 +240,7 @@ Uživatel může ručně zadat IRI vrcholu, který se následně zobrazí v graf
 \paragraph{Analýza} Pro úspěšné zobrazení vrcholu musí aplikace znát jeho \texttt{preview}. To lze ale získat pouze z konkrétního pohledu a je tedy nutné nejprve stáhnout \texttt{view-sets} daného vrcholu, z nich následně vybrat defaultní a zvolit výchozí pohled. Pak je možné zavolat metodu \texttt{preview} na serveru a získat data o vrcholu.
 
 \begin{itemize}
-    \item IRI vrcholu bude považováno za chybné, pokud server vrátí prázdnou množinu na dotaz \texttt{view-sets}. V takovém případě totiž nejde aplikovat žádné pohledy na uzel a tedy zřejmě nepatří do dané konfigurace.
+    \item IRI vrcholu bude považováno za chybné, pokud server vrátí prázdnou množinu na dotaz \texttt{view-sets}. V takovém případě totiž nejde aplikovat žádné pohledy na uzel, a tedy zřejmě nepatří do dané konfigurace.
     \item Vrchol může být již v grafu přítomen, pak se označí a přesune se na něj obrazovka. Pokud je vrchol skrytý, bude odkryt. Pokud jsou zapnuté filtry a vrchol je skrytý filtrem, vrchol se v grafu nezobrazí. Pokud se vrchol podaří načíst, nebo již existuje, bude vybrán a zobrazí se jeho detail v pravém panelu.
 \end{itemize}
 
@@ -258,7 +258,7 @@ Může se stát, že \texttt{view-sets} vrátí prázdný výsledek. V takovém 
 Mezi akcemi bude lokalizace vrcholu, smazání, znovunačtení všech dat, zafixování pozice.
 
 \subsection*{Skrývání uzlů}
-Uživatel může skrývat uzly v panelu s detailem. Skrytý uzel se v grafu skryje společně se všemi hranami. Bude možné zobrazit seznam skytých uzlů ze kterého půjde skryté uzly opět zviditelnit.
+Uživatel může skrývat uzly v panelu s detailem. Skrytý uzel se v grafu skryje společně se všemi hranami. Bude možné zobrazit seznam skrytých uzlů ze kterého půjde skryté uzly opět zviditelnit.
 
 \paragraph{Analýza} Bude přidáno tlačítko k detailu pro skrytí/zobrazení uzlu. Současně pro vetší přehlednost bude do detailu přidána hláška informující uživatele, že je uzel skrytý.
 
@@ -267,7 +267,7 @@ Skryté uzly nebude možno lokalizovat, ale stále bude možné s nimi dále pra
 V panelu se skrytými uzly bude možnost uzly přímo zobrazit, nebo si zobrazit jejich detail. Detail skrytého uzlu funguje stejně jako pro viditelné uzly.
 
 \subsection*{Expanze}
-Po dvojkliku na uzel se uzel expanduje podle aktuálního pohledu. Uzel je také možné expandovat v panelu s detailem kliknutím na tlačtko expanze u příslušného pohledu. Expanzí se zavolá metoda \texttt{expand} na serveru a v grafu se zobrazí nové vrcholy.
+Po dvojkliku na uzel se uzel expanduje podle aktuálního pohledu. Uzel je také možné expandovat v panelu s detailem kliknutím na tlačítko expanze u příslušného pohledu. Expanzí se zavolá metoda \texttt{expand} na serveru a v grafu se zobrazí nové vrcholy.
 
 \paragraph{Analýza} Pokud přidávaný vrchol v grafu již je a je skrytý, pak skrytým zůstane. Na rozdíl od přidávání jednoho vrcholu totiž explicitně neříkáme, že chceme daný vrchol přidat. Protože je možné vrcholy mazat, povolíme uživateli provádět expanzi znova, i když již byla provedena.
 
@@ -284,7 +284,7 @@ Uživatel může přidat filtr, jež skryje nevyhovující vrcholy. Takovéto sk
 
 Uzel může být skrytý jak filtrem, tak i uživatelem. Pro přehlednost by měl být uživatel informován, že nemůže ručně zobrazit vrchol který je skrytý filtrem. Tyto vrcholy budou stále zobrazeny v seznamu skrytých vrcholů pro možnost přístupu k nim.
 
-Každý filtr určí, zda je vrchol podle tohoto filtru viditelný. Vrchol pak bude viditelný pokud všechny filtry určí, že viditelný je. Jedná se tedy o konjunkci.
+Každý filtr určí, zda je vrchol podle tohoto filtru viditelný. Vrchol pak bude viditelný, pokud všechny filtry určí, že viditelný je. Jedná se tedy o konjunkci.
 
 Typy a třídy vrcholů nejsou známy předem a API serveru neumožňuje získat celou množinu typů a tříd. Je tedy nutné přizpůsobit filtry tak, aby si dokázaly poradit s novými uzly. Proto filtry na typ a třídu budou mít dva módy. V jednom módu explicitně skrývají zvolené vlastnosti a ve druhém explicitně zobrazují vrcholy s danými vlastnostmi. Toto chování pak ovlivní přidání nových, neznámých, vrcholů. V prvním případě nový vrchol bude zobrazen (pokud jeho typ, resp. třídy ještě nejsou známy) a ve druhém případě bude ihned skryt.
 
@@ -293,7 +293,7 @@ Uživatel může přepínat mezi více jazyky uživatelského rozhraní. Aktuál
 
 \paragraph{Analýza} Kromě uživatelského rozhraní by měl být vícejazyčný i graf. Aktuální API serveru toto ještě neumožňuje a problém je předmětem poslední kapitoly. Multijazyčnost zatím podporují metody \texttt{meta-configuration} a \texttt{configuration} na serveru. Protože obecně můžou existovat překlady do spousty světových jazyků, je vhodné stahovat pouze požadovaný jazyk a při jeho změně stáhnout data s novým jazykem znovu.
 
-Pro velké grafy může být překlad problémem, protože změna jazyku může vyvolat spoustu požadavků na datové zdroje. Pro překlad grafu by tedy bylo nejlepší stáhnout překlad až když si uživatel zobrazí detail, nebo explicitně neoznačí vrcholy na překlad. Taktéž je vhodné oddělit výběr jazyka pro obsluhu aplikace a výběr konfigurací od překladu jednotlivých vrcholů. Příkladem situace kde je oddělení žádoucí může být procházení měst v Japonsku anglicky mluvícím uživatelem. V této situaci bychom požadovali, aby názvy měst byly v originálním jazyce.
+Pro velké grafy může být překlad problémem, protože změna jazyku může vyvolat spoustu požadavků na datové zdroje. Pro překlad grafu by tedy bylo nejlepší stáhnout překlad až když si uživatel zobrazí detail, nebo explicitně neoznačí vrcholy na překlad. Taktéž je vhodné oddělit výběr jazyka pro obsluhu aplikace a výběr konfigurací od překladu jednotlivých vrcholů. Příkladem situace, kde je oddělení žádoucí, může být procházení měst v Japonsku anglicky mluvícím uživatelem. V této situaci bychom požadovali, aby názvy měst byly v originálním jazyce.
 
 Překlady do konkrétního jazyka by měly být v jednom souboru, nebo adresáři a přidávání nových jazyků by mělo být snadné, nejlépe bez zásahu do kódu aplikace.
 
@@ -302,11 +302,11 @@ Uživatel má možnost stáhnout aktuální graf do souboru a později ho ze sou
 
 \paragraph{Analýza} Protože je aplikace ve vývoji, je třeba dbát na zpětnou kompatibilitu. Při každé nové verzi je tedy třeba ověřit, zdali soubor pochází ze staré verze a použít staré metody pro jeho zpracování a převedení do nového systému. Výsledný soubor může být zkomprimován pro menší velikost a nabízí se i možnost stáhnout jen základní informace tak, aby zbytek mohl být při načtení stažen ze serveru.
 
-Pokud uživatel bude chtít zavřít aplikaci, bude dotázán, zda chce aktuální graf uložit do souboru. Uložený graf již nebude blokovat stránku o uzavření dokud uživatel nesmaže, nebo nepřidá nové uzly. Stažení detailu, nebo změna pohledu nebude považována za změnu hodnou k uložení.
+Pokud uživatel bude chtít zavřít aplikaci, bude dotázán, zda chce aktuální graf uložit do souboru. Uložený graf již nebude blokovat stránku o uzavření, dokud uživatel nesmaže, nebo nepřidá nové uzly. Stažení detailu, nebo změna pohledu nebude považována za změnu hodnou k uložení.
 
 Pokud uživatel zvolí načtení nového souboru, starý graf bude zahozen a uživatel tedy bude požádán o uložení.
 
-Kromě otevření souboru ze systému bude možnost soubor našíst i z webu.
+Kromě otevření souboru ze systému bude možnost soubor načíst i z webu.
 
 \subsection*{Odstranění vrcholu}
 Uživatel může z grafu vrchol odstranit.
@@ -322,15 +322,15 @@ Pokud to konfigurace umožňuje, bude možné přidávat nové uzly do grafu s p
 
 Návrh vyhledávače by měl podporovat více vyhledávacích zdrojů a vhodně kombinovat nalezené výsledky v případě, že více zdrojů vrátí stejné vrcholy.
 
-Kromě vyhledávání v JSON souboru se pak nabízí hledat i v aktuálním grafu a umožnit uživateli zadat do vyhledávacího pole přímo IRI uzlu, popřípadě její část ze které se aplikace pokusí sestavit celou IRI.
+Kromě vyhledávání v JSON souboru se pak nabízí hledat i v aktuálním grafu a umožnit uživateli zadat do vyhledávacího pole přímo IRI uzlu, popřípadě její část, ze které se aplikace pokusí sestavit celou IRI.
 
 \subsection*{Podpora layoutů}
 Aplikace bude umožňovat několik způsobů layoutování grafu, které si bude moci uživatel volit.
 
 \begin{itemize}
-    \item Pokud to layout umoňuje, bude možné ukotvit vrchol. To lze provést přesunutím vrcholu, pravým kliknutím myši, nebo z nabídky u detailu vrcholu. U ukotvených vrcholů bude zobrazena ikonka. Takovéto vrcholy pak nebudou layoutem ovlivněny.
+    \item Pokud to layout umožňuje, bude možné ukotvit vrchol. To lze provést přesunutím vrcholu, pravým kliknutím myši, nebo z nabídky u detailu vrcholu. U ukotvených vrcholů bude zobrazena ikonka. Takovéto vrcholy pak nebudou layoutem ovlivněny.
     \item Layout reaguje na různé události, jako vytvoření skupiny, expanze vrcholu, přidání nového vrcholu do grafu, přesunutí vrcholu a na základě těchto událostí provádí layoutování grafu.
-    \item Pokud to layout umožňuje, bude v pravém dolním rohu obrazovky tlačítko které spustí layoutování explicitně.
+    \item Pokud to layout umožňuje, bude v pravém dolním rohu obrazovky tlačítko, které spustí layoutování explicitně.
     \item Layout má vlastní nastavení.
 \end{itemize}
 
@@ -338,8 +338,8 @@ Aplikace bude umožňovat několik způsobů layoutování grafu, které si bude
 Vrcholy bude možné seskupovat do skupin, které budou ve vizuálním grafu reprezentovány jedním vrcholem. Pokud expanze vrátí větší množství nových vrcholů, vzniknou jako skupina. Skupinu bude možné rozbít dvojklikem.
 
 \begin{itemize}
-    \item Z grafového hlediska skupina vzikne kontrakcí hran mezi vrcholy skupiny. To znamená, že pokud vedla hrana mezi vrcholem mimo skupinu a vrcholem ve skupině, povede tato hrana mezi vrcholem mimo skupinu a skupinou. Všechny násobné hrany stejného typu budou nahrazeny jednou hranou. Obdobně toto platí pro hrany mezi dvěmi skupinami. Pokud je ve skupině vrchol skrytý (uživatelem, nebo filtrem), jeho hrany se nepodílejí na utváření skupiny. Pokud jsou všechny vrcholy skupiny skryty, je skrytá i skupina.
-    \item Skupina se na grafu chová jako obyčejné vrhcholy, je ji možné skrýt, přesouvat, ukotvit atp.
-    \item Označením několika vrcholů se nabídne možnost vytvořit skupinu. Tato skupina pak vzikne na místě, kde byly původní vrcholy.
-    \item Rozbít skupinu je možné dvojklikem, nebo tlačítkem z detailu skupiny. Vrchol skupiny bude odstraněn a vziknou místo něj původní vrcholy, které budou layoutovány.
+    \item Z grafového hlediska skupina vznikne kontrakcí hran mezi vrcholy skupiny. To znamená, že pokud vedla hrana mezi vrcholem mimo skupinu a vrcholem ve skupině, povede tato hrana mezi vrcholem mimo skupinu a skupinou. Všechny násobné hrany stejného typu budou nahrazeny jednou hranou. Obdobně toto platí pro hrany mezi dvěma skupinami. Pokud je ve skupině vrchol skrytý (uživatelem, nebo filtrem), jeho hrany se nepodílejí na utváření skupiny. Pokud jsou všechny vrcholy skupiny skryty, je skrytá i skupina.
+    \item Skupina se na grafu chová jako obyčejné vrcholy, je ji možné skrýt, přesouvat, ukotvit atp.
+    \item Označením několika vrcholů se nabídne možnost vytvořit skupinu. Tato skupina pak vznikne na místě, kde byly původní vrcholy.
+    \item Rozbít skupinu je možné dvojklikem, nebo tlačítkem z detailu skupiny. Vrchol skupiny bude odstraněn a vzniknou místo něj původní vrcholy, které budou layoutovány.
 \end{itemize}
