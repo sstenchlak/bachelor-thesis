@@ -13,7 +13,7 @@ Jako vrchol IRI (Internationalized Resource Identifier) se rozumí vrchol jež p
 
 \medskip
 
-Literálem je pak uzel nesoucí nějakou hodnotu. Může se jednat o číslo popisující věk osoby, její jméno atp. V rámci RDF kromě hodnoty má literál i svůj typ, jež je opět vyjádřen pomocí IRI. Uveďme kupříkladu \url{http://www.w3.org/2001/XMLSchema#integer} jež vyjadřuje obecně celé číslo. Speciálním typem je \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#langString} který vyžaduje ještě takzvaný \textbf{laguage tag} a popisuje text v nějakém konkrétním jazyce.
+Literálem je pak uzel nesoucí nějakou hodnotu. Může se jednat o číslo popisující věk osoby, její jméno atp. V rámci RDF kromě hodnoty má literál i svůj typ, jež je opět vyjádřen pomocí IRI. Uveďme kupříkladu \url{http://www.w3.org/2001/XMLSchema#integer} jež vyjadřuje obecně celé číslo. Speciálním typem je \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#langString}, který vyžaduje ještě takzvaný \textbf{laguage tag} a popisuje text v nějakém konkrétním jazyce.
 
 \medskip
 
@@ -45,7 +45,7 @@ wd:Q155855 wdt:P569 "1890-01-09"^^xsd:dateTime .
 Kód popisuje jedno tvrzení, kdy se Karlu Čapkovi \\ \url{https://www.wikidata.org/wiki/Q155855} přiřadí přes property datum narození \url{https://www.wikidata.org/wiki/Property:P569} literál s jeho datem narození, jež má typ \url{http://www.w3.org/2001/XMLSchema#dateTime}.
 \end{prikl}
 
-Jak lze vidět z příkladu, tvrzení nemusí odkazovat jen na svůj dataset, ale i mimo něj. To nám dovoluje stavět již na existujících datasetech a jednoduše se na ně okazovat přes IRI. Můžeme tak mít vlastní knihovní databázi jež ke knize přiradí autora z datasetu Wikidat. Tímto jsme propojili dva datasety, což nám umožní nad nimi provádět dotazy. Příkladem takového dotazu by mohlo být \uv{Chci seznam knih v naší knihovně, jež byly napsány českými autory.} Takový dotaz pak současně prohledá dva různé datasety a vrátí očekávané výsledky.
+Jak lze vidět z příkladu, tvrzení nemusí odkazovat jen na svůj dataset, ale i mimo něj. To nám dovoluje stavět již na existujících datasetech a jednoduše se na ně odkazovat přes IRI. Můžeme tak mít vlastní knihovní databázi jež ke knize přiřadí autora z datasetu Wikidat. Tímto jsme propojili dva datasety, což nám umožní nad nimi provádět dotazy. Příkladem takového dotazu by mohlo být \uv{Chci seznam knih v naší knihovně, jež byly napsány českými autory.} Takový dotaz pak současně prohledá dva různé datasety a vrátí očekávané výsledky.
 
 Uveďme ještě příklad tvrzení, jež se odkazuje na další entity.
 \begin{prikl}
@@ -63,7 +63,7 @@ wd:Q6657059 wdt:P40 wd:Q155855 ,
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{media/rdf.pdf}
-    \caption{Příklad grafu který získáme z předešlých dvou ukázek.}
+    \caption{Příklad grafu, který získáme z předešlých dvou ukázek.}
 \end{figure}
 
 Pro úplnost zmiňme ještě následující graf popisující vztahy mezi lidmi, které jsou vyjádřeny ontologií FOAF (friend of a friend). Pokud by všechny zdroje popisující lidi využívaly tuto ontologii, měli bychom jednotné rozhraní, jak přistupovat k lidským vztahům.

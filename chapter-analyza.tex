@@ -88,7 +88,7 @@ Konkrétní pohled na vrchol, který určuje náhled, detail a expanzi. Jak již
 \end{itemize}
 
 \subsection{Expanze} \label{pozadavky-expansion}
-Expanze popisuje, jak lze daný vrchol rozšířit o nové vrcholy, které s ním souvisí. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného vrcholu. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy, co napsala daná osoba}. Expanze formálně partří k pohledu (view).
+Expanze popisuje, jak lze daný vrchol rozšířit o nové vrcholy, které s ním souvisí. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného vrcholu. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy, co napsala daná osoba}. Expanze formálně patří k pohledu (view).
 \begin{itemize}
     \item \texttt{dct:title} Název expanze. \textit{(je možné zadat ve více jazycích, aktuálně se nepoužívá)}
     \item \texttt{browser:hasDataset} Popisuje dataset, vůči kterému se dotazuje na data. \textit{(popsáno dále)}
@@ -221,7 +221,7 @@ Server zprostředkovává následující požadavky:
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{media/use-case.pdf}
-    \caption{Use case diagram dle uživetelských požadavků.}
+    \caption{Use case diagram dle uživatelských požadavků.}
     \label{fig:use-case}
 \end{figure}
 
@@ -255,7 +255,7 @@ Panel bude zobrazovat také další možné akce k vrcholu.
 
 Může se stát, že \texttt{view-sets} vrátí prázdný výsledek. V takovém případě vrchol v grafu necháme i přes to, že podle původního požadavku bychom jej smazali. Taková situace nicméně implikuje chybně napsanou konfiguraci a uživatel bude o tomto informován chybovou hláškou.
 
-Mezi akcemi bude lokalizace vrcholu, smazání, znovunačtení všech dat, zafixování pozice.
+Mezi akcemi bude lokalizace vrcholu, smazání, opětovné načtení všech dat, zafixování pozice.
 
 \subsection*{Skrývání uzlů}
 Uživatel může skrývat uzly v panelu s detailem. Skrytý uzel se v grafu skryje společně se všemi hranami. Bude možné zobrazit seznam skrytých uzlů ze kterého půjde skryté uzly opět zviditelnit.
@@ -347,4 +347,4 @@ Vrcholy bude možné seskupovat do skupin, které budou ve vizuálním grafu rep
 \subsection*{Kompaktní mód}
 Uživatel bude mít možnost zapnout kompaktní mód. Během něj se ve středu obrazovky zobrazí pouze zvolené vrcholy a jejich přímí sousedi. Tyto vrcholy budou layoutovány bez ohledu na ostatní vrcholy, které budou skryté. Uživatel pak bude mít možnost graf v tomto módu procházet klikáním na sousedy aktivního vrcholu.
 
-\paragraph{Analýza} Kompaktní mód se vypne, pokud nebude vybrán žádný vrchol. Při kompaktním módu se bude obrazovka neustále zaměřovat na vrcholy účastnící se kompaktního módu. Jamile vrchol kompaktní mód opustí, měl by se vrátit na svou původní pozici. Po skončení kompaktního módu se původní rozložení grafu nezmění. Nově vytvořené vrcholy v rámci kompaktního módu musí být i správně umístěny, jakmile bude mód ukončen.
+\paragraph{Analýza} Kompaktní mód se vypne, pokud nebude vybrán žádný vrchol. Při kompaktním módu se bude obrazovka neustále zaměřovat na vrcholy účastnící se kompaktního módu. Jakmile vrchol kompaktní mód opustí, měl by se vrátit na svou původní pozici. Po skončení kompaktního módu se původní rozložení grafu nezmění. Nově vytvořené vrcholy v rámci kompaktního módu musí být i správně umístěny, jakmile bude mód ukončen.

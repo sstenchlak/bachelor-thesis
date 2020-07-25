@@ -14,7 +14,7 @@ Vrátíme-li se k původnímu příkladu, programátorovi stačí přiřadit do 
 
 \subsubsection{Computed properties}
 
-Kromě této funkcionality Vuex nabízí takzvané \textbf{gettery}, jež jsou ve Vue frameworku nazývány jako \textbf{computed properties}. Jedná se o funkce, které využívají data ze storu pro výpočet dat nových. Výhoda takovýchto getterů je ta, že Vuex dokáže výsledky těchto funkcí cachovat a přepočítává je pouze tehdy, změní-li se data původní. Interně gettery fungují tak, že při zavolání klientské funkce Vuex sleduje které části storu byly dotázany a ty pak sleduje na změnu jež invaliduje cache konkrétního getteru. Při příštím požadavku na hodnotu se pak klientská funkce volá znovu a celá operace se opakuje.
+Kromě této funkcionality Vuex nabízí takzvané \textbf{gettery}, jež jsou ve Vue frameworku nazývány jako \textbf{computed properties}. Jedná se o funkce, které využívají data ze storu pro výpočet dat nových. Výhoda takovýchto getterů je ta, že Vuex dokáže výsledky těchto funkcí cachovat a přepočítává je pouze tehdy, změní-li se data původní. Interně gettery fungují tak, že při zavolání klientské funkce Vuex sleduje, které části storu byly dotázány a ty pak sleduje na změnu jež invaliduje cache konkrétního getteru. Při příštím požadavku na hodnotu se pak klientská funkce volá znovu a celá operace se opakuje.
 
 Tyto computed properties jsou v aplikaci využívány často. Kupříkladu funkce, která počítá, zda je sousední uzel vybrán. Na takovouto hodnotu se v aplikaci mohu ptát libovolně krát, ale počítá se pouze tehdy, když se množina sousedních uzlů vrcholu změní, nebo se změní právě označení uzlu z množiny.
 
@@ -24,24 +24,24 @@ Ve Vue lze využívat i \textbf{watch}ery, které umožňují registraci callbac
 
 \subsubsection{Změna stavu}
 
-Jak již bylo zmíněno, stav lze měnit přiřazením do proměnné, popřípadě voláním metod jako \texttt{.push()} na poli. Vuex dokáže tyto změny sledovat nahrazením původní proměnné (máme na mysli položku objektu) JavaScriptovým setterem. U polí dojde k obalení metody \texttt{.push()} jež registruje změnu stavu.
+Jak již bylo zmíněno, stav lze měnit přiřazením do proměnné, popřípadě voláním metod jako \texttt{.push()} na poli. Vuex dokáže tyto změny sledovat nahrazením původní proměnné (máme na mysli položku objektu) JavaScriptovým setterem. U polí dojde k obalení metody \texttt{.push()}, jež registruje změnu stavu.
 
 Tento přístup má několik nevýhod, které se promítly i při vývoji klientské aplikace:
 \begin{itemize}
   \item Vue není plně kompatibilní s novými \textbf{ES6 kontejnery} \texttt{Map} a \texttt{Set} a proto jsou v aplikaci používány jen v rámci lokálních proměnných a mapa je nahrazena klasickým objektem.
-  \item Protože je v JavaScriptu nemožné sledovat \textbf{vytvoření nové property objektu}, musí programátor v tomto případě volat ručně \texttt{Vue.set(target, propertyName/index, value)} a \texttt{Vue.delete}, popřípadě vytvořit nový objekt který nahradí ten původní.
-  \item Je důležité mít na paměti, že data ve storu již nejsou původními objekty v pravém slova smyslu, ale veškeré fieldy a metody u polí byly nahrazeny, jak je zmíněno výše. Proto předání objektů a polí ze storu knihovnám třetích stran je nutné ošetřit \textbf{oklonováním objektu}, jinak může dojít k zaseknutí aplikace.
+  \item Protože je v JavaScriptu nemožné sledovat \textbf{vytvoření nové property objektu}, musí programátor v tomto případě volat ručně \texttt{Vue.set(target, propertyName/index, value)} a \texttt{Vue.delete}, popřípadě vytvořit nový objekt, který nahradí ten původní.
+  \item Je důležité mít na paměti, že data ve storu již nejsou původními objekty v pravém slova smyslu, ale veškeré fieldy a metody u polí byly nahrazeny, jak je zmíněno výše. Proto předání objektů a polí ze storu knihovnám třetích stran je nutné ošetřit \textbf{klonováním objektu}, jinak může dojít k zaseknutí aplikace.
   \item Instance tříd \textbf{knihoven třetích stran může zaseknout aplikaci}, pokud ji uložíme do storu. Bohužel, tohoto je velmi snadné ve Vue frameworku dosáhnout omylem. Problém je rozebrán v následující kapitole.
 \end{itemize}
 
 \subsection{Vue framework}
-Vue framework využívá takzvané komponenty. Komponentou se rozumí prvek na stránce se kterým má smysl pracovat samostatně. Každá komponenta má vlastní HTML, CSS a JS. Komponenty se mohou do sebe zanořovat a vytvářet tak větší komponenty z menších. Příkladem může být komponenta \textit{seznam} jež dokáže na stránku vykreslit senznam prvků. Takováto komponenta by pak mohla mít podkomponenty jako \textit{prvek seznamu}.
+Vue framework využívá takzvané komponenty. Komponentou se rozumí prvek na stránce, se kterým má smysl pracovat samostatně. Každá komponenta má vlastní HTML, CSS a JS. Komponenty se mohou do sebe zanořovat a vytvářet tak větší komponenty z menších. Příkladem může být komponenta \textit{seznam} jež dokáže na stránku vykreslit seznam prvků. Takováto komponenta by pak mohla mít podkomponenty jako \textit{prvek seznamu}.
 
 Každé komponentě lze předat data formou \textbf{properties} přičemž komponenta na základě těchto dat může vyrobit pod sebou další komponenty a předat jim část dat, která dostala.
 
 Někdy může být žádoucí, aby vícero komponent sdílelo stejnou množinu funkcí. V klasickém programování toto odpovídá dědičnosti tříd. Vue má takzvané Mixiny. Mixin je objekt, který komponentě dodává logiku navíc. Mixiny se dají použít jak v případě dědičnosti, kdy komponenty řeší podobný problém, tak i v případě, kdy kód jedné komponenty je příliš dlouhý a vyplatí se ho rozdělit na více částí. Mixiny totiž umožňují i vícenásobnou dědičnost.
 
-Tyto předávána data jsou právě data ze storu. Vue framework doporučuje, aby data co koponenta dostane formou properties neupravovala přímo, ale místo toho posílala události rodičovské komponentě, která data upraví. Ve své práci jsem se \textbf{rozhodl toto doporučení ignorovat}, neboť by tímto vzrostla náročnočnost na správu aplikace.
+Tyto předávána data jsou právě data ze storu. Vue framework doporučuje, aby data, co komponenta dostane formou properties, neupravovala přímo, ale místo toho posílala události rodičovské komponentě, která data upraví. Ve své práci jsem se \textbf{rozhodl toto doporučení ignorovat}, neboť by tímto vzrostla náročnost na správu aplikace.
 
 \begin{figure}[h]
     \centering
@@ -50,12 +50,12 @@ Tyto předávána data jsou právě data ze storu. Vue framework doporučuje, ab
 \end{figure}
 
 \subsection{Loaders}
-Kód Vue komponent se zapisuje do souborů s příponou \texttt{.vue}. Při sestavování aplikace se pak použije \texttt{vue-loader} který ze souboru vyextrahuje zvlášť CSS, JS a HTML a ty předá dál na zpracování. HTML kód komponent není ve skutečnosti pravý HTML. Jedná se nadstavbu umožňující psát speciální značky, jež rozhodují kolikrát a jestli vůbec se tag na stránce vyrenderuje. Tato HTML nadstavba je pak předána \texttt{vue-template-compiler} který vyrobí optimalizovaný JS kód jež renderuje HTML na základě stavu komponenty.
+Kód Vue komponent se zapisuje do souborů s příponou \texttt{.vue}. Při sestavování aplikace se pak použije \texttt{vue-loader}, který ze souboru vyextrahuje zvlášť CSS, JS a HTML a ty předá dál na zpracování. HTML kód komponent není ve skutečnosti pravý HTML. Jedná se nadstavbu umožňující psát speciální značky, jež rozhodují kolikrát a jestli vůbec se tag na stránce vyrenderuje. Tato HTML nadstavba je pak předána \texttt{vue-template-compiler}, který vyrobí optimalizovaný JS kód jež renderuje HTML na základě stavu komponenty.
 
 \newpage
 
 \begin{prikl}
-Ukázka jednoduché Vue komponenty \texttt{IndexedList} která má parametr \texttt{list} očekávající pole stringů. Tato komponenta vypíše pole v odrážkovém seznamu ve formě \texttt{index: hodnota}. Komponenta se sama stará o překreslení DOMu, když se změní data. Komponentu můžeme v jiné komponentě použít vložením \texttt{<indexed-list :list="inputData" />} kde \texttt{inputData} je proměnná obsahující pole stringů.
+Ukázka jednoduché Vue komponenty \texttt{IndexedList}, která má parametr \texttt{list} očekávající pole stringů. Tato komponenta vypíše pole v odrážkovém seznamu ve formě \texttt{index: hodnota}. Komponenta se sama stará o překreslení DOMu, když se změní data. Komponentu můžeme v jiné komponentě použít vložením \texttt{<indexed-list :list="inputData" />}, kde \texttt{inputData} je proměnná obsahující pole stringů.
 
 \begin{code}
 <template>
@@ -85,9 +85,9 @@ Ukázka jednoduché Vue komponenty \texttt{IndexedList} která má parametr \tex
 
 \subsubsection*{Scoped styly}
 
-Můžeme si povšimnout \texttt{scoped} stylů v ukázce. Vue má mechanismus, že styly které zde nastavíme se aplikují jen na tuto komponentu. Nastavením červené barvy na seznam jsme tedy skutečně nastavili červenou barvu jen této komponentě a ostatní seznamy jsou netknuté. Toto má nespornou výhodu pokud pracujeme s velkým množstvím komponent a hrozilo by, že bychom museli používat složitě pojmenované css třídy aby nedošlo ke kolizi.
+Můžeme si povšimnout \texttt{scoped} stylů v ukázce. Vue má mechanismus, že styly, které zde nastavíme se aplikují jen na tuto komponentu. Nastavením červené barvy na seznam jsme tedy skutečně nastavili červenou barvu jen této komponentě a ostatní seznamy jsou netknuté. Toto má nespornou výhodu pokud pracujeme s velkým množstvím komponent a hrozilo by, že bychom museli používat složitě pojmenované css třídy aby nedošlo ke kolizi.
 
-Pokud bychom chtěli ovlivnit styly vnořených komponent a máme nastavené scoped styly, musíme použít pseudoselektor \texttt{::v-deep}, kupříkladu \\  \texttt{.actions ::v-deep .v-input--selection-controls}. Tohoto je hodně používáno poukud je potřeba upravit styly Vuetify frameworku (viz dále).
+Pokud bychom chtěli ovlivnit styly vnořených komponent a máme nastavené scoped styly, musíme použít pseudo selektor \texttt{::v-deep}, kupříkladu \\  \texttt{.actions ::v-deep .v-input--selection-controls}. Tohoto je hodně používáno, pokud je potřeba upravit styly Vuetify frameworku (viz dále).
 
 \newpage
 
@@ -98,19 +98,19 @@ Pokud bychom chtěli ovlivnit styly vnořených komponent a máme nastavené sco
 
 \section{Cytoscape knihovna}
 
-Cytoscape.js\footnote{\url{https://js.cytoscape.org/}, \citet{10.1093/bioinformatics/btv557}} je JavaScriptová knihovna na kreslení grafů s pomocí technologie canvas\footnote{Canvas umožňuje kreslit bitmapové obrázky na stránku. Alternativou této technologie je SVG která pracuje s vektorovými objekty. Nicméně pro větší grafy může limitovat výkon aplikace.}, která byla využita v tomto projektu.
+Cytoscape.js\footnote{\url{https://js.cytoscape.org/}, \citet{10.1093/bioinformatics/btv557}} je JavaScriptová knihovna na kreslení grafů s pomocí technologie canvas\footnote{Canvas umožňuje kreslit bitmapové obrázky na stránku. Alternativou této technologie je SVG, která pracuje s vektorovými objekty. Nicméně pro větší grafy může limitovat výkon aplikace.}, která byla využita v tomto projektu.
 
-Cytoscape umoňuje definovat graf pomocí vrcholů a hran, který bude vykreslen na obrazovku, kde může uživatel přesouvat jednotlivé jeho části, měnit přiblížení grafu, označovat vrcholy a podobně. Kromě toho podporuje širokou škálu možností, jak vizuálně obarvit vrcholy. Tato pravidla jsou dodávána jako style sheet a odpovídají těm, které byly zmíněné v kapitole \ref{pozadavky-visual-style-sheet}.
+Cytoscape umožňuje definovat graf pomocí vrcholů a hran, který bude vykreslen na obrazovku, kde může uživatel přesouvat jednotlivé jeho části, měnit přiblížení grafu, označovat vrcholy a podobně. Kromě toho podporuje širokou škálu možností, jak vizuálně obarvit vrcholy. Tato pravidla jsou dodávána jako style sheet a odpovídají těm, které byly zmíněné v kapitole \ref{pozadavky-visual-style-sheet}.
 
-V knihovně lze zaregistrovat callbacky na různé události grafu a tímto jsme schopni na ně v aplikaci reagovat a propojit knihovnu i s Vue frameworkem. Umoňuje také měnit stav grafu průběžně a vytvářet tak animace, kupříkladu přiblížení grafu pak bude plynulé.
+V knihovně lze zaregistrovat callbacky na různé události grafu a tímto jsme schopni na ně v aplikaci reagovat a propojit knihovnu i s Vue frameworkem. Umožňuje také měnit stav grafu průběžně a vytvářet tak animace, kupříkladu přiblížení grafu pak bude plynulé.
 
-Cytoscape podporuje layoutování grafu s pomocí pluginů. V této prácy byl využit Cola layout\footnote{\url{https://github.com/cytoscape/cytoscape.js-cola}}, který využívá fyzikální simulaci na esteticky příjemné uspořádání vrcholů. Původní plugin byl v mírně upraven, aby vyhovoval požadavkům na uzamykání pozic vrcholů. Kromě Coly je v aplikaci využit Dagre layout, který vrcholy uspořádá do stromové struktury.
+Cytoscape podporuje layoutování grafu s pomocí pluginů. V této práci byl využit Cola layout\footnote{\url{https://github.com/cytoscape/cytoscape.js-cola}}, který využívá fyzikální simulaci na esteticky příjemné uspořádání vrcholů. Původní plugin byl v mírně upraven, aby vyhovoval požadavkům na uzamykání pozic vrcholů. Kromě Coly je v aplikaci využit Dagre layout, který vrcholy uspořádá do stromové struktury.
 
-\paragraph{Třídy} Cytoscape podporuje přídávání tříd vrcholům obdobně, jako třídy v HTML. Na tyto třídy je pak možné nastavit pravidla style shetů. Toho je v aplikaci právě využito tak, že náhled (\ref{pozadavky-preview}) vrací seznam tříd, které budou nastaveny vrcholům a podle kterých budou barevně a jinak vizuálně rozlišeny.
+\paragraph{Třídy} Cytoscape podporuje přidávání tříd vrcholům obdobně, jako třídy v HTML. Na tyto třídy je pak možné nastavit pravidla style sheetů. Toho je v aplikaci právě využito tak, že náhled (\ref{pozadavky-preview}) vrací seznam tříd, které budou nastaveny vrcholům a podle kterých budou barevně a jinak vizuálně rozlišeny.
 
 
 \begin{prikl}
-Ukázka kódu který vytváří nový vrchol. Jak lze vidět, vytvářenému vrcholu nastavujeme ihned pozici a třídy. Kromě tříd může nést další data jako popisek (label), který se pak zobrazí jako text u vrcholu. Vrcholu jsou nastavena všechna data z \texttt{preview} na které lze reagovat a používat je v rámci style sheetů.
+Ukázka kódu, který vytváří nový vrchol. Jak lze vidět, vytvářenému vrcholu nastavujeme ihned pozici a třídy. Kromě tříd může nést další data jako popisek (label), který se pak zobrazí jako text u vrcholu. Vrcholu jsou nastavena všechna data z \texttt{preview}, na které lze reagovat a používat je v rámci style sheetů.
 \begin{code}
 this.element = this.cy.add({
     group: 'nodes',
@@ -137,7 +137,7 @@ this.element = this.cy.add({
 Klientská část aplikace je napsána v jazyce TypeScript\footnote{\url{https://www.typescriptlang.org/}}, což je typovaná nadstavba JavaScriptu. Projekt využívá balíčkovací nástroj npm\footnote{\url{https://www.npmjs.com/}} a je sestavován pomocí \texttt{@vue/cli-service}. Ten interně využívá Webpack\footnote{\url{https://webpack.js.org/}} pro sestavení celého projektu.
 
 \subsection{Instalace}
-Pro úspěšné přeložení aplikace je nutné vytvořit soubor \texttt{./conf.yaml} který přepisuje nastavení ze souboru \texttt{./conf.default.yaml}. V tomto souboru lze nastavit výchozí jazyk aplikace, výkozí IRI meta konfigurace a URL adresu, kde se nachází server.
+Pro úspěšné přeložení aplikace je nutné vytvořit soubor \texttt{./conf.yaml}, který přepisuje nastavení ze souboru \texttt{./conf.default.yaml}. V tomto souboru lze nastavit výchozí jazyk aplikace, výchozí IRI meta konfigurace a URL adresu, kde se nachází server.
 
 Pro přeložení projektu je pak nutné spustit
 \begin{enumerate}
@@ -147,8 +147,8 @@ Pro přeložení projektu je pak nutné spustit
 
 Výsledné soubory jsou umístěny v adresáři \texttt{./dist} včetně souboru \texttt{index.html}, odkud se aplikace spouští. Webový server by tedy měl odkazovat právě do tohoto adresáře.
 
-\subsection*{Překlad aplikace}
-Aplikaci lze přeložit přidáním souboru \texttt{<jazykový-kód>.yaml} do adresáře \texttt{./locales}. Soubor vytvořte jako kopii souboru \texttt{en.yaml}, jež obsahuje anglické překlady aplikace. Aplikaci pak stačí znova přeložit a vytvořený jazyk bude v aplikaci dostupný.
+\subsection*{Jazykový překlad aplikace}
+Aplikaci lze přeložit do více světových jazyků přidáním souboru \texttt{<jazykový-kód>.yaml} do adresáře \texttt{./locales}. Soubor vytvořte jako kopii souboru \texttt{en.yaml}, jež obsahuje anglické překlady aplikace. Aplikaci pak stačí znova přeložit a vytvořený jazyk bude v aplikaci dostupný.
 
 \newpage
 
@@ -160,7 +160,7 @@ Aplikaci lze přeložit přidáním souboru \texttt{<jazykový-kód>.yaml} do ad
 .2 public \DTcomment{Adresář se statickými soubory.}.
 .3 index.html \DTcomment{Šablona pro soubor index.html.}.
 .2 src.
-.3 @types \DTcomment{Definice typů pro knihovny jež nemají oficiální typy pro Typescript.}.
+.3 @types \DTcomment{Definice typů pro knihovny, jež nemají oficiální typy pro Typescript.}.
 .3 component \DTcomment{Obsahuje Vue komponenty.}.
 .4 Application.vue \DTcomment{Top level Vue komponenta. Zde se vše registruje.}.
 .3 configurations \DTcomment{Obsahuje logiku pro správu konfigurací a meta konfigurací.}.
@@ -189,69 +189,69 @@ Aplikaci lze přeložit přidáním souboru \texttt{<jazykový-kód>.yaml} do ad
 V této sekci budou postupně rozebrány klíčové třídy a komponenty aplikace.
 
 \subsection{Vstupní skript a pomocné soubory}
-Vstupním skriptem celé aplikace je soubor \texttt{main.ts} ve kterém je inicializován Vuetify a Vue framework, který spouští komponentu Application, jež je výchozí komponentou celé aplikace.
+Vstupním skriptem celé aplikace je soubor \texttt{main.ts}, ve kterém je inicializován Vuetify a Vue framework, který spouští komponentu Application, jež je výchozí komponentou celé aplikace.
 
-V tomto souboru je také includován soubor \texttt{LiteralTranslator.ts} který přidává pomocné globální metody (v rámci Vue frameworku jsou dostupné pod \texttt{this}) pro překlad literálů z grafu.
+V tomto souboru je také includován soubor \texttt{LiteralTranslator.ts}, který přidává pomocné globální metody (v rámci Vue frameworku jsou dostupné pod \texttt{this}) pro překlad literálů z grafu.
 
 \begin{itemize}
-  \item \texttt{\$t_literal(translations): string|undefined} - Očekává objekt \\popsaný v kapitole \ref{jazykova-podpora} a vybere z něj nejvhodnější překlad podle pravidel popsaných ve zmíněné kapitole. Vrací \texttt{undefined} pokud žádný překlad není.
+  \item \texttt{\$t_literal(translations): string|undefined} - Očekává objekt \\popsaný v kapitole \ref{jazykova-podpora} a vybere z něj nejvhodnější překlad podle pravidel popsaných ve zmíněné kapitole. Vrací \texttt{null}, pokud žádný překlad není.
 
   \item \texttt{\$te_literal(translations): boolean} - Vrací true, pokud by předchozí metoda našla překlad.
 
-  \item \texttt{\$i18nGetAllLanguages(): string[]} - Vrací jazyky které jsou požadovány ze serveru. Pokud se jazyk aplikace změní a na již stažená data vrátí \texttt{\$te_literal} false, pak se data stáhnou znovu s již správným jazykem. Tato logika je zatím implementována pouze u meta konfigurací a konfigurací.
+  \item \texttt{\$i18nGetAllLanguages(): string[]} - Vrací jazyky, které jsou požadovány ze serveru. Pokud se jazyk aplikace změní a na již stažená data vrátí \texttt{\$te_literal} false, pak se data stáhnou znovu s již správným jazykem. Tato logika je zatím implementována pouze u meta konfigurací a konfigurací.
 \end{itemize}
 
 \subsection{Komponenta Application}
-Jedná se kořenovou komponentu celé aplikace, která drží základní třídy a moduly a řídí logiku celé aplikace. Tato komponenta registruje veškeré dialogové okna a grafické prvky.
+Jedná se kořenovou komponentu celé aplikace, která drží základní třídy a moduly a řídí logiku celé aplikace. Tato komponenta registruje veškeré dialogov8 okna a grafické prvky.
 
-Pro debugování aplikace je komponenta přístupná pod \texttt{window.kgwb} a je tedy možné zasahovat do jakékoli části aplikace.
+Pro debugování aplikace je komponenta přístupná pod \texttt{window.kgvb} a je tedy možné zasahovat do jakékoli části aplikace.
 
 Mezi důležité fieldy patří (veškeré tyto třídy budou popsány dále v textu):
 \begin{itemize}
-  \item \texttt{server: RemoteServer} - Třída komunikující se serverem. Obsahuje metody které zavolají na serveru konkrétní požadavek a vrátí výsledek ve správném interface nebo false, pokud nastala chyba.
+  \item \texttt{server: RemoteServer} - Třída komunikující se serverem. Obsahuje metody, které zavolají na serveru konkrétní požadavek a vrátí výsledek ve správném interface nebo false, pokud nastala chyba.
   \item \texttt{configuration: Configuration} - Aktuální konfigurace grafu ve smyslu konfigurace z kapitoly \ref{pozadavky-konfigurace}.
   \item \texttt{graph: Graph} - Aktuální graf jež závisí na \texttt{configuration}.
-  \item \texttt{areaManipulator: GraphAreaManipulator} - Třída která obsahuje \\ metody pro práci s grafovou oblastí jako zoomování, přesouvání pohledu atp.
-  \item \texttt{manipulator: GraphManipulator} - Třída která obsahuje metody pro složitější práci s grafem. Na rozdíl od \texttt{Graph} metody v této třídě více odpovídají akcím uživatele a obvykle volají další moduly jako \texttt{LayoutManager}.
-  \item \texttt{viewOptions: ViewOptions} - Jednoduchá třída mající stav, jak pohlížet na graf. Řeší zda u hran mají být popisky a zda vůbec mají být hrany viditelné. U vrcholů pak řeší také viditelnost popisků a zda se mají zobrazit jako malé tečky.
+  \item \texttt{areaManipulator: GraphAreaManipulator} - Třída, která obsahuje \\ metody pro práci s grafovou oblastí jako přibližování, přesouvání pohledu atp.
+  \item \texttt{manipulator: GraphManipulator} - Třída, která obsahuje metody pro složitější práci s grafem. Na rozdíl od \texttt{Graph}, metody v této třídě více odpovídají akcím uživatele a obvykle volají další moduly jako \texttt{LayoutManager}.
+  \item \texttt{viewOptions: ViewOptions} - Jednoduchá třída mající stav, jak pohlížet na graf. Řeší, zda u hran mají být popisky a zda vůbec mají být hrany viditelné. U vrcholů pak řeší také viditelnost popisků a zda se mají zobrazit jako malé tečky.
   \item \texttt{filter: FiltersList} - Modul řešící filtrování.
   \item \texttt{layouts: LayoutManager} - Modul řešící layoutování grafu v závislosti na určitých akcích uživatele.
-  \item \texttt{configurationManager: ConfigurationManager} - Drží všecny načtené konfigurace a metakonfigurace ze serveru.
-  \item \texttt{visualStyleSheet: ResponseStylesheet} - Aktuální stylesheet pro \\ Cytoscape knihovnu.
+  \item \texttt{configurationManager: ConfigurationManager} - Drží všechny načtené konfigurace a meta konfigurace ze serveru.
+  \item \texttt{visualStyleSheet: ResponseStylesheet} - Aktuální style sheet pro \\ Cytoscape knihovnu.
   \item \texttt{graphSearcher: GraphSearcher} - Třída schopna vyhledávat vrcholy v grafu a z autocomplete souborů jež jsou specifikovány v konfiguraci.
 \end{itemize}
 
 \subsubsection{Závislost modulů}
 
-Značná část modulů v aplikaci je závislá na jiných. Kupříkladu \texttt{Graph} je závislý na \texttt{RemoteServer} a částečně na \texttt{Configuration}. Na třídě \texttt{Graph} pak závisí \texttt{GraphAreaManipulator} na které závisí \texttt{GraphManipulator}. Protože těchto závislostí je hodně, některé třídy byly určeny jako readonly a tedy se může měnit pouze jejich stav. Jedná se například o třídu \texttt{RemoteServer} které lze měnit URL adresu serveru. Dalšími třídami jsou \texttt{GraphAreaManipulator}, \texttt{ViewOptions}, \texttt{FiltersList}, \texttt{LayoutManager}, \texttt{ConfigurationManager}. Ostaní třídy jsou pak měněny pouze když se mění konfigurace, v tu chvíli se starý graf zahazuje a vytváří se nový.
+Značná část modulů v aplikaci je závislá na jiných. Kupříkladu \texttt{Graph} je závislý na \texttt{RemoteServer} a částečně na \texttt{Configuration}. Na třídě \texttt{Graph} pak závisí \texttt{GraphAreaManipulator} na které závisí \texttt{GraphManipulator}. Protože těchto závislostí je hodně, některé třídy byly určeny jako readonly a tedy se může měnit pouze jejich stav. Jedná se například o třídu \texttt{RemoteServer} které lze měnit URL adresu serveru. Dalšími třídami jsou \texttt{GraphAreaManipulator}, \texttt{ViewOptions}, \texttt{FiltersList}, \texttt{LayoutManager}, \texttt{ConfigurationManager}. Ostatní třídy jsou pak měněny pouze když se mění konfigurace, v tu chvíli se starý graf zahazuje a vytváří se nový.
 
 \medskip
 
 Mezi důležité metody patří
 \begin{itemize}
-  \item \texttt{async loadStylesheet()} - Načte stylesheet do proměnné \\ \texttt{visualStyleSheet} podle aktuální konfigurace \texttt{configuration}.
+  \item \texttt{async loadStylesheet()} - Načte style sheet do proměnné \\ \texttt{visualStyleSheet} podle aktuální konfigurace \texttt{configuration}.
   \item \texttt{changeConfiguration()} - Nastaví novou konfiguraci \texttt{configuration} a zavolá metodu \texttt{createNewGraph}.
   \item \texttt{createNewGraph(loadStylesheet: boolean = true)} - Na základě konfigurace \texttt{configuration} vytvoří nový, prázdný graf (startý zahodí) a nastaví závislosti mezi moduly. Tato metoda pak ještě resetuje nastavení filtrů a plátna kde se vykresluje graf.
-  \item \texttt{updateGraphSearcher()} - Pomocná metoda pro \texttt{createNewGraph} která na základě konfigurace a grafu sestaví třídu schopnou vyhledávat nové vrcholy v grafu.
+  \item \texttt{updateGraphSearcher()} - Pomocná metoda pro \texttt{createNewGraph}, která na základě konfigurace a grafu sestaví třídu schopnou vyhledávat nové vrcholy v grafu.
 \end{itemize}
 
-Kromě těchto metod komponenta obsahuje ještě Vue metodu \texttt{mounted} která skryje uvítací obrazovku aplikace až se komponenta (a tedy i celá aplikace) inicializuje. Kontroluje také URL adresu, zda neobsahuje parametry \texttt{load}, \\ \texttt{meta-configuration} nebo \texttt{configuration} které přimějí aplikaci načíst graf z url respektive načíst meta konfiguraci respektive konfiguraci.
+Kromě těchto metod komponenta obsahuje ještě Vue metodu \texttt{mounted}, která skryje uvítací obrazovku aplikace až se komponenta (a tedy i celá aplikace) inicializuje. Kontroluje také URL adresu, zda neobsahuje parametry \texttt{load}, \\ \texttt{meta-configuration} nebo \texttt{configuration} které přimějí aplikaci načíst graf z url respektive načíst meta konfiguraci respektive konfiguraci.
 
 \subsubsection{ApplicationLoadStoreMixin}
 \texttt{ApplicationLoadStoreMixin} rozšiřuje komponentu o načítání a ukládání grafu ze a do souboru.
 
-\paragraph{askForSaveAndPerformAction(modal: boolean, callback: Function)}\mbox{}\\ Tato funkce zkontroluje, zda jsou v grafu nějaké neuložené změny a pokud ano, otevře \texttt{SaveDialog} komponentu. Podle odpovědi na dialog pak graf uloží a v případě kladného potvrzení zavolá \texttt{callback} funkci která pak může například vytvořit nový graf. Pokud žádné změny nejsou, callback je volán okamžitě.
+\paragraph{askForSaveAndPerformAction(modal: boolean, callback: Function)}\mbox{}\\ Tato funkce zkontroluje, zda jsou v grafu nějaké neuložené změny a pokud ano, otevře \texttt{SaveDialog} komponentu. Podle odpovědi na dialog pak graf uloží a v případě kladného potvrzení zavolá \texttt{callback} funkci, která pak může například vytvořit nový graf. Pokud žádné změny nejsou, callback je volán okamžitě.
 
 \paragraph{loadFromFile(file: File), loadFromUrl(url: string)} - Metoda otevře soubor respektive soubor z URL a přečte ho jako JSON. Výsledný objekt pak předá metodě \texttt{ObjectSave::restoreFromObject}.
 
 \paragraph{saveToFile()} - Vyrobí soubor se stavem aplikace který je možné stáhnout.
 
 \subsection{Interface file-save/ObjectSave}
-Interface \texttt{ObjectSave} předepisuje dvě metody \texttt{saveToObject(): object} a \texttt{restoreFromObject(object: any): void} které uloží stav třídy do serializovatelného objektu, respektive tento stav obnoví. Tento interface obsahují všechny třídy jež drží stav aplikace který je třeba uložit do souboru, pokud o to uřivatel požádá.
+Interface \texttt{ObjectSave} předepisuje dvě metody \texttt{saveToObject(): object} a \texttt{restoreFromObject(object: any): void} které uloží stav třídy do serializovatelného objektu, respektive tento stav obnoví. Tento interface obsahují všechny třídy jež drží stav aplikace který je třeba uložit do souboru, pokud o to uživatel požádá.
 
-Tento interface implemetuje i komponenta \texttt{Application} jež tyto metody volá na modulech a jednotlivé výsledky pak spojí do jednoho objektu (v případě metody \texttt{saveToObject}). Výsledek je pak serializován do JSONu a uložen do počítače. V opačném případě je JSON deserializován a předán metodě \texttt{restoreFromObject} která volá tuto metodu na modulech které ji mohou volat na podtřídách.
+Tento interface implementuje i komponenta \texttt{Application} jež tyto metody volá na modulech a jednotlivé výsledky pak spojí do jednoho objektu (v případě metody \texttt{saveToObject}). Výsledek je pak serializován do JSONu a uložen do počítače. V opačném případě je JSON deserializován a předán metodě \texttt{restoreFromObject} která volá tuto metodu na modulech které ji mohou volat na podtřídách.
 
-\paragraph{Poznámka:} Je třeba mít na paměti, že metoda \texttt{saveToObject} by měla vracet plain Javascript objekt, tedy veškeré neprimitivní typy jako objekty a pole musí být oklonovány, pokud jsou ve vlastnictví Vue frameworku. Taktéž je třeba dbát na zpětnou kompatibilitu u metody \texttt{restoreFromObject}.
+\paragraph{Poznámka:} Je třeba mít na paměti, že metoda \texttt{saveToObject} by měla vracet plain Javascript objekt, tedy veškeré neprimitivní typy jako objekty a pole musí být klonovány, pokud jsou ve vlastnictví Vue frameworku. Taktéž je třeba dbát na zpětnou kompatibilitu u metody \texttt{restoreFromObject}.
 
 \smallskip
 
@@ -294,7 +294,7 @@ Poslední tři zmíněné fieldy jsou gettery. Protože se aplikace často na ty
   \item \texttt{getOrCreateNode(IRI: string): Promise<Node>} - Obdobná metoda \\metodě výše. Pokud uzel neexistuje, volá předchozí metodu. Pokud uzel existuje, stáhne jeho \texttt{view-sets} a \texttt{preview} obdobně jako předchozí metoda a vrátí ho.
 \end{itemize}
 
-\paragraph{Poznámka k viditelnosti} Veškeré metody které vytvářejí vrcholy, skupiny nebo hrany tyto prvy nevytvoří viditelnými. Aby mohl být prvek viděn v grafu, musí mu být nastaven field \texttt{mounted = true}.
+\paragraph{Poznámka k viditelnosti} Veškeré metody které vytvářejí vrcholy, skupiny nebo hrany tyto prvky nevytvoří viditelnými. Aby mohl být prvek viděn v grafu, musí mu být nastaven field \texttt{mounted = true}.
 
 \subsection{Třída NodeCommon}
 Třída \texttt{NodeCommon} je společný předek pro třídy \texttt{Node} a \texttt{NodeGroup} a zaštiťje především jejich vizuální vlastnosti.
@@ -303,9 +303,9 @@ Třída \texttt{NodeCommon} je společný předek pro třídy \texttt{Node} a \t
 \begin{itemize}
   \item \texttt{mounted: boolean} - Určuje, zda má být vrchol viditelný v aplikaci. Na rozdíl od ostatních úrovní viditelností je tato myšlena tak, že uzel který má tuto hodnotu false v grafu vůbec nefiguruje a není jej možné ani najít v jiných částech aplikace (například mezi skrytými vrcholy). Využití najde v případě, kdy server pošle více vrcholů než uživatel žádal, nebo ho lze použít v případě browsingu seznamem, který je popsán v poslední kapitole.
 
-  \item \texttt{onMountPosition: [number, number]} - Pomocný field který určuje, kde má být vrchol na plátně vykreslet, až bude nastaven na mounted.
+  \item \texttt{onMountPosition: [number, number]} - Pomocný field který určuje, kde má být vrchol na plátně vykreslen, až bude nastaven na mounted.
 
-  \item \texttt{visible: boolean} - Nastavuje uživetelskou viditelnost uzlu. Uživatel se může rozhodnout ručně skrýt uzel. Takový uzel si pak zachovává svou pozici na plátně a je v seznamu mezi ostatními skrytými uzly.
+  \item \texttt{visible: boolean} - Nastavuje uživatelskou viditelnost uzlu. Uživatel se může rozhodnout ručně skrýt uzel. Takový uzel si pak zachovává svou pozici na plátně a je v seznamu mezi ostatními skrytými uzly.
 
   \item \texttt{get isVisible: boolean} - Pomocný getter který určí, jestli je uzel viditelný. \\ Pro \texttt{NodeGroup} se počítá jako \texttt{visible} AND \uv{alespoň jeden vrchol skupiny je \texttt{isVisible}}. \\ \texttt{Node} pak viditelnost počítá jako \texttt{visible} AND \uv{žáden filtr nezakazuje jeho viditelnost}.
 
@@ -323,10 +323,10 @@ Třída \texttt{NodeCommon} je společný předek pro třídy \texttt{Node} a \t
 \subsubsection*{Metody}
 \begin{itemize}
   \item \texttt{remove()} - Smaže vrchol z grafu společně s jeho hranami. V případě skupiny smaže skupiny a vrcholy v ní.
-  \item \texttt{selectExclusively()} - Nastaví \texttt{selected} pouze pro tento vrchol. V praxi to znamená, že se zobrazí detail tototo vrcholu v pravém panelu.
+  \item \texttt{selectExclusively()} - Nastaví \texttt{selected} pouze pro tento vrchol. V praxi to znamená, že se zobrazí detail tohoto vrcholu v pravém panelu.
 \end{itemize}
 
-\paragraph{Poznámka} Díky Vue frameworku je hodně akcí vyvoláno právě nastavením nějaké proměnné. Kupříkladu proměnná \texttt{mounted} místo metody \texttt{mount()}. Vue framework automaticky při změně taktovýchto proměnných provede příslušnou akci. Tento přístup má několik výhod, kupříkladu můžeme napojit proměnnou \texttt{visible} na checkbox a tak propojit viditelnost vrcholu se zaškrtávacím políčkem v obou směrech. Nevýhoda tohoto přístupu je ta, že skutečná akce bude provedena až po skončení funkce. Pokud bychom například chtěli počkat, až se uzel namountuje a pak provést nějakou akci, musíme počkat na další AnimationFrame. Následující kód toto předvádí na akci, kdy chceme vrchol zobrazit v grafu a pak na něj přesunout pohled.
+\paragraph{Poznámka} Díky Vue frameworku je hodně akcí vyvoláno právě nastavením nějaké proměnné. Kupříkladu proměnná \texttt{mounted} místo metody \texttt{mount()}. Vue framework automaticky při změně takovýchto proměnných provede příslušnou akci. Tento přístup má několik výhod, kupříkladu můžeme napojit proměnnou \texttt{visible} na checkbox a tak propojit viditelnost vrcholu se zaškrtávacím políčkem v obou směrech. Nevýhoda tohoto přístupu je ta, že skutečná akce bude provedena až po skončení funkce. Pokud bychom například chtěli počkat, až se uzel namountuje a pak provést nějakou akci, musíme počkat na další AnimationFrame. Následující kód toto předvádí na akci, kdy chceme vrchol zobrazit v grafu a pak na něj přesunout pohled.
 
 \begin{code}
 node.mounted = true;
@@ -340,7 +340,7 @@ Třída \texttt{Node} rozšiřuje třídu \texttt{NodeCommon} a reprezentuje vrc
 \subsubsection*{Fieldy}
 \begin{itemize}
   \item \texttt{get classes: string[]} - Seznam tříd z posledního kompletního pohledu. \textit{(viz dále)}
-  \item \texttt{get edges: Edge[]} - Senazm hran příslušících vrcholu.
+  \item \texttt{get edges: Edge[]} - Seznam hran příslušících vrcholu.
   \item \texttt{filters} jako objekt - Objekt jehož klíčem jsou identifikátory filtrů a hodnotou je \texttt{boolean} zda konkrétní filtr povoluje viditelnost vrcholu. Objekt je aktualizován kdykoli se změní stav vrcholu který daný filtr využívá nebo se změní nastavení filtrů. Všechny hodnoty nastavené na \texttt{true} jsou nutnou podmínkou viditelnosti vrcholu.
   \item \texttt{get shownByFilters: boolean} - Zdali všechny hodnoty objektu výše jsou nastaveny na true.
   \item \texttt{currentView: NodeView} - Určuje aktuální pohled na vrchol.
@@ -352,7 +352,7 @@ Třída \texttt{Node} rozšiřuje třídu \texttt{NodeCommon} a reprezentuje vrc
 
 \subsubsection*{Metody}
 \begin{itemize}
-  \item \texttt{async fetchViewSets(): Promise<void>} - Metoda asynchronně stáhne view sety. Tato metoda (společně s dalšími) je navržena tak, že druhým voláním nezahájí druhé stahování, ale vrátí promisu z prvního stahování. Takto nedojde k zatížení serveru a datových zdrojů. Ukázka metody je zobrazena an obrázku \ref{fetchViewSets}.
+  \item \texttt{async fetchViewSets(): Promise<void>} - Metoda asynchronně stáhne view sety. Tato metoda (společně s dalšími) je navržena tak, že druhým voláním nezahájí druhé stahování, ale vrátí Promise z prvního stahování. Takto nedojde k zatížení serveru a datových zdrojů. Ukázka metody je zobrazena an obrázku \ref{fetchViewSets}.
   \item \texttt{async useDefaultView(): Promise<NodeView>} - Metoda, v případě že vrchol nemá nastaven pohled, stáhne pohledy a nastaví výchozí.
 \end{itemize}
 
@@ -387,7 +387,7 @@ async fetchViewSets(): Promise<void> {
 \end{figure}
 
 \subsection{Třída NodeGroup}
-Třída \texttt{NodeGroup} rozšiřuje třídu \texttt{NodeCommon} a reprezentuje skupinu vrcholů \texttt{Node}. Aktuálně není podporováno, aby skupina obsahovala další skupiny. Všechny pomocné metody pak řeší přeskupování tak, že prvně vrcholy ze skupiny odstraní a volží je do jiné.
+Třída \texttt{NodeGroup} rozšiřuje třídu \texttt{NodeCommon} a reprezentuje skupinu vrcholů \texttt{Node}. Aktuálně není podporováno, aby skupina obsahovala další skupiny. Všechny pomocné metody pak řeší přeskupování tak, že prvně vrcholy ze skupiny odstraní a vloží je do jiné.
 
 
 
@@ -406,11 +406,11 @@ Třída \texttt{NodeGroup} rozšiřuje třídu \texttt{NodeCommon} a reprezentuj
 \subsubsection{Generování GroupEdges}
 \texttt{NodeGroup} seskupuje několik vrcholů a z grafového hlediska provádí jejich kontrakci. To znamená, že musíme sjednotit několik hran do jedné.
 
-Třída obsahuje field \texttt{groupEdgesCache} který udržuje tyto virtuální hrany. Kdykoli dojde ke změně v grafu, dojde ke znovupřepočítání těchto virtuálních hran a pokud již existují, budou použity tyto existující. Pokud vznikne nová hrana, bude uložena do této cache a pokud nějaká hrana zanikla, bude z této chache odstraněna.
+Třída obsahuje field \texttt{groupEdgesCache} který udržuje tyto virtuální hrany. Kdykoli dojde ke změně v grafu, dojde k opětovnému přepočítání těchto virtuálních hran a pokud již existují, budou použity tyto existující. Pokud vznikne nová hrana, bude uložena do této cache a pokud nějaká hrana zanikla, bude z této cache odstraněna.
 
 Tímto způsobem je docíleno automatického generování těchto hran přičemž existující hrany se nemění (jejich instance zůstává stejná). Celý proces je spravován Vue frameworkem a tedy se děje všechno automaticky.
 
-Třída má field \texttt{get visibleGroupEdges: GroupEdge[]} který vrací všechny hrany kromě těch, které vycházejí z jiné \texttt{NodeGroup}. Jednoduchým sjednocením pak tedy dostaneme všechny hrany a každou právě jednou. Hrany se vypočítavají funkcí \texttt{getGroupEdgesInDirection} která kvůli komplexnosti počítá hrany jen v jednom směru a musí se tedy volat dvakrát. Jak již bylo zmíněno, tato funkce používá cache aby vracela již existující hrany. Výsledek funkce je pak ještě jednou chachován, tentokrát pomocí computed properties a tedy k přepočítání dojde pouze tehdy, změní-li se graf.
+Třída má field \texttt{get visibleGroupEdges: GroupEdge[]} který vrací všechny hrany kromě těch, které vycházejí z jiné \texttt{NodeGroup}. Jednoduchým sjednocením pak tedy dostaneme všechny hrany a každou právě jednou. Hrany se vypočítávají funkcí \texttt{getGroupEdgesInDirection} která kvůli komplexnosti počítá hrany jen v jednom směru a musí se tedy volat dvakrát. Jak již bylo zmíněno, tato funkce používá cache aby vracela již existující hrany. Výsledek funkce je pak ještě jednou cachován, tentokrát pomocí computed properties a tedy k přepočítání dojde pouze tehdy, změní-li se graf.
 
 \subsection{Třídy EdgeCommon, Edge, GroupEdge}
 Hrany RDF grafu jsou pak reprezentovány třídou \texttt{Edge} a hrany mezi skupinou a vrcholem, nebo dvěma skupinami třídou \texttt{GroupEdge}.
@@ -445,10 +445,10 @@ Tato třída odpovídá pohledům tak, jak jsou definovány v kapitole \ref{poza
   \item \texttt{async expand(): Promise<Expansion>} - Provede expanzi a vrátí ji.
 \end{itemize}
 
-Všechny tři funkce mají podobnou ochranu proti znovuzavolání jako metoda \texttt{fetchViewSets} jejíž ukázka je na obrázku \ref{fetchViewSets}. Metoda \texttt{expand} používá třídu \texttt{Graph} a vytáří nové vrcholy a nastavuje jim \texttt{preview}. Nově vytvořené vrcholy nemají nastavené \texttt{mounted} takže lze snadno určit nově vytvořené vrcholy a ty vhodně layoutovat.
+Všechny tři funkce mají podobnou ochranu proti opětovnému volání, jako metoda \texttt{fetchViewSets}, jejíž ukázka je na obrázku \ref{fetchViewSets}. Metoda \texttt{expand} používá třídu \texttt{Graph} a vytváří nové vrcholy a nastavuje jim \texttt{preview}. Nově vytvořené vrcholy nemají nastavené \texttt{mounted}, takže lze snadno určit nově vytvořené vrcholy a ty vhodně layoutovat.
 
 \subsection{Třída Expansion}
-Aktuálně třída \texttt{Expansion} je v aplikaci využívána pouze během procesu expanze. Do budoucna ji lze použít například pro znázornění vrcholů které vzikly z jiných vrcholů. Obsahuje seznam vrcholů \texttt{nodes: Node[]} a hran \texttt{edges: Edge[]}
+Aktuálně třída \texttt{Expansion} je v aplikaci využívána pouze během procesu expanze. Do budoucna ji lze použít například pro znázornění vrcholů, které vznikly z jiných vrcholů. Obsahuje seznam vrcholů \texttt{nodes: Node[]} a hran \texttt{edges: Edge[]}
 
 \bigskip
 
@@ -462,16 +462,16 @@ Veškeré třídy zde zmíněné pro práci s grafem implementují rozhraní \\\
 
 \newpage
 
-V následujících kapitolách práce bude popsáno, jak je tento modul grafu integrován do Vue frameworku tak, aby se samy vytvářely a updatovaly vrcholy a hrany, kdykoli dojde k jejich změně.
+V následujících kapitolách práce bude popsáno, jak je tento modul grafu integrován do Vue frameworku tak, aby se samy vytvářely a aktualizovaly vrcholy a hrany, kdykoli dojde k jejich změně.
 
 \subsection{Komponenta GraphArea} \label{komponenta-graph-area}
-Tato komponenta je definována v souboru \\\texttt{src/component/graph/GraphArea.vue} a reprezentuje právě plátno na které se vykresluje graf. Kromě plátna ještě obsluhuje tlačítka v pravém dolním rohu na jeho ovládání a vyhledávací políčko v levém horním rohu.
+Tato komponenta je definována v souboru \\\texttt{src/component/graph/GraphArea.vue} a reprezentuje právě plátno na které se vykresluje graf. Kromě plátna ještě vyrábí tlačítka v pravém dolním rohu na jeho ovládání a vyhledávací políčko v levém horním rohu.
 
-Komponenta přijímá spoustu properties, nejdůležitější jsou však \\\texttt{graph: Graph} a \texttt{stylesheet: ResponseStylesheet}. Jakmile se komponenta vyrobí, vrátí rodičovské komponentě \texttt{Application} instanci třídy \\\texttt{GraphAreaManipulator} formou emitu, jež je schopna pracovat právě s grafovou oblastí.
+Komponenta přijímá spoustu properties, nejdůležitější jsou však \\\texttt{graph: Graph} a \texttt{stylesheet: ResponseStylesheet}. Jakmile se komponenta vyrobí, vrátí rodičovské komponentě \texttt{Application} instanci třídy \\\texttt{GraphAreaManipulator} formou Vue emitu, jež je schopna pracovat právě s grafovou oblastí.
 
 \subsubsection{GraphAreaStylesheetMixin}
 
-Komponenta používá \texttt{GraphAreaStylesheetMixin} kde je oddělena logika \\zpracování stylesheetů.
+Komponenta používá \texttt{GraphAreaStylesheetMixin} kde je oddělena logika \\zpracování style sheetů.
 
 Předtím, než jsou styly předány Cytoscape knihovně, jsou použity výchozí styly z \texttt{defaultStyles} které nastavují základní parametry. Poté jsou aplikovány styly které komponenta dostala od rodiče a ten si je stáhl ze serveru. Nakonec jsou použity styly z \texttt{viewOptionsStyles} které na základě \texttt{ViewOptions} přepisují základní pravidla.
 
@@ -484,10 +484,10 @@ protected stylesheetUpdated() {
     this.cy.style(clone(this.finalStylesheet));
 }
 \end{code}
-S pomocí dekorátoru nastavíme sledování \texttt{finalStylesheet}. Jamile dojde k jeho změně, zavolá se metoda která předá knihovně (\texttt{this.cy}) nový stylesheet. Nesmíme zapomenout objekt oklonovat, protože nemáme zaručeno, že ho knihovna nebude upravovat. Pokud by knihovna objekt vždy upravila, například z optimalizačních důvodů, Vue framework by zachytil změnu stylu a znovu by zavolal tuto funkci.
+S pomocí dekorátoru nastavíme sledování \texttt{finalStylesheet}. Jakmile dojde k jeho změně, zavolá se metoda, která předá knihovně (\texttt{this.cy}) nový style sheet. Nesmíme zapomenout objekt klonovat, protože nemáme zaručeno, že ho knihovna nebude upravovat. Pokud by knihovna objekt vždy upravila, například z optimalizačních důvodů, Vue framework by zachytil změnu stylu a znovu by zavolal tuto funkci.
 
 \newpage
-Komponenta pak ke každému vrcholu, hraně a skupině vytvoří vlastní komponentu která tento prvek reprezentuje a spravuje. Jako příklad uveďme vytvoření komponent reprezentujících vrchol.
+Komponenta pak ke každému vrcholu, hraně a skupině vytvoří vlastní podkomponentu, která tento prvek reprezentuje a spravuje. Jako příklad uveďme vytvoření komponent reprezentujících vrchol.
 
 \begin{code}
 <graph-element-node
@@ -501,7 +501,7 @@ Komponenta pak ke každému vrcholu, hraně a skupině vytvoří vlastní kompon
 
 \bigskip
 
-Mezi tlačítky v pravém dolním rohu se vykreslí i tlačítka aktuálního layoutu, pokud to daný layout podporuje. Layout v takovém případě musí dodat právě komponentu, která se zde vloží. V následujícím kódu se ověří, že \texttt{buttons} není prázdné a použije se jako ona komponenta. Té pak je předán jeden parametr a to aktuální layout.
+Mezi tlačítky v pravém dolním rohu se vykreslí i tlačítka aktuálního layoutu, pokud to daný layout podporuje. Layout v takovém případě musí dodat právě komponentu, která se zde vloží. V následujícím kódu se ověří, že \texttt{buttons} není prázdné a použije se jako ona komponenta. Té je pak předán jeden parametr, a to aktuální layout.
 
 \begin{code}
 <component
@@ -511,17 +511,17 @@ Mezi tlačítky v pravém dolním rohu se vykreslí i tlačítka aktuálního la
 \end{code}
 
 \subsection{Komponenty GraphElementNode, GraphElementNodeGroup a GraphElementNodeMixin}
-Jak již bylo zmíněno v popsiu Vue frameworku a z příkladu výše, framework automaticky pro kažý vrchol grafu, který je \texttt{mounted} a není ve skupině, vytvoří kopmonentu \texttt{GraphElementNode}. Ta se pak stará o zobrazení tohoto vrhcholu v rámci Cytoscape knihovny.
+Jak již bylo zmíněno v popisu Vue frameworku a z příkladu výše, framework automaticky pro kažý vrchol grafu, který je \texttt{mounted} a není ve skupině, vytvoří komponentu \texttt{GraphElementNode}. Ta se pak stará o zobrazení tohoto vrcholu v rámci Cytoscape knihovny.
 
 Obdobně jako jsme měli třídy \texttt{NodeCommon}, \texttt{Node} a \texttt{NodeGroup} i zde máme komponenty \texttt{GraphElementNodeMixin}, \texttt{GraphElementNode} a \\\texttt{GraphElementNodeGroup}, jež si navzájem odpovídají.
 
 Mezi významné metody patří
 \begin{itemize}
-  \item \texttt{mounted()} - Metoda se volá automaticky, když je komponenta vytvořena. V této metodě probíhá registrace vrcholu v Cytoscape knihovně, registrace důležitých eventů a registrace knihovny Popper\footnote{\url{https://popper.js.org/}}, jež má na starosti pozicování elementů vůči různým objektům, zde právě vůči vrcholům na plátně. Tak jsme schopni vykreslit k vrcholům ikonky. Prozatím jsou dvě ikonky - uzamčení vrcholu a že je vrchol skupinou.
+  \item \texttt{mounted()} - Metoda se volá automaticky, když je komponenta vytvořena. V této metodě probíhá registrace vrcholu v Cytoscape knihovně, registrace důležitých událostí a registrace knihovny Popper\footnote{\url{https://popper.js.org/}}, jež má na starosti pozicování elementů vůči různým objektům, zde právě vůči vrcholům na plátně. Tak jsme schopni vykreslit k vrcholům ikonky. Prozatím existují dvě ikonky - uzamčení vrcholu a že je vrchol skupinou.
   \item \texttt{beforeDestroy()} - Metoda je volána před tím, než Vue framework zničí komponentu. V této části probíhá odstranění vrcholu z grafu.
 \end{itemize}
 
-\paragraph{Souhrn} Díky těmto dvěma metodám a kompletnímu managementu Vue frameworku nám stačí do třídy \texttt{Graph} přidat nový uzel a ten se automaticky vykreslí do grafu. Opětovným odstraněním uzlu z kontejneru dojde k jeho smazání.
+\paragraph{Souhrn} Díky těmto dvěma metodám a kompletnímu managementu Vue frameworku nám stačí do třídy \texttt{Graph} přidat nový uzel a ten se automaticky vykreslí do grafu. Odstraněním uzlu z kontejneru pak dojde k jeho smazání.
 
 
 \newpage
@@ -559,17 +559,17 @@ Hrany jsou pak vykresleny komponentou \texttt{GraphElementEdge}.
 Jednotlivé filtry jsou definovány v adresáři \\\texttt{src/filter/filters/<jméno-filtru>}. Každá definice filtru je pak soubor, který exportuje objekt odkazující na třídy a komponenty příslušného filtru. Tento objekt musí odpovídat rozhraní \\\texttt{FilterDefinition}, které je definováno následovně:
 
 \begin{itemize}
-  \item \texttt{name: string} - Jednoznačný identifikátor filtru podle kterého se pak jednotlivé filtry identifikují a data filtru ukládají do souboru. Pro každý filtr by měl být neměnný a nesmí nastávat kolize.
-  \item \texttt{component: typeof Vue} - Jedná se o Vue komponentu, která se napojí na filtr a jeden vrchol a provádí filtrování tohoto vrcholu. Výhoda použití komponenty místo klasické třídy je ta, že komponenta si může snadno zaregistrovat watchery a aktualizuje se pouze tehdy, když se změní sledovaný stav. Této komponentě je pak předán jeden vrchol \texttt{node: Node} a data filtru \texttt{filter}. Komponenta na základě dat filtru sleduje vrchol a zapisuje do \texttt{node.filters[name]} boolean hodnotu, zda je vrchol dle tohoto filtru viditelný.
+  \item \texttt{name: string} - Jednoznačný identifikátor filtru podle kterého se jednotlivé filtry identifikují a data filtru ukládají do souboru. Pro každý filtr by měl být neměnný a nesmí nastávat kolize.
+  \item \texttt{component: typeof Vue} - Jedná se o Vue komponentu, která se napojí na filtr a jeden vrchol a provádí filtrování tohoto vrcholu. Výhoda použití komponenty místo klasické třídy je ta, že komponenta si může snadno zaregistrovat watchery a aktualizuje se pouze tehdy, když se změní sledovaný stav. Této komponentě je pak předán jeden vrchol \texttt{node: Node} a data filtru \texttt{filter}. Komponenta na základě dat filtru sleduje vrchol a zapisuje do \texttt{node.filters[name]} pravdivostní hodnotu, zda je vrchol dle tohoto filtru viditelný.
 
-  Jedná se o takzvanou renderless komponentu. Komponenta nemá žádný HTML výstup a pouze využívá Vue frameworku, který ji automaticky vytoří a zničí když se odstraní vrchol.
+  Jedná se o takzvanou renderless komponentu. Komponenta nemá žádný HTML výstup a pouze využívá Vue frameworku, který ji automaticky vytvoří a zničí, když se odstraní vrchol.
 
-  \item \texttt{filter: Filter} - Nese data filtru, která se pak dají uložit do souboru. Interface \texttt{Filter} tedy rozšiřuje rozhraní \texttt{ObjectSave}. Kromě toho má metodu \texttt{reset()} která nastaví filtr do výchozí hodnoty. Toho je využíváno při vytváření nového grafu, neboť většina filtrů je závislých právě na konkrétním grafu (například filtrování podle typu nemá smysl zachovávat, když měníme konfiguraci). Nakonec, toto rozhraní ještě předepisuje \texttt{readonly active: number}, jež je použit jako getter a říká \uv{kolik filtrů je aktivních}. Tyto čísla jsou pak zobrazena v uživatelksém rozhraní pro přehled uživatele.
+  \item \texttt{filter: Filter} - Nese data filtru, která se pak dají uložit do souboru. Interface \texttt{Filter} tedy rozšiřuje rozhraní \texttt{ObjectSave}. Kromě toho má metodu \texttt{reset()}, která nastaví filtr do výchozí hodnoty. Toho je využíváno při vytváření nového grafu, neboť většina filtrů je závislých právě na konkrétním grafu (například filtrování podle typu nemá smysl zachovávat, když měníme konfiguraci). Nakonec, toto rozhraní ještě předepisuje \texttt{readonly active: number}, jež je použit jako getter a říká \uv{kolik filtrů je aktivních}. Tyto čísla jsou pak zobrazena v uživatelském rozhraní pro přehled uživatele.
 
   \item \texttt{tabs} - Jedná se o pole jednotlivých sekci filtrů. Každý filtr totiž může v rámci uživatelského rozhraní mít více oken pro nastavení. Každé okno je pak reprezentováno jedním prvkem této položky.
   \begin{itemize}
     \item \texttt{component: typeof Vue} - Komponenta, která vykreslí okno s nastavením filtru.
-    \item \texttt{icon: string} - Data ikony která bude zobrazena u názvu karty.
+    \item \texttt{icon: string} - Data ikony, která bude zobrazena u názvu karty.
     \item \texttt{active: (filter: Filter) => bool} - Vrací logickou hodnotu zdali je daná část filtru aktivní.
     \item \texttt{text: string} - Kód reprezentující text, který se zobrazí v seznamu karet. Podle tohoto kódu se pak provede překlad.
   \end{itemize}
@@ -577,7 +577,7 @@ Jednotlivé filtry jsou definovány v adresáři \\\texttt{src/filter/filters/<j
 \end{itemize}
 
 \subsection*{Komponenta VueFilterComponentCreator}
-Tato komponenta očekává \texttt{graph: Graph} a seznam filtrů \\\texttt{filter: FiltersList}. Pro každý filtr a každý vrchol pak vytvoří komponentu (viz výše) která dostane zmíněný vrchol a graf. Tato komponenta je vytvořena v komponentě \\\texttt{Application}.
+Tato komponenta očekává \texttt{graph: Graph} a seznam filtrů \\\texttt{filter: FiltersList}. Pro každý filtr a každý vrchol pak vytvoří komponentu, (viz výše) která dostane zmíněný vrchol a graf. Tato komponenta je vytvořena v komponentě \\\texttt{Application}.
 
 Příklad definice filtru.
 \begin{code}
@@ -604,9 +604,9 @@ export default {
 Struktura layoutů je velmi podobně koncipována jako struktura filtrů. Layouty se registrují v rámci třídy \texttt{LayoutManager}. Jednotlivé layouty jsou definované jako objekty implementující rozhraní \texttt{LayoutData}. Toto rozhraní je definováno následovně:
 
 \begin{itemize}
-  \item \texttt{name: string} - Unikátní identifikátor layoutu podle kterého se stav ukládá do souboru.
+  \item \texttt{name: string} - Unikátní identifikátor layoutu podle kterého se ukládá stav layoutu do souboru.
   \item \texttt{layout: Layout} - Třída nesoucí stav layoutu a provádí samotné layoutování.
-  \item \texttt{settingsComponent: typeof Vue} - Vue komponenta, která vykreslí stánku s nastavením layoutu. Této komponentě je předán parametr \texttt{layout} a data tohoto layoutu upravuje. Na rozdíl od filtrů každý layout může vyrobit jen jednu stránku s nastavením. Titulek této stránky je pak sestaven ze jména \texttt{name} jako kód na přeložení.
+  \item \texttt{settingsComponent: typeof Vue} - Vue komponenta, která vykreslí stánku s nastavením layoutu. Této komponentě je předán parametr \texttt{layout} a data tohoto layoutu upravuje. Na rozdíl od filtrů, každý layout může vyrobit jen jednu stránku s nastavením. Titulek této stránky je pak sestaven ze jména \texttt{name} jako kód na přeložení.
   \item \texttt{buttons?: typeof Vue} - Volitelný parametr jako komponenta, která vykreslí dodatečná tlačítka v pravém dolním rohu aplikace. Této komponentě je opět předán parametr \texttt{layout}. Ukázka integrace této komponenty je na konci kapitoly \ref{komponenta-graph-area}.
 \end{itemize}
 
@@ -629,9 +629,9 @@ Pro explicitní spuštění layoutu je možné volat funkci \texttt{run}.
 Layout implementuje \texttt{ObjectSave}.
 
 \subsection{LayoutManager}
-Třída spravuje všechny layouty. Je konstruována s polem objektů \texttt{LayoutData}, tedy při jejím vytvoření dostane seznam podporovaných layoutů. Tento seznam nicméně může být měněn za runtime.
+Třída spravuje všechny layouty. Je konstruována s polem objektů \texttt{LayoutData}, tedy při jejím vytvoření dostane seznam podporovaných layoutů. Tento seznam může být později měněn.
 
-Metoda \texttt{switchToLayout(name: string)} pak po zadání identifikátoru layoutu správně provede jejich změnu.
+Metoda \texttt{switchToLayout(name: string)} pak po zadání identifikátoru layoutu správně provede jeho změnu.
 
 \subsection{Vyhledávání vrcholů}
 \subsubsection{Interface Searcher}
@@ -643,7 +643,7 @@ Všechny vyhledávače implementují následující funkce:
 
 \subsubsection{Interface SearcherResult}
 \begin{itemize}
-  \item \texttt{readonly IRI: string} - IRI vrcholu, který objekt popisuje.
+  \item \texttt{readonly IRI: string} - IRI vrcholu, který objekt reprezentuje.
   \item \texttt{text: string | string[]} - Text, jež bude zobrazen u nalezeného vrcholu jako \uv{popisek} tohoto vrcholu. Pokud se jedná o \texttt{string}, bude normálně zobrazen. To se použije v případě, kdy známe název vrcholu. Pokud se jedná o pole, první prvek reprezentuje kód pro překlad a další prvky pak parametry. Tohoto lze využít, pokud název vrcholu neznáme a chceme tedy vypsat obecnou hlášku, například \uv{Vrchol s identifikátorem XYZ}.
   \item \texttt{icon: string} a \texttt{color: string} - Popisuje, jak má vypadat ikonka u vyhledávaného výsledku. Používá se pro rozlišení více typů vyhledávačů, například v autocomplete a v grafu.
 \end{itemize}
@@ -667,7 +667,7 @@ Předchozí třída při vyhledávání vytvoří tuto třídu, která reprezent
 
 V aplikaci jsou implementovány následující vyhledávače
 \begin{itemize}
-  \item \texttt{IRIConstructorSearcher} - Pokud hledaný výraz odpovídá regulárnímu výrazu, pak se obalí prefixem a sufixem a takto bude vytvořené IRI. Dá se využít kupříkladu u Wikidat, jejichž IRI mají tvar jednotného prefixu následován výrazem \texttt{Q<číslo>}.
+  \item \texttt{IRIConstructorSearcher} - Pokud hledaný výraz odpovídá regulárnímu výrazu, pak se tento výraz obalí prefixem a sufixem a takto bude vytvořeno IRI. Dá se využít kupříkladu u Wikidat, jejichž IRI mají tvar jednotného prefixu následován výrazem \texttt{Q<číslo>}.
   \item \texttt{IRIIdentitySearcher} - Pokud hledaný výraz odpovídá regulárnímu výrazu popisující, jak by mělo vypadat IRI, bude vrácen výsledek s tímto IRI označen jako \uv{podporované IRI}. V případě, že dotaz neodpovídá regulárnímu výrazu, bude opět navrácen jeden výsledek s IRI rovnou vyhledávanému dotazu a označen jako \uv{nepodporované IRI}.
   \item \texttt{LocalGraphSearcher} - Vyhledává v grafu podle popisku (label pod preview). Ignoruje velikost písmen.
   \item \texttt{SimpleJsonSearcher} - Stáhne z internetu soubor ve formátu JSON-LD se seznamem vrcholů a jejich popisky. Po stažení je index uložen a tedy další dotazy již nevrací Promise, ale přímo výsledky.

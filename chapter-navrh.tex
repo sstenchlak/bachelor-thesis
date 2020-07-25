@@ -7,16 +7,16 @@ Rozdělení aplikace na klient-server také umožňuje cachování na straně se
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.75\textwidth]{media/communication.pdf}
-    \caption{Komunikace mezi klientem, serverem a datovými zdroji. Cachování na serveru ještě implemontováno není.}
+    \caption{Komunikace mezi klientem, serverem a datovými zdroji. Cachování na serveru ještě implementováno není.}
 \end{figure}
 
 \section{Server}
 Jak již bylo v dokumentu zmíněno, převážná část serveru byla dodána jako specifikace pro klientskou aplikaci.
 
 \subsection{Jazyková podpora} \label{jazykova-podpora}
-Server jsem částečně přepsal, aby podporoval dotazování na data z více světových jazyků. Některé požadavky přijímají parametr \texttt{languages} obsahující čárkou (\texttt{,}) oddělené ISO 639-1 jazykové kódy. Server pak vrací objekty jejiž klíčem je jazykový kód a hodnotou daný překlad do jazyka. Pokud překlad neexistuje, hodnotou je \texttt{null}. V případě, že na všechny jazyky bylo vráceno \texttt{null}, server se pokusí přidat další jazyk, který existuje. Který jazyk takto bude vybrán není určeno.
+Server jsem částečně přepsal, aby podporoval dotazování na data z více světových jazyků. Některé požadavky přijímají parametr \texttt{languages} obsahující čárkou (\texttt{,}) oddělené ISO 639-1 jazykové kódy. Server pak vrací objekty, jejichž klíčem je jazykový kód a hodnotou daný překlad do jazyka. Pokud překlad neexistuje, hodnotou je \texttt{null}. V případě, že na všechny jazyky bylo vráceno \texttt{null}, server se pokusí přidat další jazyk, který existuje. Který jazyk takto bude vybrán, není určeno.
 
-Tato implementace umoňuje stahování vícejazyčných dat tak, že jsou stažené jen žádané jazyky, což může značně ušetřit přenos dat v některých případech, ale současně dojde ke stažení alespoň jednoho podporovaného jazyka, pokud je to možné.
+Tato implementace umožňuje stahování vícejazyčných dat tak, že jsou stažené jen žádané jazyky, což může značně ušetřit přenos dat v některých případech, ale současně dojde ke stažení alespoň jednoho podporovaného jazyka, pokud je to možné.
 
 \begin{prikl}
 Pro \texttt{languages=cs,en} může server vrátit například
@@ -26,7 +26,7 @@ Pro \texttt{languages=cs,en} může server vrátit například
     en: "Kankakee County"
 }
 \end{code}
-ale pokud nezná překlad ani do češtiny, ani do angličity, může vrátit
+ale pokud nezná překlad ani do češtiny, ani do angličtiny, může vrátit
 \begin{code}[frame=none]
 {
     cs: null,
@@ -42,13 +42,13 @@ Server vrací data ve formátu JSON, požadavky jsou posílány metodou GET a pa
 \begin{figure}[p]
     \centering
     \includegraphics[width=\textwidth]{media/sequence-server.pdf}
-    \caption{Příklad komunikace mezi klientem, serverem a RDF databází při spuštění aplikace. Na začátku klient nejprve vybírá konfiguraci. (Přičemž je dostačující volat pouze \texttt{meta-configuration}, protože výsledek dotazu obsahuje i konfigurace.) Poté začne stahování stylesheetu a prvního vrcholu. \\ Při stahování vrcholu se nejprve stáhnou \texttt{view-sets} a poté z výchozího pohledu \texttt{detail} a vrchol se zobrazí na grafu. Případné \texttt{expand} a \texttt{preview} vypadají obdobně.}
+    \caption{Příklad komunikace mezi klientem, serverem a RDF databází při spuštění aplikace. Na začátku klient nejprve vybírá konfiguraci. (Přičemž je dostačující volat pouze \texttt{meta-configuration}, protože výsledek dotazu obsahuje i konfigurace.) Poté začne stahování style sheetu a prvního vrcholu. \\ Při stahování vrcholu se nejprve stáhnou \texttt{view-sets} a poté z výchozího pohledu \texttt{detail} a vrchol se zobrazí na grafu. Případné \texttt{expand} a \texttt{preview} vypadají obdobně.}
 \end{figure}
 
-\subsubsection{/metaconfiguration}
+\subsubsection{/meta-configuration}
 \textbf{parametry:} \texttt{iri} a \texttt{languages} \\
-Vrátí informace o metakonfiguraci zadané podle \texttt{iri}. \\
-Vrátí všechna data (viz kapitola \ref{pozadavky-metakonfigurace}) o metakonfiguraci, veškerá data o dceřiných konfiguracích (viz kapitola \ref{pozadavky-konfigurace}) a základní data o dceřiných metakonfiguracích (vše kromě seznamu konfigurací a metakonfigurací).
+Vrátí informace o meta konfiguraci zadané podle \texttt{iri}. \\
+Vrátí všechna data (viz kapitola \ref{pozadavky-metakonfigurace}) o meta konfiguraci, veškerá data o dceřiných konfiguracích (viz kapitola \ref{pozadavky-konfigurace}) a základní data o dceřiných meta konfiguracích (vše kromě seznamu konfigurací a meta konfigurací).
 
 \begin{code}
 interface ResponseMetaConfiguration extends
@@ -68,8 +68,8 @@ interface ResponseMetaConfigurationBase {
 \subsubsection{/configuration}
 \textbf{parametry:} \texttt{iri} a \texttt{languages} \\
 Vrátí informace o konfiguraci zadané podle \texttt{iri}. \\
-Vrátí stejná data jako \texttt{/metaconfiguration} o svých sceřiných konfiguracích. \\
-Toto volání se používá pouze když uživatel ručně zvolí IRI konfigurace, v opačném případě si aplikace vystačí s voláním \texttt{/metaconfiguration}.
+Vrátí stejná data jako \texttt{/meta-configuration} o svých dceřiných konfiguracích. \\
+Toto volání se používá pouze když uživatel ručně zvolí IRI konfigurace, v opačném případě si aplikace vystačí s voláním \texttt{/meta-configuration}.
 
 \begin{code}
 interface ResponseConfiguration {
@@ -100,7 +100,7 @@ interface ResponseStylesheet {
 
 \subsubsection{/view-sets}
 \textbf{parametry:} \texttt{config} a \texttt{resource} \\
-Vrátí seznam možných view setů (viz kapitola \ref{pozadavky-view-sets}) které odpovídají uzlu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
+Vrátí seznam možných view setů, (viz kapitola \ref{pozadavky-view-sets}) které odpovídají uzlu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
 
 \begin{code}
 interface ResponseViewSets {
@@ -194,7 +194,7 @@ interface ResponseElementNode {
 Následující text popisuje rozvržení klientské části do modulů a jejich vzájemnou integraci.
 
 \subsubsection{Připojení na server}
-Modul řeší komunikaci se serverem. Obsahuje metody odpovídající API serveru, které vracejí data ve správném interface. V případě chyby vrátí jako odpověď false. Vyžaduje URL adresu serveru se kterým má komunikovat.
+Modul řeší komunikaci se serverem. Obsahuje metody odpovídající API serveru, které vracejí data ve správném interface. V případě chyby vrátí jako odpověď false. Vyžaduje URL adresu serveru, se kterým má komunikovat.
 
 \subsubsection{Graf}
 Tato část aplikace reprezentuje stažený graf a všechny jeho data. Má metody pro práci s grafem, jeho modifikaci a stahování nových dat ze serveru.
@@ -229,7 +229,7 @@ Obdobně jako filtrování, modul layoutování obsahuje množinu layoutů, kter
     \item Může vykreslit dodatečná tlačítka do uživatelského rozhraní pro snazší obsluhu layoutování.
 \end{itemize}
 
-Vždy je aktivní právě jeden layout. Pokud dojde ke změně layoutu, je o tom starý, i nový layout informován. Aktivní layout pak přijímá události z aplikace na které může reagovat. Využívá právě modulu práce s grafovou oblastí.
+Vždy je aktivní právě jeden layout. Pokud dojde ke změně layoutu, je o tom starý, i nový layout informován. Aktivní layout pak přijímá události z aplikace, na které může reagovat. Využívá právě modulu práce s grafovou oblastí.
 
 \subsubsection{Vyhledávání}
 Modul vyhledávání vrací IRI vrcholy konfigurace na základě textového řetězce. Vyhledává v grafu, z autocomplete nebo se pokusí IRI sestavit z hledaného výrazu.
