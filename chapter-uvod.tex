@@ -24,7 +24,7 @@ Jako modelový příklad vizualizace uveďme entitu Karla Čapka a některá jeh
     \label{fig:capek-full}
 \end{figure}
 
-Jak vidíme z obrázku \ref{fig:capek-full}, zobrazit všechna data k uzlu může být velmi nepřehledné a takovýchto uzlů může být stovky. Pokud nás například zajímají pouze díla Karla Čapka, určitě v grafu nebudeme chtít mít informaci, že je Karel Čapek člověk. Možností řešení tohoto problému je dívat se na entity pouze určitým pohledem, a tedy zobrazit pouze ty vztahy k vrcholu, jež odpovídají pohledu.
+Jak vidíme z obrázku \ref{fig:capek-full}, zobrazit všechna data k uzlu může být velmi nepřehledné a takovýchto uzlů může být stovky. Pokud nás například zajímají pouze díla Karla Čapka, určitě v grafu nebudeme chtít mít informaci, že je Karel Čapek člověk. Tuto situaci můžeme vyřešit tak, že se na entity grafu budeme dívat pouze určitým pohledem a tedy zobrazíme pouze ty vztahy k vrcholu, jež odpovídají danému pohledu.
 
 Kupříkladu pokud bychom chtěli procházet rodokmenem, je vhodné se na Karla Čapka dívat jako na osobu, jež má rodiče a sama může být rodičem ostatních osob. V tuto chvíli nás nezajímají ostatní vlastnosti jako knihy, které napsal, nebo ocenění, která získal. Na Karla Čapka se ale můžeme dívat i jako na spisovatele, kde nás pak zajímají pouze jeho díla a rodinné vztahy můžeme skrýt. Příklad takovýchto pohledů je na obrázku \ref{fig:capek-part}.
 
@@ -39,12 +39,12 @@ Tento způsob procházení grafových dat sice vyžaduje předem nadefinovat poh
 
 \section{Cíl práce}
 
-Cílem této práce bylo vyrobit webovou aplikaci, jež by na základě předem definovaných pohledů vizualizovala grafová data a umožňovala uživateli procházet tento graf a objevovat nové vrcholy. Protože je žádoucí mít více pohledů na konkrétní typ vrcholu, pohledy jsou seskupeny do takzvaných konfigurací. Konfigurace pak popisuje nejen pohledy na různé typy vrcholů, ale i jaké vrcholy lze takto vizualizovat a z jakých zdrojů čerpat.
+Cílem této práce je vyrobit webovou aplikaci, jež by na základě předem definovaných pohledů vizualizovala grafová data a umožňovala uživateli procházet tento graf a objevovat nové vrcholy. Protože je žádoucí mít více pohledů na konkrétní typ vrcholu, pohledy jsou seskupeny do takzvaných konfigurací. Konfigurace pak popisuje nejen pohledy na různé typy vrcholů, ale i jaké vrcholy lze takto vizualizovat a z jakých zdrojů čerpat.
 
 Konfigurace, jež jsou použité v aplikaci jsou například:
 \begin{itemize}
     \item \textbf{Procházení živočichů na Wikidatech} - Uživatel může vizualizovat jednotlivé rostlinné a živočišné druhy a procházet je podle rozdělení do taxonů.
-    \item \textbf{Procházení slavných osobností z Wikidat} - Uživatel může procházet slavné osobnosti a nechat si načíst jejich filmová a literární díla a rodinné vztahy.
+    \item \textbf{Procházení slavných osobností na Wikidatech} - Uživatel může procházet slavné osobnosti a nechat si načíst jejich filmová a literární díla a rodinné vztahy.
 \end{itemize}
 
 Kromě procházení si bude uživatel moci zobrazit detailní informace ke konkrétnímu vrcholu v závislosti na pohledu.

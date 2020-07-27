@@ -9,7 +9,7 @@ Vrcholem v RDF může být IRI, literál, nebo prázdný uzel.
 
 \medskip
 
-Jako vrchol IRI (Internationalized Resource Identifier) se rozumí vrchol jež přiřazuje entitě nějaký identifikátor ve tvaru IRI. Tímto jsme schopni v rámci WWW identifikovat různé entity a pracovat s nimi napříč různými zdroji. Ku příkladu Karel Čapek, zmíněný v úvodu, je v rámci Wikidat jednoznačně identifikován jako \url{https://www.wikidata.org/wiki/Q155855}. IRI kromě identifikátoru nenese žádné další informace včetně jména, reprezentuje tedy nějakou entitu, která musí být popsaná tvrzeními, aby dostala význam.
+Jako vrchol IRI (Internationalized Resource Identifier) se rozumí vrchol, jež přiřazuje entitě nějaký identifikátor ve tvaru IRI. Tímto jsme schopni v rámci WWW identifikovat různé entity a pracovat s nimi napříč různými zdroji. Ku příkladu Karel Čapek, zmíněný v úvodu, je v rámci Wikidat jednoznačně identifikován jako \url{https://www.wikidata.org/wiki/Q155855}. IRI kromě identifikátoru nenese žádné další informace včetně jména, reprezentuje tedy nějakou entitu, která musí být popsaná tvrzeními, aby dostala význam.
 
 \medskip
 
@@ -17,14 +17,14 @@ Literálem je pak uzel nesoucí nějakou hodnotu. Může se jednat o číslo pop
 
 \medskip
 
-Literály nám tedy dávají možnost přidat IRI uzlům různé hodnoty a podporují právě i multijazyčnost. Takovéto grafy pak dokáží popsat celou řadu věcí z reálného světa.
+Literály nám tedy dávají možnost popsat IRI uzly (entity) pomocí různých vlastností, které podporují právě i multijazyčnost. S pomocí takovýchto grafů pak dokážeme popsat celou řadu věcí z reálného světa.
 
 Nakonec, hrana je opět popsána pomocí IRI, jež reprezentuje typ vztahu.
 
 \subsection{Turtle jazyk}
 RDF graf může být popsán pomocí Turtle jazyka\footnote{\citet{Prud'hommeaux:14:RT}}. Ten je využit při zápisu konfigurací, jež jsou popsány dále v tomto dokumentu.
 
-Trojice (tvrzení) se zapisují jako tři slova oddělená mezerami a zakončená tečkou. Chceme-li zapsat IRI, musíme jej dát do špičatých závorek \texttt{<>}. Na začátku dokumentu lze definovat prefixy, které pak umožňují zkrátit zapisované IRI do namespace a zbylé části \texttt{namespace:zbytek}.
+Trojice (tvrzení) se zapisují jako tři slova oddělená mezerami a zakončená tečkou. Chceme-li zapsat IRI, musíme jej dát do špičatých závorek \texttt{<>}. Na začátku dokumentu lze definovat prefixy, které pak umožňují zkrátit zapisované IRI do namespace a zbylé části jako \texttt{namespace:zbytek}.
 
 Pokud se nám u trojic opakuje subjekt a predikát, můžeme jednotlivé objekty oddělovat čárkou (\texttt{,}). Obdobně, pokud se nám opakuje jen subjekt, můžeme dvojice predikát-objekt oddělovat středníkem (\texttt{;}).
 
@@ -45,7 +45,7 @@ wd:Q155855 wdt:P569 "1890-01-09"^^xsd:dateTime .
 Kód popisuje jedno tvrzení, kdy se Karlu Čapkovi \\ \url{https://www.wikidata.org/wiki/Q155855} přiřadí přes property datum narození \url{https://www.wikidata.org/wiki/Property:P569} literál s jeho datem narození, jež má typ \url{http://www.w3.org/2001/XMLSchema#dateTime}.
 \end{prikl}
 
-Jak lze vidět z příkladu, tvrzení nemusí odkazovat jen na svůj dataset, ale i mimo něj. To nám dovoluje stavět již na existujících datasetech a jednoduše se na ně odkazovat přes IRI. Můžeme tak mít vlastní knihovní databázi jež ke knize přiřadí autora z datasetu Wikidat. Tímto jsme propojili dva datasety, což nám umožní nad nimi provádět dotazy. Příkladem takového dotazu by mohlo být \uv{Chci seznam knih v naší knihovně, jež byly napsány českými autory.} Takový dotaz pak současně prohledá dva různé datasety a vrátí očekávané výsledky.
+Jak lze vidět z příkladu, tvrzení nemusí odkazovat jen na svůj dataset, ale i mimo něj. To nám dovoluje stavět již na existujících datasetech a jednoduše se na ně odkazovat přes IRI. Můžeme tak mít vlastní knihovní databázi, jež ke knize přiřadí autora z datasetu Wikidat. Tímto jsme propojili dva datasety, což nám umožní nad nimi provádět dotazy. Příkladem takového dotazu by mohlo být \uv{Chci seznam knih v naší knihovně, jež byly napsány českými autory.} Takový dotaz pak současně prohledá dva různé datasety a vrátí očekávané výsledky.
 
 Uveďme ještě příklad tvrzení, jež se odkazuje na další entity.
 \begin{prikl}
@@ -112,4 +112,28 @@ WHERE
 Jedná se o \texttt{SELECT} dotaz, tedy jako výsledek dostaneme tabulku, jež má sloupce \texttt{title} a \texttt{publication_date}.
 
 Dotaz se nejprve zeptá na všechny vrcholy, které dostaneme přes vlastnost \texttt{wdt:P800}, kterou Wikidata definují jako \uv{dílo - významné vědecké, umělecké či jiné dílo}. Tyto vrcholy jsou pak reprezentovány proměnnou \texttt{?work}. Na dalších dvou řádcích se pak dotazujeme, jaký titulek (\texttt{wdt:P1476}) má \texttt{?work} a uložíme ho do \texttt{?title}, který je i prvním sloupcem výstupu. Dále se pak obdobně ptáme na datum publikace, které je také součástí výsledku.
+\end{prikl}
+
+\begin{prikl}
+Dotaz, zda vrchol identifikován jako \uv{Q7377} je taxon, nebo klad (dle Wikidat definovaný jako \uv{systematická jednotka v biologii zahrnující společného předka a všechny z něho vzešlé potomky}).
+\begin{code}
+ASK {
+  wd:Q7377 wdt:P31 ?type .
+  FILTER(?type IN (wd:Q16521, wd:Q713623))
+}
+\end{code}
+Protože jako odpověď očekáváme ano/ne, jedná se o \texttt{ASK} dotaz. Obdobně jako v minulém příkladu ve \texttt{WHERE} části popisujeme podmínky, které pak určí, zda existuje nějaká trojice a tedy zda dotaz vrátí kladný výsledek. Všimněme si funkce \texttt{FILTER}, která dovoluje typu mít jen jednu ze dvou hodnot.
+\end{prikl}
+
+\begin{prikl}
+Dotaz, který vrací graf dětí Antonína Čapka (\texttt{Q6657059}) v ontologii \url{http://purl.org/vocab/relationship/}.
+\begin{code}
+PREFIX relationship: <http://purl.org/vocab/relationship/>
+CONSTRUCT {
+    ?child relationship:childOf wd:Q6657059 .
+} WHERE {
+    wd:Q6657059 wdt:P40 ?child .
+}
+\end{code}
+Nejprve specifikujeme, jak chceme, aby výsledný graf vypadal. Poté ve \texttt{WHERE} části určíme podmínky a tím i proměnné použité v první části dotazu.
 \end{prikl}
