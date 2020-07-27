@@ -2,7 +2,7 @@
 
 \textit{Tato kapitola popisuje požadavky, jež byly kladeny na vývoj systému.}
 
-Cílem práce je vyrobit webovou aplikaci, která vizualizuje grafová data dle předem definovaných konfigurací a je schopna s těmito daty pracovat. Konfigurace popisují jak a která data mají být vizualizována a jak je možné graf dále rozšiřovat. Celá aplikace bude rozdělena na klientskou a serverovou část, přičemž server odstiňuje klienta od RDF modelu a vrací mu již zpracovaná data.
+Cílem práce je vyrobit webovou aplikaci, která vizualizuje grafová data dle předem definovaných konfigurací a je schopna s těmito daty pracovat. Konfigurace popisují, jak a která data mají být vizualizována a jak je možné graf dále rozšiřovat. Celá aplikace bude rozdělena na klientskou a serverovou část, přičemž server odstiňuje klienta od RDF modelu a vrací mu již zpracovaná data.
 
 Součástí požadavků na webovou aplikaci bylo vedoucím této práce připraveno několik konfigurací a webový server s určeným rozhraním, se kterým má klientská aplikace komunikovat.
 
@@ -12,11 +12,15 @@ V následujících kapitolách je nejprve popsána struktura konfigurací, rozhr
 
 \textbf{Konfigurace} popisuje určitý pohled na data a definuje, jaká data lze v rámci této konfigurace vizualizovat a jakými způsoby. Konfigurace má \textbf{množiny pohledů}, kdy každá množina je aplikovatelná jen na určitou skupinu typů vrcholů podporovaných konfigurací. Množina pohledů pak obsahuje jednotlivé \textbf{pohledy}, které popisují, jak se na konkrétní vrchol můžeme dívat. Každý pohled pak určuje \textbf{náhled} (preview), \textbf{detail} a \textbf{expanzi}. Náhled poskytuje základní informace o vrcholu v rámci pohledu a určuje, jak má být vrchol v grafu vykreslen. Detail pak tyto informace rozšiřuje o další, které mohou být vypsány v tabulce. Expanze popisuje RDF graf, který doplňuje konkrétní vrchol o nové vztahy v rámci pohledu.
 
-Konfigurace také určuje \textbf{počáteční vrchol} a \textbf{stylesheet}, tedy pravidla, jak mají být uzly v aplikaci vizualizovány.
+Konfigurace také určuje \textbf{počáteční vrchol} a \textbf{stylesheet}, tedy pravidla, jak mají být vrcholy v aplikaci vizualizovány.
 
 Nakonec, konfigurace mohou být uloženy v rámci \textbf{meta konfigurací}, které slouží jako složky pro konfigurace.
 
 Obrázek \ref{fig:configuration-class-diagram} popisuje UML diagram konfigurací.
+
+\bigskip
+
+Konfigurace jsou zapsány právě v RDF a slovník, jež je použit pro popis konfigurací, je popsán v následujícím textu.
 
 \begin{figure}
     \centering
@@ -54,16 +58,16 @@ Meta konfigurace je skupina pro další konfigurace a meta konfigurace. Díky to
 Meta konfigurací může být například \uv{Wikidata} nebo \uv{Otevřená data ČR}.
 
 \subsection{Konfigurace} \label{pozadavky-konfigurace}
-Konfigurace popisuje způsoby, jakými se lze dívat na data. Dvě konfigurace již byly zmíněny v úvodní kapitole. Aktuálně může mít konfigurace tyto vlastnosti:
+Konfigurace popisuje způsoby, jakými se lze dívat na data. Dvě konfigurace již byly zmíněny v úvodní kapitole. Jednalo se o procházení taxonů a slavných osobností na Wikidatech. Aktuálně může mít konfigurace tyto vlastnosti:
 
 \begin{itemize}
     \item \texttt{dct:title} Název konfigurace. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{dct:description} Detailnější popis čeho je možné s konfigurací dosáhnout. \textit{(je možné zadat ve více jazycích)}
-    \item \texttt{browser:hasVisualStyleSheet} Určuje, jak mají být uzly v aplikaci vizualizovány. \textit{(popsáno dále)}
-    \item \texttt{browser:startingNode} Doporučený uzel nebo uzly, se kterými začít s procházením grafu. \textit{(je očekáváno více objektů)}
-    \item \texttt{browser:resourceUriPattern} Regulární výraz popisující, jak by mělo vypadat IRI uzlu. Používá se v aplikaci jako nápověda uživateli, zda zadal správné IRI dřív, než se pošle požadavek. Také se používá pro sestavení IRI z vyhledávaného dotazu, pokud lze dotazem nahradit část výrazu a získat tak validní IRI.
-    \item \texttt{browser:hasViewSet} Seznam množin pohledů které tato konfigurace podporuje. \textit{(popsáno dále)}
-    \item \texttt{browser:autocomplete} JSON soubor se seznamem RDF uzlů podle kterých probíhá hledání. \textit{(je očekáváno více objektů; popsáno dále)}
+    \item \texttt{browser:hasVisualStyleSheet} Určuje, jak mají být vrcholy v aplikaci vizualizovány. \textit{(popsáno dále)}
+    \item \texttt{browser:startingNode} Doporučený vrchol nebo vrcholy, se kterými začít s procházením grafu. \textit{(je očekáváno více objektů)}
+    \item \texttt{browser:resourceUriPattern} Regulární výraz popisující, jak by mělo vypadat IRI vrcholu. Používá se v aplikaci jako nápověda uživateli, zda zadal správné IRI dřív, než se pošle požadavek. Také se používá pro sestavení IRI z vyhledávaného dotazu, pokud lze dotazem nahradit část výrazu a získat tak validní IRI.
+    \item \texttt{browser:hasViewSet} Seznam množin pohledů, které tato konfigurace podporuje. \textit{(popsáno dále)}
+    \item \texttt{browser:autocomplete} JSON soubor se seznamem RDF vrcholů, podle kterých probíhá hledání. \textit{(je očekáváno více objektů; popsáno dále)}
 \end{itemize}
 
 \subsection{ViewSet} \label{pozadavky-view-sets}
@@ -72,7 +76,7 @@ View set reprezentuje skupinu pohledů. Skupina pohledů je vždy aplikovatelná
     \item \texttt{dct:title} Název view setu. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{browser:hasView} Pohledy, které patří pod tento view set. \textit{(je očekáváno více objektů; popsáno dále)}
     \item \texttt{browser:hasDefaultView} Výchozí pohled ze seznamu výše.
-    \item \texttt{browser:hasCondition} SPARQL ASK dotaz jež určí, zda tato množina pohledů je aplikovatelná na konkrétní vrchol.
+    \item \texttt{browser:hasCondition} SPARQL ASK dotaz, jež určí, zda tato množina pohledů je aplikovatelná na konkrétní vrchol.
     \item \texttt{browser:hasDataset} Dataset, vůči kterému probíhá ASK dotaz. \textit{(popsáno dále)}
 \end{itemize}
 
@@ -83,12 +87,12 @@ Konkrétní pohled na vrchol, který určuje náhled, detail a expanzi. Jak již
     \item \texttt{dct:title} Název pohledu. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{dct:description} Popis pohledu. \textit{(je možné zadat ve více jazycích)}
     \item \texttt{browser:hasExpansion} Expanze -  popisuje graf který rozšiřuje vrchol o nové vrcholy v rámci daného pohledu. \textit{(popsáno dále)}
-    \item \texttt{browser:hasPreview} Preview (náhled) - určuje data která popisují vrchol v rámci daného pohledu a na základě kterých se vrchol vizuálně vykreslí \textit{(popsáno dále)}
+    \item \texttt{browser:hasPreview} Preview (náhled) - určuje data, která popisují vrchol v rámci daného pohledu a na základě kterých se vrchol vizuálně vykreslí. \textit{(popsáno dále)}
     \item \texttt{browser:hasDetail} Detail - určuje dodatečné informace o vrcholu v rámci daného pohledu. \textit{(popsáno dále)}
 \end{itemize}
 
 \subsection{Expanze} \label{pozadavky-expansion}
-Expanze popisuje, jak lze daný vrchol rozšířit o nové vrcholy, které s ním souvisí. Expanze vrací graf, tedy expandované uzly nemusí být přímými sousedy expandovaného vrcholu. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy, co napsala daná osoba}. Expanze formálně patří k pohledu (view).
+Expanze popisuje, jak lze daný vrchol rozšířit o nové vrcholy, které s ním souvisí. Expanze vrací graf. Expandované vrcholy tedy nemusí být přímými sousedy expandovaného vrcholu. Jako expanzi si můžeme představit například \uv{Zobraz všechny knihy, co napsala daná osoba}. Expanze formálně patří k pohledu (view).
 \begin{itemize}
     \item \texttt{dct:title} Název expanze. \textit{(je možné zadat ve více jazycích, aktuálně se nepoužívá)}
     \item \texttt{browser:hasDataset} Popisuje dataset, vůči kterému se dotazuje na data. \textit{(popsáno dále)}
@@ -98,12 +102,12 @@ Expanze popisuje, jak lze daný vrchol rozšířit o nové vrcholy, které s ní
 \subsection{Preview (náhled)} \label{pozadavky-preview}
 Preview určuje, která data v rámci daného pohledu (view) popisují konkrétní vrchol. Popisem se myslí taková data, podle kterých se určí, jak bude vrchol na grafu vizuálně vykreslen. Obdobně jako expanze, preview patří ke konkrétnímu pohledu.
 
-Preview má stejné vlastnosti jako expanze. \texttt{browser:query} v tomto případě popisuje SPARQL CONSTRUCT dotaz, který vrátí graf obsahující daný uzel společně s literály ze kterých bude sestaven preview.
+Preview má stejné vlastnosti jako expanze. \texttt{browser:query} v tomto případě popisuje SPARQL CONSTRUCT dotaz, který vrátí graf obsahující daný vrchol společně s literály ze kterých bude preview sestaven.
 
-Konkrétně pro preview je predikát \texttt{browser:class} považován za třídu uzlu. Podle těchto tříd je pak možné nastavovat vizuální styly pro konkrétní vrcholy.
+Konkrétně pro preview je predikát \texttt{browser:class} považován za třídu vrcholu. Podle těchto tříd je pak možné nastavovat vizuální styly pro konkrétní vrcholy a vrcholy s pomocí nich filtrovat.
 
 \subsection{Detail} \label{pozadavky-detail}
-Detail poskytuje dodatečné informace k uzlu. Může se jednat o literály, které nemá smysl v dané konfiguraci vykreslit do grafu jako uzly, a proto budou zobrazeny v bočním panelu aplikace po kliknutí na uzel.
+Detail poskytuje dodatečné informace k vrcholu. Může se jednat o literály, které nemá smysl v dané konfiguraci vykreslit do grafu jako vrcholy, a proto budou zobrazeny v bočním panelu aplikace po kliknutí na vrchol.
 
 Detail má stejné vlastnosti včetně \texttt{browser:query} jako preview.
 
@@ -129,8 +133,8 @@ Visual style sheet má pouze jednu vlastnost
 Visual style má pak:
 
 \begin{itemize}
-    \item \texttt{browser:hasSelector} Selector pro Cytoscape knihovnu, jež vybírá, \\ na které uzly nebo hrany bude daný styl aplikován.
-    \item \texttt{browser:*} Konkrétní styly, jak má být daný uzel vykreslen. Používají se přesně ty názvy, které používá knihovna Cytoscape. Kupříkladu \\\texttt{browser:border-width} nebo \texttt{browser:background-color}.
+    \item \texttt{browser:hasSelector} Selector pro Cytoscape knihovnu, jež vybírá, \\ na které vrcholy nebo hrany bude daný styl aplikován.
+    \item \texttt{browser:*} Konkrétní styly, jak má být daný vrchol vykreslen. Používají se přesně ty názvy, které používá knihovna Cytoscape. Kupříkladu \\\texttt{browser:border-width} nebo \texttt{browser:background-color}.
 \end{itemize}
 
 \bigskip
@@ -163,6 +167,29 @@ rb:configuration/wikidata/animals
     browser:hasViewSet
         rb:view-set/wikidata/animals/taxon .
 \end{code}
+Jak již bylo popsáno v této kapitole, konfigurace má svůj název a popisek a definuje množiny pohledů, jak se na vrcholy dívat. V tomto případě se jedná pouze o jednu množinu. Mezi počátečními vrcholy jsou definovány dva a konfigurace nemá autocomlete, uživatel tedy může začít těmito dvěma vrcholy, nebo může ručně zadat IRI. Každá konfigurace má pak i stylesheet, který definuje barvy a tvary vrcholů při vykreslení na obrazovku.
+
+\newpage
+
+\textbf{Definice view setu}
+\begin{code}
+rb:view-set/wikidata/animals/taxon a browser:ViewSet ;
+    dct:title "Views of taxons"@en ;
+    browser:hasView rb:view/wikidata/animals/taxon/broader ,
+                    rb:view/wikidata/animals/taxon/narrower ;
+    browser:hasDefaultView rb:view/wikidata/animals/taxon/broader ;
+    browser:hasCondition
+        """PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+ASK {
+  ?node wdt:P31 ?type .
+  FILTER(?type IN (wd:Q16521, wd:Q713623))
+}""" ;
+    browser:hasDataset rb:dataset/wikidata> .
+\end{code}
+Z ukázky si povšimněte \texttt{browser:hasCondition}, jež určuje, jaké vrcholy jsou na tuto množinu aplikovatelné. Přesně tento \texttt{ASK} dotaz byl popsán v příkladu v kapitole \ref{SPARQL}.
+
+\medskip
 
 \textbf{Definice pohledu}
 \begin{code}
@@ -172,6 +199,63 @@ rb:view/wikidata/animals/taxon/narrower a browser:View ;
     browser:hasPreview rb:preview-query/animals/taxon/basic ;
     browser:hasDetail rb:detail-query/animals/taxon/basic .
 \end{code}
+
+\textbf{Expanze} \\
+Hodnota \texttt{browser:query} pro expanzi, jež je zmíněná v předchozím příkladu. Z dotazu byly vynechány prefixy.
+\begin{code}
+CONSTRUCT {
+    ?childTaxon a wdab:taxon ;
+                rdfs:label ?childTaxonLabel ;
+                wdab:broader ?node ;
+                browser:class "taxon",
+                              ?childTaxonClass .
+
+    wdab:broader browser:class "broader" .
+} WHERE {
+    ?childTaxon wdt:P171 ?node .
+
+    OPTIONAL {
+        ?childTaxon wdt:P105 ?childTaxonRank .
+        ?childTaxonRank rdfs:label ?childTaxonRankLabel .
+        FILTER(lang(?childTaxonRankLabel) = "en")
+        BIND(IF(?childTaxonRank IN (wd:Q7432, wd:Q34740, wd:Q35409,
+            wd:Q36602, wd:Q37517, wd:Q38348, wd:Q36732, wd:Q146481),
+            ?childTaxonRankLabel, "unsupportedTaxon") AS
+            ?childTaxonClass)
+    }
+
+    #FILTER(?childTaxonRank IN (wd:Q7432, wd:Q34740, wd:Q35409,
+    wd:Q36602, wd:Q37517, wd:Q38348, wd:Q36732, wd:Q146481))
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+\end{code}
+Povšimněte si, že expanze vrací přímo i preview všech expandovaných vrcholů, aby se omezila zátěž na datové zdroje.
+\medskip
+
+\textbf{Preview} \\
+Hodnota \texttt{browser:query} pro preview, který je zmíněný v definici pohledu z předchozího příkladu. Z dotazu byly opět vynechány prefixy.
+\begin{code}
+CONSTRUCT {
+    ?node a wdab:taxon ;
+          rdfs:label ?nodeLabel ;
+          browser:class "taxon",
+                        ?taxonClass .
+} WHERE {
+    ?node wdt:P105 ?taxonRank .
+
+    ?taxonRank rdfs:label ?taxonRankLabel .
+    FILTER(lang(?taxonRankLabel) = "en")
+
+    BIND(IF(?taxonRank IN (wd:Q7432, wd:Q34740, wd:Q35409, wd:Q36602,
+        wd:Q37517, wd:Q38348, wd:Q36732, wd:Q146481), ?taxonRankLabel,
+        "unsupportedTaxon") AS ?taxonClass)
+
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+\end{code}
+Dotaz vypadá obdobně jako část předchozího dotazu, neboť expanze vrací pro každý vrchol i detail. Zde si můžeme povšimnout, jaké třídy dostává vrchol. Vždy se jedná o \uv{taxon}. Další třídy pak pocházejí z property, kterou Wikidata definují jako \uv{taxonomické zařazení} a jedná se například o \uv{species}, \uv{genus}, \uv{family} atp. Právě na \uv{genus} se aplikuje styl z ukázky dále a tedy všechny rody budou vykresleny žlutě.
+
+\medskip
 
 \textbf{Definice datasetu}
 \begin{code}
@@ -187,8 +271,36 @@ rb:wikidata/animals/style/genus a browser:VisualStyle ;
     browser:background-color "#ffbf00" ;
     browser:hasSelector ".genus" .
 \end{code}
+
+\newpage
+
+\textbf{Detail} \\
+Na závěr uveďme ještě detail, na který odkazuje pohled popsaný výše. Stejně jako expanze a náhled, i detail obsahuje titulek a odkaz na dataset, které opět pro přehlednost vynecháme a ukážeme pouze hodnotu \texttt{browser:query}, tedy dotaz na stažení detailu.
+\begin{code}
+CONSTRUCT {
+    ?node rdfs:label ?nodeLabel ;
+          wdt:P225 ?p225 ;
+          wdt:P181 ?p181 ;
+          wdt:P18 ?p18 .
+} WHERE {
+    node wdt:P31 wd:Q16521 .
+
+    {
+        ?node wdt:P225 ?p225 .
+    } UNION {
+        ?node wdt:P181 ?p181 .
+    } UNION {
+        ?node wdt:P18 ?p18 .
+    }
+
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+\end{code}
+
+Z ukázky vidíme, že mezi detail vrcholu patří popisek, název taxonu (\texttt{P225}), mapa rozšíření taxonu jako obrázek (\texttt{P181}) a obecný obrázek (\texttt{P18}). Klientská aplikace pak může tyto dva obrázky stáhnout a vykreslit je v bočním panelu při kliknutí na vrchol.
 \end{prikl}
 
+\newpage
 
 \section{Server}
 Dalším požadavkem bylo, aby klientská aplikace komunikovala se serverem, který provádí dotazy a vrací data pro aplikaci. Server bude detailněji popsán v příští kapitole.
@@ -207,7 +319,7 @@ Server zprostředkovává následující požadavky:
 
     \item \texttt{/detail} - K vrcholu a pohledu vrátí detail.
 
-    \item \texttt{/expand} - K vrcholu a pohledu vrátí expandované uzly.
+    \item \texttt{/expand} - K vrcholu a pohledu vrátí expandované vrcholy.
 \end{itemize}
 
 \newpage
@@ -232,7 +344,7 @@ Níže je sepsán seznam původních požadavků na klientskou aplikaci.
 \subsection*{Konfigurace a stylesheet}
 Uživatel musí být schopen vybrat IRI konfigurace a IRI visual style sheetu a lze je kdykoli změnit. IRI konfigurace může být vybráno jen jedno.
 
-\paragraph{Analýza} Konfigurace popisuje, jak je graf zobrazen a které pohledy jsou na uzly aplikovatelné. Ačkoli by teoreticky bylo možné podporovat dvě konfigurace, nebudeme toto implementovat. Změna konfigurace tedy smaže aktuální graf a vytvoří graf nový.
+\paragraph{Analýza} Konfigurace popisuje, jak je graf zobrazen a které pohledy jsou na vrcholy aplikovatelné. Ačkoli by teoreticky bylo možné podporovat dvě konfigurace, nebudeme toto implementovat. Změna konfigurace tedy smaže aktuální graf a vytvoří graf nový.
 
 \subsection*{Vložení vrcholů}
 Uživatel může ručně zadat IRI vrcholu, který se následně zobrazí v grafu.
@@ -240,12 +352,12 @@ Uživatel může ručně zadat IRI vrcholu, který se následně zobrazí v graf
 \paragraph{Analýza} Pro úspěšné zobrazení vrcholu musí aplikace znát jeho \texttt{preview}. To lze ale získat pouze z konkrétního pohledu a je tedy nutné nejprve stáhnout \texttt{view-sets} daného vrcholu, z nich následně vybrat defaultní a zvolit výchozí pohled. Pak je možné zavolat metodu \texttt{preview} na serveru a získat data o vrcholu.
 
 \begin{itemize}
-    \item IRI vrcholu bude považováno za chybné, pokud server vrátí prázdnou množinu na dotaz \texttt{view-sets}. V takovém případě totiž nejde aplikovat žádné pohledy na uzel, a tedy zřejmě nepatří do dané konfigurace.
+    \item IRI vrcholu bude považováno za chybné, pokud server vrátí prázdnou množinu na dotaz \texttt{view-sets}. V takovém případě totiž nejde aplikovat žádné pohledy na vrchol, a tedy zřejmě nepatří do dané konfigurace.
     \item Vrchol může být již v grafu přítomen, pak se označí a přesune se na něj obrazovka. Pokud je vrchol skrytý, bude odkryt. Pokud jsou zapnuté filtry a vrchol je skrytý filtrem, vrchol se v grafu nezobrazí. Pokud se vrchol podaří načíst, nebo již existuje, bude vybrán a zobrazí se jeho detail v pravém panelu.
 \end{itemize}
 
 \subsection*{Detail vrcholu}
-Pokud uživatel klikne na vrchol, zobrazí se panel s podrobnými informacemi o uzlu. Bude zobrazen detail uzlu voláním metody \texttt{detail} na serveru a budou zobrazeny veškeré pohledy vrcholu, možnost je přepínat a provádět expanze podle daného pohledu.
+Pokud uživatel klikne na vrchol, zobrazí se panel s podrobnými informacemi o vrcholu. Bude zobrazen detail vrcholu voláním metody \texttt{detail} na serveru a budou zobrazeny veškeré pohledy vrcholu, možnost je přepínat a provádět expanze podle daného pohledu.
 
 Detail bude zobrazen jako dvousloupcová tabulka klíč-hodnota.
 
@@ -257,17 +369,17 @@ Může se stát, že \texttt{view-sets} vrátí prázdný výsledek. V takovém 
 
 Mezi akcemi bude lokalizace vrcholu, smazání, opětovné načtení všech dat, zafixování pozice.
 
-\subsection*{Skrývání uzlů}
-Uživatel může skrývat uzly v panelu s detailem. Skrytý uzel se v grafu skryje společně se všemi hranami. Bude možné zobrazit seznam skrytých uzlů ze kterého půjde skryté uzly opět zviditelnit.
+\subsection*{Skrývání vrcholů}
+Uživatel může skrývat vrcholy v panelu s detailem. Skrytý vrchol se v grafu skryje společně se všemi hranami. Bude možné zobrazit seznam skrytých vrcholů ze kterého půjde skryté vrcholy opět zviditelnit.
 
-\paragraph{Analýza} Bude přidáno tlačítko k detailu pro skrytí/zobrazení uzlu. Současně pro vetší přehlednost bude do detailu přidána hláška informující uživatele, že je uzel skrytý.
+\paragraph{Analýza} Bude přidáno tlačítko k detailu pro skrytí/zobrazení vrcholu. Současně pro vetší přehlednost bude do detailu přidána hláška informující uživatele, že je vrchol skrytý.
 
-Skryté uzly nebude možno lokalizovat, ale stále bude možné s nimi dále pracovat. Podle prvního požadavku se uzel opět zobrazí, pokud ho uživatel bude chtít explicitně vložit.
+Skryté vrcholy nebude možno lokalizovat, ale stále bude možné s nimi dále pracovat. Podle prvního požadavku se vrchol opět zobrazí, pokud ho uživatel bude chtít explicitně vložit.
 
-V panelu se skrytými uzly bude možnost uzly přímo zobrazit, nebo si zobrazit jejich detail. Detail skrytého uzlu funguje stejně jako pro viditelné uzly.
+V panelu se skrytými vrcholy bude možnost vrcholy přímo zobrazit, nebo si zobrazit jejich detail. Detail skrytého vrcholu funguje stejně jako pro viditelné vrcholy.
 
 \subsection*{Expanze}
-Po dvojkliku na uzel se uzel expanduje podle aktuálního pohledu. Uzel je také možné expandovat v panelu s detailem kliknutím na tlačítko expanze u příslušného pohledu. Expanzí se zavolá metoda \texttt{expand} na serveru a v grafu se zobrazí nové vrcholy.
+Po dvojkliku na vrchol se vrchol expanduje podle aktuálního pohledu. vrchol je také možné expandovat v panelu s detailem kliknutím na tlačítko expanze u příslušného pohledu. Expanzí se zavolá metoda \texttt{expand} na serveru a v grafu se zobrazí nové vrcholy.
 
 \paragraph{Analýza} Pokud přidávaný vrchol v grafu již je a je skrytý, pak skrytým zůstane. Na rozdíl od přidávání jednoho vrcholu totiž explicitně neříkáme, že chceme daný vrchol přidat. Protože je možné vrcholy mazat, povolíme uživateli provádět expanzi znova, i když již byla provedena.
 
@@ -282,11 +394,11 @@ Uživatel může přidat filtr, jež skryje nevyhovující vrcholy. Takovéto sk
 
 \paragraph{Analýza} Aplikace by měla podporovat snadné přidání filtrů do budoucna a podporu pro pluginy, které dodávají vlastní možnosti filtrování. Aby bylo možné vyjádřit libovolné filtry, každý filtr by měl mít přístup k celému grafu a všem vrcholům.
 
-Uzel může být skrytý jak filtrem, tak i uživatelem. Pro přehlednost by měl být uživatel informován, že nemůže ručně zobrazit vrchol který je skrytý filtrem. Tyto vrcholy budou stále zobrazeny v seznamu skrytých vrcholů pro možnost přístupu k nim.
+vrchol může být skrytý jak filtrem, tak i uživatelem. Pro přehlednost by měl být uživatel informován, že nemůže ručně zobrazit vrchol který je skrytý filtrem. Tyto vrcholy budou stále zobrazeny v seznamu skrytých vrcholů pro možnost přístupu k nim.
 
 Každý filtr určí, zda je vrchol podle tohoto filtru viditelný. Vrchol pak bude viditelný, pokud všechny filtry určí, že viditelný je. Jedná se tedy o konjunkci.
 
-Typy a třídy vrcholů nejsou známy předem a API serveru neumožňuje získat celou množinu typů a tříd. Je tedy nutné přizpůsobit filtry tak, aby si dokázaly poradit s novými uzly. Proto filtry na typ a třídu budou mít dva módy. V jednom módu explicitně skrývají zvolené vlastnosti a ve druhém explicitně zobrazují vrcholy s danými vlastnostmi. Toto chování pak ovlivní přidání nových, neznámých, vrcholů. V prvním případě nový vrchol bude zobrazen (pokud jeho typ, resp. třídy ještě nejsou známy) a ve druhém případě bude ihned skryt.
+Typy a třídy vrcholů nejsou známy předem a API serveru neumožňuje získat celou množinu typů a tříd. Je tedy nutné přizpůsobit filtry tak, aby si dokázaly poradit s novými vrcholy. Proto filtry na typ a třídu budou mít dva módy. V jednom módu explicitně skrývají zvolené vlastnosti a ve druhém explicitně zobrazují vrcholy s danými vlastnostmi. Toto chování pak ovlivní přidání nových, neznámých, vrcholů. V prvním případě nový vrchol bude zobrazen (pokud jeho typ, resp. třídy ještě nejsou známy) a ve druhém případě bude ihned skryt.
 
 \subsection*{Vícejazyčné uživatelské rozhraní}
 Uživatel může přepínat mezi více jazyky uživatelského rozhraní. Aktuálně bude podporována pouze angličtina a čeština.
@@ -302,7 +414,7 @@ Uživatel má možnost stáhnout aktuální graf do souboru a později ho ze sou
 
 \paragraph{Analýza} Protože je aplikace ve vývoji, je třeba dbát na zpětnou kompatibilitu. Při každé nové verzi je tedy třeba ověřit, zdali soubor pochází ze staré verze a použít staré metody pro jeho zpracování a převedení do nového systému. Výsledný soubor může být zkomprimován pro menší velikost a nabízí se i možnost stáhnout jen základní informace tak, aby zbytek mohl být při načtení stažen ze serveru.
 
-Pokud uživatel bude chtít zavřít aplikaci, bude dotázán, zda chce aktuální graf uložit do souboru. Uložený graf již nebude blokovat stránku o uzavření, dokud uživatel nesmaže, nebo nepřidá nové uzly. Stažení detailu, nebo změna pohledu nebude považována za změnu hodnou k uložení.
+Pokud uživatel bude chtít zavřít aplikaci, bude dotázán, zda chce aktuální graf uložit do souboru. Uložený graf již nebude blokovat stránku o uzavření, dokud uživatel nesmaže, nebo nepřidá nové vrcholy. Stažení detailu, nebo změna pohledu nebude považována za změnu hodnou k uložení.
 
 Pokud uživatel zvolí načtení nového souboru, starý graf bude zahozen a uživatel tedy bude požádán o uložení.
 
@@ -316,13 +428,13 @@ Uživatel může z grafu vrchol odstranit.
 Odstranit vrchol bude možné pomocí tlačítka v panelu s detailem, popřípadě skupinu vrcholů bude možné odstranit obdobným způsobem.
 
 \subsection*{Vyhledávání vrcholů s pomocí autocomplete}
-Pokud to konfigurace umožňuje, bude možné přidávat nové uzly do grafu s pomocí autocomplete.
+Pokud to konfigurace umožňuje, bude možné přidávat nové vrcholy do grafu s pomocí autocomplete.
 
 \paragraph{Analýza} Data pro vyhledávání se budou stahovat až když uživatel bude chtít poprvé vyhledávat.
 
 Návrh vyhledávače by měl podporovat více vyhledávacích zdrojů a vhodně kombinovat nalezené výsledky v případě, že více zdrojů vrátí stejné vrcholy.
 
-Kromě vyhledávání v JSON souboru se pak nabízí hledat i v aktuálním grafu a umožnit uživateli zadat do vyhledávacího pole přímo IRI uzlu, popřípadě její část, ze které se aplikace pokusí sestavit celou IRI.
+Kromě vyhledávání v JSON souboru se pak nabízí hledat i v aktuálním grafu a umožnit uživateli zadat do vyhledávacího pole přímo IRI vrcholu, popřípadě její část, ze které se aplikace pokusí sestavit celou IRI.
 
 \subsection*{Podpora layoutů}
 Aplikace bude umožňovat několik způsobů layoutování grafu, které si bude moci uživatel volit.
