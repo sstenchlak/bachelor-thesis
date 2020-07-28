@@ -16,7 +16,7 @@ Vrátíme-li se k původnímu příkladu, programátorovi stačí přiřadit do 
 
 Kromě této funkcionality Vuex nabízí takzvané \textbf{gettery}, jež jsou ve Vue frameworku nazývány jako \textbf{computed properties}. Jedná se o funkce, které využívají data ze storu pro výpočet dat nových. Výhoda takovýchto getterů je ta, že Vuex dokáže výsledky těchto funkcí cachovat a přepočítává je pouze tehdy, změní-li se data původní. Interně gettery fungují tak, že při zavolání klientské funkce Vuex sleduje, které části storu byly dotázány a ty pak sleduje na změnu jež invaliduje cache konkrétního getteru. Při příštím požadavku na hodnotu se pak klientská funkce volá znovu a celá operace se opakuje.
 
-Tyto computed properties jsou v aplikaci využívány často. Kupříkladu funkce, která počítá, zda je sousední uzel vybrán. Na takovouto hodnotu se v aplikaci můžeme ptát libovolně krát, ale počítá se pouze tehdy, když se množina sousedních uzlů vrcholu změní, nebo se změní právě označení vrcholu z množiny.
+Tyto computed properties jsou v aplikaci využívány často. Kupříkladu funkce, která počítá, zda je sousední vrchol vybrán. Na takovouto hodnotu se v aplikaci můžeme ptát libovolně krát, ale počítá se pouze tehdy, když se množina sousedních vrcholů vrcholu změní, nebo se změní právě označení vrcholu z množiny.
 
 \subsubsection{Watchers}
 
@@ -172,7 +172,7 @@ Aplikaci lze přeložit do více světových jazyků přidáním souboru \\\text
 .4 Application.vue \DTcomment{Top level Vue komponenta. Zde se vše registruje.}.
 .3 configurations \DTcomment{Obsahuje logiku pro správu konfigurací a meta konfigurací.}.
 .3 file-save \DTcomment{Interface pro třídy které obsahují uložitelná data.}.
-.3 filter \DTcomment{Logika filtrování a jednotlivé filtry na skrývání uzlů.}.
+.3 filter \DTcomment{Logika filtrování a jednotlivé filtry na skrývání vrcholů.}.
 .4 filters \DTcomment{Obsahuje adresáře s jednotlivými filtry.}.
 .3 graph \DTcomment{Třídy reprezentující lokální graf.}.
 .3 layout \DTcomment{Logika layoutů.}.
@@ -289,7 +289,7 @@ Třída \texttt{Graph} umístěna v \texttt{graph/} spravuje stažený graf pod 
   \item \texttt{edges} objekt tříd \texttt{Edge} - Seznam všech hran stažených ze serveru.
   \item \texttt{groups: NodeGroup[]} - Seznam všech neprázdných skupin vrcholů.
   \item \texttt{nodesVisual: NodeCommon[]} - Všechny \texttt{Node} a \texttt{NodeGroup}, které jsou aktuálně viditelné v grafu. \textit{Viditelnost vrcholů je popsána dále.}
-  \item \texttt{groupEdges: GroupEdge[]} - Hrany které propojují skupiny uzlů nebo skupinu a normální uzel. Tyto hrany vzikly sloučením několika hran a existují pouze díky existenci nějaké skupiny vrcholů.
+  \item \texttt{groupEdges: GroupEdge[]} - Hrany které propojují skupiny vrcholů nebo skupinu a normální vrchol. Tyto hrany vzikly sloučením několika hran a existují pouze díky existenci nějaké skupiny vrcholů.
   \item \texttt{edgesVisual: EdgeCommon[]} - Všechny \texttt{Edge} a \texttt{GroupEdge} které jsou aktuálně viditelné v grafu. \textit{Viditelnost hran je popsána dále.}
 \end{itemize}
 
@@ -303,11 +303,11 @@ Poslední tři zmíněné fieldy jsou gettery. Protože se aplikace často na ty
   \item \texttt{createEdge(source: Node, target: Node, type: EdgeType): Edge}\mbox{}\\Vytvoří a zaregistruje novou hranu v grafu.
   \item \texttt{createGroup(): NodeGroup} - Vytvoří a zaregistruje prázdnou skupinu vrcholů.
 
-  \item \texttt{getAllTypes(): Set<NodeType>} a \texttt{getAllClasses(): Set<string>}\mbox{}\\Pomocné metody, které projdou všechny uzly v grafu a shromáždí jejich typy, respektive třídy. Těchto metod je využíváno při filtrování, protože nejsme schopni ze serveru získat kompletní množinu typů a tříd. Metody jsou volány, když uživatel otevře okno s možnostmi filtrů.
+  \item \texttt{getAllTypes(): Set<NodeType>} a \texttt{getAllClasses(): Set<string>}\mbox{}\\Pomocné metody, které projdou všechny vrcholy v grafu a shromáždí jejich typy, respektive třídy. Těchto metod je využíváno při filtrování, protože nejsme schopni ze serveru získat kompletní množinu typů a tříd. Metody jsou volány, když uživatel otevře okno s možnostmi filtrů.
 
   \item \texttt{fetchNode(IRI: string): Promise<Node>} - Vrchol je definován pouze svým IRI a tedy pro vytvoření vrcholu se aplikace nemusí ničeho dotazovat serveru. Tato metoda kromě vytvoření takového vrcholu ještě stáhne jeho \texttt{view-sets}, zvolí výchozí pohled a stáhne \texttt{preview} vrcholu. V případě, že se nepodaří stáhnout tyto informace, pak podle požadavku na vložení vrcholu z \ref{pozadavky-uzivatelske}, vrchol do grafu nebude přidán a metoda vrátí null.
 
-  \item \texttt{getOrCreateNode(IRI: string): Promise<Node>} - Obdobná metoda \\metodě výše. Pokud uzel neexistuje, volá předchozí metodu. Pokud uzel existuje, stáhne jeho \texttt{view-sets} a \texttt{preview} obdobně jako předchozí metoda a vrátí ho.
+  \item \texttt{getOrCreateNode(IRI: string): Promise<Node>} - Obdobná metoda \\metodě výše. Pokud vrchol neexistuje, volá předchozí metodu. Pokud vrchol existuje, stáhne jeho \texttt{view-sets} a \texttt{preview} obdobně jako předchozí metoda a vrátí ho.
 \end{itemize}
 
 \paragraph{Poznámka k viditelnosti} Veškeré metody, které vytvářejí vrcholy, skupiny nebo hrany, tyto prvky nevytvoří viditelnými. Aby mohl být prvek viděn v grafu, musí mu být nastaven field \texttt{mounted = true}.
@@ -317,13 +317,13 @@ Třída \texttt{NodeCommon} je společným předkem pro třídy \texttt{Node} a 
 
 \subsubsection*{Fieldy}
 \begin{itemize}
-  \item \texttt{mounted: boolean} - Určuje, zda má být vrchol viditelný v aplikaci. Na rozdíl od ostatních úrovní viditelností je tato myšlena tak, že uzel, který má tuto hodnotu false, v grafu vůbec nefiguruje a není jej možné ani najít v jiných částech aplikace (například mezi skrytými vrcholy). Využití najde v případě, kdy server pošle více vrcholů než uživatel žádal, nebo ho lze použít v případě browsingu seznamem, který je popsán v poslední kapitole.
+  \item \texttt{mounted: boolean} - Určuje, zda má být vrchol viditelný v aplikaci. Na rozdíl od ostatních úrovní viditelností je tato myšlena tak, že vrchol, který má tuto hodnotu false, v grafu vůbec nefiguruje a není jej možné ani najít v jiných částech aplikace (například mezi skrytými vrcholy). Využití najde v případě, kdy server pošle více vrcholů než uživatel žádal, nebo ho lze použít v případě browsingu seznamem, který je popsán v poslední kapitole.
 
   \item \texttt{onMountPosition: [number, number]} - Pomocný field, který určuje, kde má být vrchol na plátně vykreslen, až bude nastaven na mounted. Souřadnice odpovídají souřadnicím používanými Cytoscape knihovnou.
 
-  \item \texttt{visible: boolean} - Nastavuje uživatelskou viditelnost uzlu. Uživatel se může rozhodnout ručně skrýt uzel. Takový uzel si pak zachovává svou pozici na plátně a je v seznamu mezi ostatními skrytými uzly.
+  \item \texttt{visible: boolean} - Nastavuje uživatelskou viditelnost vrcholu. Uživatel se může rozhodnout ručně skrýt vrchol. Takový vrchol si pak zachovává svou pozici na plátně a je v seznamu mezi ostatními skrytými vrcholy.
 
-  \item \texttt{get isVisible: boolean} - Pomocný getter, který určí, jestli je uzel viditelný. Pro \texttt{NodeGroup} se počítá jako \texttt{visible} AND \uv{alespoň jeden vrchol skupiny je \texttt{isVisible}}.  \texttt{Node} pak viditelnost počítá jako \texttt{visible} AND \uv{žádný filtr nezakazuje jeho viditelnost}.
+  \item \texttt{get isVisible: boolean} - Pomocný getter, který určí, jestli je vrchol viditelný. Pro \texttt{NodeGroup} se počítá jako \texttt{visible} AND \uv{alespoň jeden vrchol skupiny je \texttt{isVisible}}.  \texttt{Node} pak viditelnost počítá jako \texttt{visible} AND \uv{žádný filtr nezakazuje jeho viditelnost}.
 
   \item \texttt{selected: boolean} - Pokud je vrchol vybrán, je zobrazen jeho detail v pravém panelu aplikace. Je možné vybrat více vrcholů. Vybrání vrcholů je napojeno na vybírání vrcholů na plátně. Lze vybrat i skryté vrcholy (uživatelem, nebo filtrem). Pokud vrchol není mounted, je tato hodnota ignorována.
 
@@ -342,7 +342,7 @@ Třída \texttt{NodeCommon} je společným předkem pro třídy \texttt{Node} a 
   \item \texttt{selectExclusively()} - Nastaví \texttt{selected} pouze pro tento vrchol. V praxi to znamená, že se zobrazí detail tohoto vrcholu v pravém panelu.
 \end{itemize}
 
-\paragraph{Poznámka} Díky Vue frameworku je hodně akcí vyvoláno právě nastavením nějaké proměnné. Kupříkladu proměnná \texttt{mounted} místo metody \texttt{mount()}. Vue framework automaticky při změně takovýchto proměnných provede příslušnou akci. Tento přístup má několik výhod, kupříkladu můžeme napojit proměnnou \texttt{visible} na checkbox a tak propojit viditelnost vrcholu se zaškrtávacím políčkem v obou směrech. Nevýhoda tohoto přístupu je ta, že skutečná akce bude provedena až po skončení funkce. Pokud bychom například chtěli počkat, až se uzel namountuje a pak provést nějakou akci, musíme počkat na další AnimationFrame. Následující kód toto předvádí na akci, kdy chceme vrchol zobrazit v grafu a pak na něj přesunout pohled.
+\paragraph{Poznámka} Díky Vue frameworku je hodně akcí vyvoláno právě nastavením nějaké proměnné. Kupříkladu proměnná \texttt{mounted} místo metody \texttt{mount()}. Vue framework automaticky při změně takovýchto proměnných provede příslušnou akci. Tento přístup má několik výhod, kupříkladu můžeme napojit proměnnou \texttt{visible} na checkbox a tak propojit viditelnost vrcholu se zaškrtávacím políčkem v obou směrech. Nevýhoda tohoto přístupu je ta, že skutečná akce bude provedena až po skončení funkce. Pokud bychom například chtěli počkat, až se vrchol namountuje a pak provést nějakou akci, musíme počkat na další AnimationFrame. Následující kód toto předvádí na akci, kdy chceme vrchol zobrazit v grafu a pak na něj přesunout pohled.
 
 \begin{code}
 node.mounted = true;
@@ -541,7 +541,7 @@ Mezi významné metody patří
 
 
 \newpage
-Komponenty obsahují spoustu dalších metod pro aktualizaci stylů, pozic vrcholů a podobně. Uveďme ještě konkrétní příklad pro vybírání uzlů.
+Komponenty obsahují spoustu dalších metod pro aktualizaci stylů, pozic vrcholů a podobně. Uveďme ještě konkrétní příklad pro vybírání vrcholů.
 \begin{code}
 @Watch('node.selected')
 protected selectedChanged() {

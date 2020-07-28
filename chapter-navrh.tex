@@ -100,7 +100,7 @@ interface ResponseStylesheet {
 
 \subsubsection{/view-sets}
 \textbf{parametry:} \texttt{config} a \texttt{resource} \\
-Vrátí seznam možných view setů, (viz kapitola \ref{pozadavky-view-sets}) které odpovídají uzlu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
+Vrátí seznam možných view setů, (viz kapitola \ref{pozadavky-view-sets}) které odpovídají vrcholu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
 
 \begin{code}
 interface ResponseViewSets {
@@ -119,7 +119,7 @@ interface ResponseViewSets {
 
 \subsubsection{/preview}
 \textbf{parametry:} \texttt{view} a \texttt{resource} \\
-Vrátí data z dotazu preview (viz kapitola \ref{pozadavky-preview}) na uzel s IRI \texttt{resource} při daném pohledu \texttt{view}.
+Vrátí data z dotazu preview (viz kapitola \ref{pozadavky-preview}) na vrchol s IRI \texttt{resource} při daném pohledu \texttt{view}.
 
 \begin{code}
 interface ResponsePreview {
@@ -130,7 +130,7 @@ interface ResponsePreview {
 
 \subsubsection{/detail}
 \textbf{parametry:} \texttt{view} a \texttt{resource} \\
-Vrátí data z dotazu detail (viz kapitola \ref{pozadavky-detail}) na uzel s IRI \texttt{resource} při daném pohledu \texttt{view}.
+Vrátí data z dotazu detail (viz kapitola \ref{pozadavky-detail}) na vrchol s IRI \texttt{resource} při daném pohledu \texttt{view}.
 
 \begin{code}
 interface ResponseDetail {
@@ -146,7 +146,7 @@ interface ResponseDetail {
 
 \subsubsection{/expand}
 \textbf{parametry:} \texttt{view} a \texttt{resource} \\
-Vrátí expandované uzly (viz kapitola \ref{pozadavky-expansion}) pro uzel s IRI \texttt{resource} při daném pohledu \texttt{view}. Tyto expandované uzly již obsahují data o detailu a tedy není třeba žádného dalšího volání.
+Vrátí expandované vrcholy (viz kapitola \ref{pozadavky-expansion}) pro vrchol s IRI \texttt{resource} při daném pohledu \texttt{view}. Tyto expandované vrcholy již obsahují data o detailu a tedy není třeba žádného dalšího volání.
 
 \begin{code}
 interface ResponseExpand {

@@ -39,14 +39,14 @@ Server vrací data ve formátu JSON, požadavky jsou posílány metodou GET a pa
     Vrátí kompletní visual style sheet (viz kapitola \ref{pozadavky-visual-style-sheet}) na základě jeho IRI jako parametr \texttt{stylesheet}.
 
     \item \texttt{/view-sets}, \textbf{parametry:} \texttt{config} a \texttt{resource} \\
-    Vrátí seznam možných view setů (viz kapitola \ref{pozadavky-view-sets}) které odpovídají uzlu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
+    Vrátí seznam možných view setů (viz kapitola \ref{pozadavky-view-sets}) které odpovídají vrcholu s IRI \texttt{resource} při dané konfiguraci \texttt{config}.
 
     \item \texttt{/preview}, \textbf{parametry:} \texttt{view} a \texttt{resource} \\
-    Vrátí data z dotazu preview (viz kapitola \ref{pozadavky-preview}) na uzel s IRI \texttt{resource} při daném pohledu \texttt{view}.
+    Vrátí data z dotazu preview (viz kapitola \ref{pozadavky-preview}) na vrchol s IRI \texttt{resource} při daném pohledu \texttt{view}.
 
     \item \texttt{/detail}, \textbf{parametry:} \texttt{view} a \texttt{resource} \\
-    Vrátí data z dotazu detail (viz kapitola \ref{pozadavky-detail}) na uzel s IRI \texttt{resource} při daném pohledu \texttt{view}.
+    Vrátí data z dotazu detail (viz kapitola \ref{pozadavky-detail}) na vrchol s IRI \texttt{resource} při daném pohledu \texttt{view}.
 
     \item \texttt{/expand}, \textbf{parametry:} \texttt{view} a \texttt{resource} \\
-    Vrátí expandované uzly (viz kapitola \ref{pozadavky-expansion}) pro uzel s IRI \texttt{resource} při daném pohledu \texttt{view}. Tyto expandované uzly již obsahují data o detailu a tedy není třeba žádného dalšího volání.
+    Vrátí expandované vrcholy (viz kapitola \ref{pozadavky-expansion}) pro vrchol s IRI \texttt{resource} při daném pohledu \texttt{view}. Tyto expandované vrcholy již obsahují data o detailu a tedy není třeba žádného dalšího volání.
 \end{itemize}

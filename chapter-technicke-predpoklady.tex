@@ -5,7 +5,7 @@ Resource Description Framework, zkráceně RDF, je rodina specifikací\footnote{
 
 Základem je takzvaný \textbf{statement} (česky tvrzení). Tvrzení je vyjádřeno formou trojice v tomto pořadí ze subjektu, predikátu a objektu, přičemž subjekt a objekt jsou vrcholy (anglicky \textbf{nodes}) a predikát je orientovanou hranou jdoucí od subjektu k objektu.
 
-Vrcholem v RDF může být IRI, literál, nebo prázdný uzel.
+Vrcholem v RDF může být IRI, literál, nebo prázdný vrchol.
 
 \medskip
 
@@ -13,11 +13,11 @@ Jako vrchol IRI (Internationalized Resource Identifier) se rozumí vrchol, jež 
 
 \medskip
 
-Literálem je pak uzel nesoucí nějakou hodnotu. Může se jednat o číslo popisující věk osoby, její jméno atp. V rámci RDF kromě hodnoty má literál i svůj typ, jež je opět vyjádřen pomocí IRI. Uveďme kupříkladu \url{http://www.w3.org/2001/XMLSchema#integer} jež vyjadřuje obecně celé číslo. Speciálním typem je \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#langString}, který vyžaduje ještě takzvaný \textbf{laguage tag} a popisuje text v nějakém konkrétním jazyce.
+Literálem je pak vrchol nesoucí nějakou hodnotu. Může se jednat o číslo popisující věk osoby, její jméno atp. V rámci RDF kromě hodnoty má literál i svůj typ, jež je opět vyjádřen pomocí IRI. Uveďme kupříkladu \url{http://www.w3.org/2001/XMLSchema#integer} jež vyjadřuje obecně celé číslo. Speciálním typem je \url{http://www.w3.org/1999/02/22-rdf-syntax-ns#langString}, který vyžaduje ještě takzvaný \textbf{laguage tag} a popisuje text v nějakém konkrétním jazyce.
 
 \medskip
 
-Literály nám tedy dávají možnost popsat IRI uzly (entity) pomocí různých vlastností, které podporují právě i multijazyčnost. S pomocí takovýchto grafů pak dokážeme popsat celou řadu věcí z reálného světa.
+Literály nám tedy dávají možnost popsat IRI vrcholy (entity) pomocí různých vlastností, které podporují právě i multijazyčnost. S pomocí takovýchto grafů pak dokážeme popsat celou řadu věcí z reálného světa.
 
 Nakonec, hrana je opět popsána pomocí IRI, jež reprezentuje typ vztahu.
 
