@@ -262,7 +262,7 @@ Kromě těchto metod komponenta obsahuje ještě Vue metodu \texttt{mounted}, kt
 
 \paragraph{saveToFile()} - Vyrobí soubor se stavem aplikace který je možné stáhnout.
 
-\subsection{Interface file-save/ObjectSave}
+\subsection{Interface ObjectSave}
 Interface \texttt{ObjectSave} předepisuje dvě metody \texttt{saveToObject(): object} a \texttt{restoreFromObject(object: any): void}, které uloží stav třídy do serializovatelného objektu, respektive tento stav obnoví. Tento interface obsahují všechny třídy jež drží stav aplikace který je třeba uložit do souboru, pokud o to uživatel požádá.
 
 Tento interface implementuje i komponenta \texttt{Application} jež tyto metody volá na modulech a jednotlivé výsledky pak spojí do jednoho objektu (v případě metody \texttt{saveToObject}). Výsledek je pak serializován do JSONu a uložen do počítače. V opačném případě je JSON deserializován a předán metodě \texttt{restoreFromObject} která volá tuto metodu na modulech, které ji mohou volat na podtřídách.
@@ -289,7 +289,7 @@ Třída \texttt{Graph} umístěna v \texttt{graph/} spravuje stažený graf pod 
   \item \texttt{edges} objekt tříd \texttt{Edge} - Seznam všech hran stažených ze serveru.
   \item \texttt{groups: NodeGroup[]} - Seznam všech neprázdných skupin vrcholů.
   \item \texttt{nodesVisual: NodeCommon[]} - Všechny \texttt{Node} a \texttt{NodeGroup}, které jsou aktuálně viditelné v grafu. \textit{Viditelnost vrcholů je popsána dále.}
-  \item \texttt{groupEdges: GroupEdge[]} - Hrany které propojují skupiny vrcholů nebo skupinu a normální vrchol. Tyto hrany vzikly sloučením několika hran a existují pouze díky existenci nějaké skupiny vrcholů.
+  \item \texttt{groupEdges: GroupEdge[]} - Hrany které propojují skupiny vrcholů nebo skupinu a normální vrchol. Tyto hrany vznikly sloučením několika hran a existují pouze díky existenci nějaké skupiny vrcholů.
   \item \texttt{edgesVisual: EdgeCommon[]} - Všechny \texttt{Edge} a \texttt{GroupEdge} které jsou aktuálně viditelné v grafu. \textit{Viditelnost hran je popsána dále.}
 \end{itemize}
 
@@ -646,14 +646,14 @@ Pro explicitní spuštění layoutu je možné volat funkci \texttt{run}.
 
 Layout implementuje \texttt{ObjectSave}.
 
-\subsection{LayoutManager}
+\subsection{Třída LayoutManager}
 Třída \texttt{LayoutManager} spravuje všechny layouty. Je konstruována s polem objektů \texttt{LayoutData}, tedy při jejím vytvoření dostane seznam podporovaných layoutů. Tento seznam může být později měněn.
 
 Metoda \texttt{switchToLayout(name: string)} pak po zadání identifikátoru layoutu správně provede jeho změnu.
 
 \newpage
 
-\subsection{GraphSearcher}
+\subsection{Třída GraphSearcher}
 Tato třída reprezentuje modul vyhledávání vrcholů v grafu. Drží si jednotlivé vyhledávače a je schopna v nich vyhledávat. Obsahuje metodu \texttt{search}, jejímž prvním parametrem je vyhledávaný řetězec a druhým je callback, který je volán \textbf{několikrát} se setříděným seznamem výsledných vrcholů a informací, zda vyhledávání stále probíhá (například při dotazování na server).
 
 \subsection{Interface Searcher}
@@ -670,7 +670,7 @@ Tento interface implementují všechny vyhledávače a předepisuje následujíc
   \item \texttt{icon: string} a \texttt{color: string} - Popisuje, jak má vypadat ikonka u vyhledávaného výsledku. Používá se pro rozlišení více typů vyhledávačů, například v autocomplete a v grafu.
 \end{itemize}
 
-\subsection{GraphSearcherQuery}
+\subsection{Třída GraphSearcherQuery}
 Předchozí třída při vyhledávání vytvoří tuto třídu, která reprezentuje konkrétní vyhledávání.
 \begin{itemize}
   \item \texttt{MAX_RESULTS_PER_SEARCHER: number} - Představuje maximální počet výsledků, které vyhledávání vrátí.

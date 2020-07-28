@@ -200,8 +200,33 @@ rb:view/wikidata/animals/taxon/narrower a browser:View ;
     browser:hasDetail rb:detail-query/animals/taxon/basic .
 \end{code}
 
+\textbf{Preview} \\
+Hodnota \texttt{browser:query} pro preview, který je odkazovaný v předchozím příkladu. Z dotazu byly vynechány prefixy pro větší přehlednost.
+\begin{code}
+CONSTRUCT {
+    ?node a wdab:taxon ;
+          rdfs:label ?nodeLabel ;
+          browser:class "taxon",
+                        ?taxonClass .
+} WHERE {
+    ?node wdt:P105 ?taxonRank .
+
+    ?taxonRank rdfs:label ?taxonRankLabel .
+    FILTER(lang(?taxonRankLabel) = "en")
+
+    BIND(IF(?taxonRank IN (wd:Q7432, wd:Q34740, wd:Q35409, wd:Q36602,
+        wd:Q37517, wd:Q38348, wd:Q36732, wd:Q146481), ?taxonRankLabel,
+        "unsupportedTaxon") AS ?taxonClass)
+
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+\end{code}
+Povšimněte si, jaké třídy dostává vrchol. Vždy se jedná o \uv{taxon}. Další třídy pak pocházejí z property, kterou Wikidata definují jako \uv{taxonomické zařazení} a jedná se například o \uv{species}, \uv{genus}, \uv{family} atp. Právě na \uv{genus} se aplikuje styl z ukázky zmíněné dále, který obarví všechny rody žlutě.
+
+\medskip
+
 \textbf{Expanze} \\
-Hodnota \texttt{browser:query} pro expanzi, jež je zmíněná v předchozím příkladu. Z dotazu byly vynechány prefixy.
+Hodnota \texttt{browser:query} pro expanzi, jež je odkazovaná v definici pohledu z předchozího příkladu. Z dotazu byly opět vynechány prefixy.
 \begin{code}
 CONSTRUCT {
     ?childTaxon a wdab:taxon ;
@@ -229,32 +254,7 @@ CONSTRUCT {
     SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 }
 \end{code}
-Povšimněte si, že expanze vrací přímo i preview všech expandovaných vrcholů, aby se omezila zátěž na datové zdroje.
-\medskip
-
-\textbf{Preview} \\
-Hodnota \texttt{browser:query} pro preview, který je zmíněný v definici pohledu z předchozího příkladu. Z dotazu byly opět vynechány prefixy.
-\begin{code}
-CONSTRUCT {
-    ?node a wdab:taxon ;
-          rdfs:label ?nodeLabel ;
-          browser:class "taxon",
-                        ?taxonClass .
-} WHERE {
-    ?node wdt:P105 ?taxonRank .
-
-    ?taxonRank rdfs:label ?taxonRankLabel .
-    FILTER(lang(?taxonRankLabel) = "en")
-
-    BIND(IF(?taxonRank IN (wd:Q7432, wd:Q34740, wd:Q35409, wd:Q36602,
-        wd:Q37517, wd:Q38348, wd:Q36732, wd:Q146481), ?taxonRankLabel,
-        "unsupportedTaxon") AS ?taxonClass)
-
-    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-}
-\end{code}
-Dotaz vypadá obdobně jako část předchozího dotazu, neboť expanze vrací pro každý vrchol i detail. Zde si můžeme povšimnout, jaké třídy dostává vrchol. Vždy se jedná o \uv{taxon}. Další třídy pak pocházejí z property, kterou Wikidata definují jako \uv{taxonomické zařazení} a jedná se například o \uv{species}, \uv{genus}, \uv{family} atp. Právě na \uv{genus} se aplikuje styl z ukázky dále a tedy všechny rody budou vykresleny žlutě.
-
+Tento a předchozí dotaz jsou si velmi podobné. Důvod je ten, že expanze vrací pro každý vrchol i preview, aby se omezila zátěž na datové zdroje. Nyní je tento problém řešen manuálně autorem konfigurace. Poslední kapitola pak rozebírá možnosti optimalizace dotazů, aby tento proces byl automatický a jednotný.
 \medskip
 
 \textbf{Definice datasetu}

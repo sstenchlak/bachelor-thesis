@@ -19,16 +19,16 @@ Testovaným osobám bude vysvětlen základní princip fungování aplikace a po
 
 \subsection{Výsledky testování SUS}
 
-Na testování se podílelo celkem 13 respondentů. Níže je vypsán seznam deseti SUS otázek společně s výsledky testu.
+Na testování se podílelo celkem 14 respondentů. Níže je vypsán seznam deseti SUS otázek společně s výsledky testu.
 
 Otázky mají určené pořadí a jsou formulovány tak, aby střídavě byla pozitivní odpověď \uv{soulasím} a \uv{nesouhlasím}. Na otázky se odpovídalo na stupnici 1-5.
 
 \pgfplotstableread[row sep=\\,col sep=&]{
 response & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
-1        & 0 & 4 & 0 & 7 & 0 & 5 & 0 & 5 & 0 & 9  \\
-2        & 1 & 5 & 2 & 3 & 2 & 5 & 0 & 4 & 3 & 3  \\
-3        & 3 & 1 & 2 & 3 & 3 & 1 & 1 & 2 & 1 & 1  \\
-4        & 6 & 3 & 7 & 0 & 3 & 2 & 8 & 2 & 4 & 0  \\
+1        & 0 & 5 & 0 & 8 & 0 & 5 & 0 & 6 & 0 & 10 \\
+2        & 1 & 5 & 2 & 3 & 2 & 6 & 0 & 4 & 3 & 3  \\
+3        & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 2 & 1 & 1  \\
+4        & 6 & 3 & 8 & 0 & 3 & 2 & 8 & 2 & 5 & 0  \\
 5        & 3 & 0 & 2 & 0 & 5 & 0 & 4 & 0 & 5 & 0 \\
 }\dataone
 
@@ -68,7 +68,7 @@ response & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
             nodes near coords align={vertical},
             symbolic x coords={1,2,3,4,5},
             xtick=data,
-            ymin=0,ymax=12,
+            ymin=0,ymax=14,
             xticklabels={,,},
         ]
         \addplot table[x=response,y=\x]{\dataone};
@@ -79,23 +79,38 @@ response & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\
 \end{minipage}\\
 }
 
-Na základě odpovědí na tyto otázky se pak počítá skóre následovně: Jednotlivé odpovědi u otázek se zprůměrují. Od každé liché otázky je odečtena $1$. (To jsou otázky, kde je pozitivní odpovědí \uv{souhlasím}, tedy $5$.) Pro každou sudou otázku pak její skóre bude odečteno od $5$. (U sudých otázek je pozitivní odpovědí \uv{nesouhlasím}, což odpovídá $1$.) Skóre všech otázek bude sečteno a vynásobeno $2,5$. Tak se získá celkové skóre v rozsahu $0$ až $100$.
+\subsubsection{Výpočet}
 
-Podle provedeného průzkumu SUS definuje, že průměrný systém s uživatelským rozhraním dosahuje skóre \textbf{68}.
+\noindent Na základě odpovědí na tyto otázky se pak počítá skóre následovně.
+\begin{itemize}
+    \item Jednotlivé odpovědi u otázek se zprůměrují.
+    \item Od každé liché otázky je odečtena $1$. (To jsou otázky, kde je pozitivní odpovědí \uv{souhlasím}, tedy $5$.)
+    \item Pro každou sudou otázku pak její skóre bude odečteno od $5$. (U sudých otázek je pozitivní odpovědí \uv{nesouhlasím}, což odpovídá $1$.)
+    \item Skóre všech otázek bude sečteno a vynásobeno $2,5$. Tak se získá celkové skóre v rozsahu $0$ až $100$.
+\end{itemize}
 
-Na základě výsledku testování pak vychází skóre této aplikace na \textbf{75,2}.
+\noindent Podle provedených průzkumů na různých aplikacích SUS definuje, že průměrný systém s uživatelským rozhraním dosahuje skóre \textbf{68}.
 
 \bigskip
 
-Respondenti také odpovídali na následující otázky
-\begin{itemize}
-    \item Víte, co je knowledge graph? - $75\%$ respondentů odpovědělo kladně.
-    \item Víte, co jsou linked data? - $83\%$ respondentů odpovědělo kladně.
-    \item Znáte SPARQL? - $50\%$ respondentů odpovědělo kladně.
-\end{itemize}
+\noindent Na základě výsledku testování pak vychází skóre této aplikace na \textbf{75,4}.
 
 \newpage
 
+\noindent Respondenti také odpovídali na následující otázky
+\begin{itemize}
+    \item Víte, co je knowledge graph? - $79\%$ (11/14) respondentů odpovědělo kladně.
+    \item Víte, co jsou linked data? - $86\%$ (12/14) respondentů odpovědělo kladně.
+    \item Znáte SPARQL? - $57\%$ (8/14) respondentů odpovědělo kladně.
+\end{itemize}
+
+Budeme-li kategorizovat respondenty podle znalosti SPARQL jazyka, protože tato otázka nejlépe rozděluje testovanou množinu, dostáváme, že SUS skóre získané od respondentů, jež znají SPARQL, je \textbf{83,8}. Naopak, výsledky respondentů, kteří odpověděli negativně, pak dosahují skóre \textbf{64,7}, které je mírně pod průměrem definovaným SUS.
+
+\bigskip
+
+Protože cílem této aplikace jsou běžní uživatelé, kteří nejsou expertmi v oboru a nerozumí problematice RDF, budeme považovat za primární výsledek testu právě ten, jež byl získán od respondentů, kteří neznají SPARQL, tedy \textbf{64,7}.
+
+Ze všech 14 výsledků pak také vyplývá, že neznalost knowledge grafů a linked dat implikuje neznalost SPARQLU.
 
 \section{Výsledky obecných otázek}
 V rámci testování SUS byli respondenti navíc dotázáni, jaké části aplikace pro ně byly uživatelsky nepřívětivé a čemu neporozuměli. Výsledky jsou sepsány v následujícím seznamu společně s možným řešením.
@@ -113,11 +128,15 @@ V rámci testování SUS byli respondenti navíc dotázáni, jaké části aplik
     Zvážit přejmenování layoutů a možností pohledů.
 \end{itemize}
 
+\newpage
+
 \section{Funkčnost aplikace}
 
 Úkoly popsané v rámci SUS průzkumu sloužily také jako určitá forma uživatelského testování aplikace. I když nebylo jasně definováno, jak by aplikace měla na konkrétní úkoly reagovat, můžeme předpokládat, že úkoly proběhly úspěšně, neboť je všichni z respondentů dokončili.
 
 Úkoly byly zadány tak, aby pokryly co nejvíce uživatelských požadavků popsaných v kapitole \ref{pozadavky-uzivatelske}.
+
+\bigskip
 
 Měřením code coverage bylo zjištěno, že provedením všech úkolů bylo pokryto \textbf{77\%} kódu. Většina aplikace tedy byla těmito úkoly úspěšně otestována.
 
