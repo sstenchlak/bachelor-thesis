@@ -337,7 +337,7 @@ Server zprostředkovává následující požadavky:
     \label{fig:use-case}
 \end{figure}
 
-\section{Uživatelské a systémové požadavky}
+\section{Uživatelské a systémové požadavky}\label{pozadavky-uzivatelske}
 
 Níže je sepsán seznam původních požadavků na klientskou aplikaci.
 
@@ -394,7 +394,7 @@ Uživatel může přidat filtr, jež skryje nevyhovující vrcholy. Takovéto sk
 
 \paragraph{Analýza} Aplikace by měla podporovat snadné přidání filtrů do budoucna a podporu pro pluginy, které dodávají vlastní možnosti filtrování. Aby bylo možné vyjádřit libovolné filtry, každý filtr by měl mít přístup k celému grafu a všem vrcholům.
 
-vrchol může být skrytý jak filtrem, tak i uživatelem. Pro přehlednost by měl být uživatel informován, že nemůže ručně zobrazit vrchol který je skrytý filtrem. Tyto vrcholy budou stále zobrazeny v seznamu skrytých vrcholů pro možnost přístupu k nim.
+Vrchol může být skrytý jak filtrem, tak i uživatelem. Pro přehlednost by měl být uživatel informován, že nemůže ručně zobrazit vrchol který je skrytý filtrem. Tyto vrcholy budou stále zobrazeny v seznamu skrytých vrcholů pro možnost přístupu k nim.
 
 Každý filtr určí, zda je vrchol podle tohoto filtru viditelný. Vrchol pak bude viditelný, pokud všechny filtry určí, že viditelný je. Jedná se tedy o konjunkci.
 
@@ -435,6 +435,9 @@ Pokud to konfigurace umožňuje, bude možné přidávat nové vrcholy do grafu 
 Návrh vyhledávače by měl podporovat více vyhledávacích zdrojů a vhodně kombinovat nalezené výsledky v případě, že více zdrojů vrátí stejné vrcholy.
 
 Kromě vyhledávání v JSON souboru se pak nabízí hledat i v aktuálním grafu a umožnit uživateli zadat do vyhledávacího pole přímo IRI vrcholu, popřípadě její část, ze které se aplikace pokusí sestavit celou IRI.
+\bigskip
+
+Níže jsou požadavky dodané do aplikace později.
 
 \subsection*{Podpora layoutů}
 Aplikace bude umožňovat několik způsobů layoutování grafu, které si bude moci uživatel volit.
@@ -459,4 +462,4 @@ Vrcholy bude možné seskupovat do skupin, které budou ve vizuálním grafu rep
 \subsection*{Kompaktní mód}
 Uživatel bude mít možnost zapnout kompaktní mód. Během něj se ve středu obrazovky zobrazí pouze zvolené vrcholy a jejich přímí sousedi. Tyto vrcholy budou layoutovány bez ohledu na ostatní vrcholy, které budou skryté. Uživatel pak bude mít možnost graf v tomto módu procházet klikáním na sousedy aktivního vrcholu.
 
-\paragraph{Analýza} Kompaktní mód se vypne, pokud nebude vybrán žádný vrchol. Při kompaktním módu se bude obrazovka neustále zaměřovat na vrcholy účastnící se kompaktního módu. Jakmile vrchol kompaktní mód opustí, měl by se vrátit na svou původní pozici. Po skončení kompaktního módu se původní rozložení grafu nezmění. Nově vytvořené vrcholy v rámci kompaktního módu musí být i správně umístěny, jakmile bude mód ukončen.
+\paragraph{Analýza} Kompaktní mód se vypne, pokud nebude vybrán žádný vrchol. Při kompaktním módu se bude obrazovka neustále zaměřovat na vrcholy účastnící se kompaktního módu. Jakmile vrchol kompaktní mód opustí, měl by se vrátit na svou původní pozici. Po skončení kompaktního módu se původní rozložení grafu nezmění. Nově vytvořené vrcholy v rámci kompaktního módu musí být správně umístěny, jakmile bude mód ukončen.
