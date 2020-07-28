@@ -2,7 +2,9 @@
 \addcontentsline{toc}{chapter}{Závěr}
 V rámci této práce byla dle zadaných požadavků navržena, implementována a otestována webová aplikace pro procházení a vizualizaci dat z grafových databází. To, jak jsou data zobrazena a jakým způsobem je lze procházet popisuje konfigurace.
 
-Uživatel si může do aplikace přidat vrcholy reprezentující existující entity a ty může expandovat a rozšiřovat tak graf o nové vrcholy. Aplikace poskytuje uživateli dodatečné informace o vrcholech, obarvuje je podle jejich typu, umožňuje filtrovat graf a podporuje několik layoutů, jak může být graf zobrazen. Pro snazší práci lze vrcholy seskupovat do skupin, a je možné si vrcholy zobrazit tak, aby je bylo snadné procházet po jejich sousedech.
+Uživatel si může do aplikace přidat vrcholy reprezentující existující entity a ty může expandovat a rozšiřovat tak graf o nové vrcholy. Aplikace poskytuje uživateli dodatečné informace o vrcholech, obarvuje je podle jejich typu, umožňuje filtrovat graf a podporuje několik layoutů, jak může být graf zobrazen. Pro snazší práci lze vrcholy seskupovat do skupin, a je možné si vrcholy zobrazit tak, aby bylo snadné procházet po sousedních vrcholech.
+
+Aplikace byla také úspěšně otestována metodou SUS a nasazena do provozu.
 
 \section{Možnosti vylepšení}
 Tato kapitola rozebírá možné způsoby, jak aplikaci rozšířit do budoucna a možnou implementaci, jak tyto rozšíření provést.
@@ -13,13 +15,13 @@ Aktuálně je rozhraní navrženo tak, že serveru lze posílat požadavky samos
 Server také může posílat data, o která klient nežádal, v případě, že se bude domnívat, že je klient může požadovat. Například když klient požádá o \texttt{view-sets}, může server rovnou poslat \texttt{preview} na výchozí pohled, neboť o něj bude klient zřejmě žádat.
 
 \subsection*{Cachování}
-Problém cachování již v této práci rozebírán byl. S každým požadavkem klienta se server dotazuje datových zdrojů. Tato operace je časově náročná a zbytečně dochází k vytěžování datových zdrojů.
+Problém cachování již v této práci rozebírán byl. S každým požadavkem klienta se server dotazuje datových zdrojů. Tato operace je časově náročná a zbytečně dochází k jejich vytěžování.
 
 Kupříkladu SPARQL endpoint Wikidat má omezení na počet požadavků a při vysoké aktivitě klienta může server dostat IP ban.
 
 Možnosti cachování jsou následující:
 \begin{itemize}
-    \item Cachovat výsledky jednotlivých dotazů. Například budou cachována data expanze pro každý vrchol kompletně zvlášť. Toto řešení je jednoduché, nicméně náročné na paměť, neboť jednotlivé vrcholy budou uložené několikrát.
+    \item Cachovat výsledky jednotlivých dotazů. Například budou cachována data expanze pro každý vrchol zvlášť. Toto řešení je jednoduché, nicméně náročné na paměť, neboť jednotlivé vrcholy budou uložené několikrát.
     \item Cachovat malé bloky a ty pak sestavovat. V případě s expanzí bude uložen pouze seznam IRI vrcholů a data k vrcholům budou uložená samostatně. Tak dojde k omezení všech redundantních informací. U každého bloku bude uložen čas stažení, který bude kontrolován a v případě příliš starého výsledku se cache zahodí.
     \item Cachovat kompletní graf. Místo ukládání dat, která jsou výsledky jednotlivých dotazů, stáhneme část grafu a dotazy nad tímto grafem budou provedeny lokálně. Tímto jsme schopni z cache získat i taková data, na která se dotazujeme poprvé.
 \end{itemize}
@@ -43,36 +45,3 @@ Pro některé scénáře může být pro uživatele nepraktické si vrcholy zobr
 
 \subsection*{Nástroj pro úpravu a návrh konfigurací}
 Aktuálně jsou konfigurace definovány pomocí Turtle notace v RDF grafech. To bohužel znemožňuje snadné vytváření konfigurací běžnými uživateli. Nabízí se tedy vytvořit nástroj, který by tyto konfigurace vytvářel a ukládal je do úložiště konfigurací, aby nebylo potřebné je ukládat ručně.
-
-\section{Aplikace}
-\textit{Tato sekce obsahuje snímky z aplikace a velmi stručný návod na její obsluhu. Cílem této sekce není poskytnutí uživatelské dokumentace. Pouze popisuje její základní principy.}
-
-Po spuštění aplikace je uživatel vyzván k výběru konfigurace. V tomto okně je také možné zadat IRI konfigurace a meta konfigurace ručně, nebo otevřít existující graf ze souboru. Jakmile je uživatelem vybrána konfigurace, je vyzván k výběru prvního vrcholu, který bude přidán do grafu. To je možné provést ze seznamu předdefinovaných vrcholů, nebo může použít vyhledávací pole.
-
-Hlavní okno aplikace má uprostřed grafovou oblast. S tou je možné manipulovat pomocí myši, nebo červených tlačítek v pravém dolním rohu. Po kliknutí na vrchol, označení více vrcholů, nebo skupiny se zobrazí pravý boční panel s detailními informacemi. Levý panel se automaticky skrývá a obsahuje další akce, které je možné s grafem provést. V levém horním rohu se také nachází pole, přes které lze přidávat a vyhledávat vrcholy v grafu.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{media/metaconfiguration.png}\\
-    \caption{Úvodní obrazovka s výměrem mezi dvěma meta konfiguracemi. Je také možné ručně zadat IRI konfigurací nebo stáhnout graf ze souboru.}
-\end{figure}
-
-\newpage
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{media/configuration.png}
-    \caption{Obrazovka s výběrem konkrétních konfigurací v rámci Wikipedie (Wikidat).}
-    \includegraphics[width=\textwidth]{media/node-selection.png}
-    \caption{Obrazovka s výběrem počátečního vrcholu. Ten je možné vybrat z předdefinovaných, nebo je možné použít vyhledávací pole.}
-\end{figure}
-
-\newpage
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{media/einstein.png}
-    \caption{Hlavní okno aplikace s již načteným grafem a vybraným vrcholem. Levý panel je zde rozevřený.}
-    \includegraphics[width=\textwidth]{media/layout.png}
-    \caption{Dialog pro výběr a nastavení layoutů.}
-\end{figure}

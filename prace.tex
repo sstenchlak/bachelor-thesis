@@ -101,7 +101,7 @@ Chtěl bych poděkovat svému vedoucímu doc. Mgr. Martinovi Nečaskému, Ph.D. 
 \def\Abstrakt{%
 Jedním ze způsobů, jak publikovat data ve strojově čitelné podobě na internetu, je formou grafu. Taková data je pak velmi snadné propojovat mezi různými datovými zdroji a vytvořit tak velkou síť propojených dat. Abychom tyto data mohli vizualizovat, musíme používat nástroje na procházení grafu, které mohou být často nepraktické, neboť nám obvykle zobrazí veškeré informace, kterých mohou být stovky.
 
-Cílem této práce je vytvořit webovou aplikaci, která je schopna tyto grafová data vizualizovat, poskytovat k nim informace a procházet je pomocí takzvaných konfigurací. Konfigurace popisuje, jaké data z velké množiny dat na internetu chceme zobrazit, jak je vizualizujeme a jak se na ně můžeme dívat. Dovolí nám tedy odfiltrovat stovky nezajímavých informací a odstíní tak uživatele od složité sítě propojených dat, aby se mohl věnovat pouze těm, která ho zajímají.
+Cílem této práce je vytvořit webovou aplikaci, která je schopna tyto grafová data vizualizovat, poskytovat k nim informace a procházet je pomocí takzvaných konfigurací. Konfigurace popisuje, jaká data z velké množiny dat na internetu chceme zobrazit, jak je vizualizujeme a jak se na ně můžeme dívat. Dovolí nám tedy odfiltrovat stovky nezajímavých informací a odstíní tak uživatele od složité sítě propojených dat, aby se mohl věnovat pouze těm, která ho zajímají.
 }
 \def\AbstraktEN{%
 One way to publish data in a machine-readable form on the Internet is in the form of a graph. Such data are easy to interconnect between different data sources and thus create a large network of linked data. In order to visualize this data, we need to use graph tools, which can often be impractical because they usually show us all the information about the graph.
@@ -137,6 +137,7 @@ The aim of this work is to create a web application that is able to visualize th
 \usepackage[]{algorithm2e}
 \usepackage{dirtree}
 \usepackage{pgfplots}
+\usepackage{pgffor}
 
 \overfullrule=0pt
 
@@ -164,13 +165,6 @@ The aim of this work is to create a web application that is able to visualize th
 %%% (pokud jich je malé množství, obvykle není třeba seznam uvádět)
 \listoffigures
 
-%%% Tabulky v bakalářské práci (opět nemusí být nutné uvádět)
-%%% U matematických prací může být lepší přemístit seznam tabulek na začátek práce.
-\listoftables
-
-%%% Použité zkratky v bakalářské práci (opět nemusí být nutné uvádět)
-%%% U matematických prací může být lepší přemístit seznam zkratek na začátek práce.
-\chapwithtoc{Seznam použitých zkratek}
 
 %%% Přílohy k bakalářské práci, existují-li. Každá příloha musí být alespoň jednou
 %%% odkazována z vlastního textu práce. Přílohy se číslují.
@@ -184,8 +178,9 @@ The aim of this work is to create a web application that is able to visualize th
 %%% opatření rektora č. 72/2017.
 \appendix
 \chapter{Přílohy}
+\input{appendix-general}
+\include{appendix-screenshots}
 
-\section{První příloha}
 
 \openright
 \end{document}
